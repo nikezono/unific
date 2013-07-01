@@ -20,6 +20,3 @@ module.exports = (app, server) ->
 
     # Use Router
     (require path.resolve('config','ioRoutes')) io,socket
-
-
-
