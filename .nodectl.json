@@ -1,0 +1,8 @@
+{
+  "main": "server.coffee",
+  "env": "development",
+  "watch": true,
+  "assets": "assets",
+  "output": "public",
+  "minify": true
+}

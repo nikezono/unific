@@ -1,0 +1,42 @@
+{
+  "name": "newstream",
+  "description": "rss reader",
+  "version": "0.0.1",
+  "author": "nikezono",
+  "dependencies": {
+    "find-rss" : "*",
+    "combine-rss": "*",
+    "underscore": "*",
+    "async": "*",
+    "socket.io":"*",
+    "express": "*",
+    "coffee-script": "*",
+    "jade": "*",
+    "connect-asset": "*",
+    "connect-assets": "*",
+    "mongoose": "*",
+    "stylus": "*",
+    "nib": "*",
+    "st": "*",
+    "direquire" : "*"
+  },
+  "devDependencies": {
+    "coffee-script": "*",
+    "assert":"*",
+    "mocha": "*"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git@//github.com/nikezono/newstream"
+  },
+  "main": "",
+  "scripts": {
+    "test"   : "./node_modules/.bin/cake test",
+    "compile": "./node_modules/.bin/cake compile"
+    },
+  "engines": {
+    "node": "*"
+  },
+  "license": "BSD"
+}

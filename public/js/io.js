@@ -1,0 +1,1 @@
+!function(){var n,o,c;c=io.connect(),o=window.location.pathname,c.on("connect",function(){return console.log("socket.io connected"),n()?(console.log("connect stream: "+o),c.emit("connect stream",o)):console.log("toppage")}),n=function(){return"/"===o?!1:!0}}.call(this);
