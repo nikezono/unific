@@ -19,4 +19,4 @@ module.exports = (app, server) ->
       socket.set 'stream_name', stream_name
 
     # Use Router
-    (require path.resolve('config','ioRoutes')) io,socket
+    (require path.resolve('routes','ioRoutes')) io,socket

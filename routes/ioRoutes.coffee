@@ -19,6 +19,7 @@ module.exports = exports = (io,socket) ->
 
   # Stream Events
   socket.on "get feed_list", StreamEvent.getFeedList     socket
+  socket.on "sync stream",   StreamEvent.sync            socket
   socket.on "change stream", StreamEvent.changeProperty  socket, data
 
   # Feed Events
@@ -31,4 +32,4 @@ module.exports = exports = (io,socket) ->
   socket.on "delete star",   PageEvent.deleteStar        socket, data
 
   # Comment Events
-  socket.on "add comment",   CommentEvent.addComment     socket, data
+  socket.on "add comment",   CommentEvent.addComment     socket, datar

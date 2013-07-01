@@ -1,4 +1,3 @@
-
 ###
 
     app.coffee
@@ -57,7 +56,7 @@ app.configure ->
   # router
   app.use app.router
 
-routes = require path.resolve 'config','routes'
+routes = require path.resolve 'routes','httpRoutes'
 routes app
 
 if process.env.NODE_ENV is 'production'
