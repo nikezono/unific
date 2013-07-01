@@ -5,7 +5,7 @@
   
 ###
 
-module.exports = exports = (socket) ->
+module.exports = exports = (io,socket) ->
 
   # include events
   Events = app.get('events')
@@ -15,16 +15,16 @@ module.exports = exports = (socket) ->
   CommentEvent = Events.CommentEvent app
 
   # Helper Events
-  socket.on "find feed",     HelperEvent.findFeed socket,url
+  socket.on "find feed",     HelperEvent.findFeed        socket,url
 
   # Stream Events
-  socket.on "get feed_list", StreamEvent.getFeedList socket
-  socket.on "change stream", StreamEvent.changeProperty socket, data
+  socket.on "get feed_list", StreamEvent.getFeedList     socket
+  socket.on "change stream", StreamEvent.changeProperty  socket, data
 
   # Page Events
-  socket.on "get page",      PageEvent.getContents socket, data
-  socket.on "add star",      PageEvent.addStar socket, data
-  socket.on "delete star",   PageEvent.deleteStar socket, data
+  socket.on "get page",      PageEvent.getContents       socket, data
+  socket.on "add star",      PageEvent.addStar           socket, data
+  socket.on "delete star",   PageEvent.deleteStar        socket, data
 
   # Comment Events
-  socket.on "add comment",   CommentEvent.addComment socket, data
+  socket.on "add comment",   CommentEvent.addComment     socket, data
