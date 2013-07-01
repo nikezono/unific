@@ -61,11 +61,11 @@ app.configure ->
 (require path.resolve 'routes','httpRoutes') app
 
 if process.env.NODE_ENV is 'production'
-  console.info "mongoose connect:newstream"
-  mongoose.connect "mongodb://localhost/newstream"
+  console.info "mongoose connect:unific"
+  mongoose.connect "mongodb://localhost/unific"
 else
-  console.info "mongoose connect:newstream"
-  mongoose.connect "mongodb://localhost/newstream"
+  console.info "mongoose connect:unific-dev"
+  mongoose.connect "mongodb://localhost/unific"
 
 
 app.configure "development", ->

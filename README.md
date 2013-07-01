@@ -1,4 +1,4 @@
-newstream
+unific
 ---
 
 ストリーム系RSSリーダー
