@@ -8,16 +8,16 @@
 module.exports = (app) ->
 
   # include events
-  homeEvent   = app.get('events').homeEvent app
-  streamEvent = app.get('events').streamEvent app
+  HomeEvent   = app.get('events').HomeEvent app
+  StreamEvent = app.get('events').StreamEvent app
 
   # homeEvent Controller
-  app.get '/',              homeEvent.index
-  app.get '/about',         homeEvent.about
+  app.get '/',              HomeEvent.index
+  app.get '/about',         HomeEvent.about
 
   # streamEvent Controller
-  app.get '/:stream',       streamEvent.index
-  app.get '/:stream/rss',   streamEvent.rss
+  app.get '/:stream',       StreamEvent.index
+  app.get '/:stream/rss',   StreamEvent.rss
 
   # 404 Not Found
   app.get '/:stream/*', (req,res,next)->

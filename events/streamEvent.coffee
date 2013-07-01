@@ -4,7 +4,7 @@
 
 ###
 
-module.exports.streamEvent = (app) ->
+module.exports.StreamEvent = (app) ->
 
   index: (req,res,next)->
     stream = req.params.stream
