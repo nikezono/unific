@@ -7,5 +7,5 @@
 
 module.exports.HelperEvent = (app) ->
 
-  findFeeds:(url)->
+  findFeeds:(url) ->
     console.log url

@@ -1,2 +1,2 @@
 # test.coffee
-# rspec
+# spec

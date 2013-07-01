@@ -8,8 +8,9 @@
 
 # Dependency
 require.all = require 'direquire'
-express = require "express"
-path = require "path"
+express     = require "express"
+path        = require "path"
+cluster     = require 'cluster'
 
 app = express()
 
@@ -56,8 +57,8 @@ app.configure ->
   # router
   app.use app.router
 
-routes = require path.resolve 'routes','httpRoutes'
-routes app
+# Routes
+(require path.resolve 'routes','httpRoutes') app
 
 if process.env.NODE_ENV is 'production'
   console.info "mongoose connect:newstream"
