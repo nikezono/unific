@@ -1,4 +1,15 @@
 extends layout
 
 block content
-  p stream
+  ul.media-list
+
+    //- #Sample
+    li.media
+      a.pull-left(href='#')
+        img.media-object(src='/images/no_image.png')
+      .media-body
+        h4.media-heading Media heading
+        p ...
+        button.btn read more
+        button.btn comments (0)
+
