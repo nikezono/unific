@@ -1,5 +1,23 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  input.input-large.search-query#GoInput(type='text',placeholder="Type something…")
+  button.btn#GoButton Go
+
+  h3 Usage
+  ol
+    li input any keyword which you interests
+    li push 'Go' button
+    li then you found(or created) your feed stream
+
+  h3 Example
+  ol
+    li
+      a(href='/music') Music
+      p music news stream.
+    li
+      a(href='/nikezono') nikezono
+      p news stream for nikezono(is the developer of unific)
+    li
+      a(href='/masuilab') Masui Lab.
+      p social news stream for Masui Lab.(Keio University)

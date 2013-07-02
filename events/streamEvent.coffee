@@ -1,6 +1,6 @@
 ###
 
-  streamEvent.coffee
+  StreamEvent.coffee
 
 ###
 
@@ -13,7 +13,7 @@ module.exports.StreamEvent = (app) ->
   index: (req,res,next)->
     stream = req.params.stream
     res.render 'stream',
-      title: "#{stream} - unific"
+      title: "#{stream}"
 
   rss  : (req,res,next)->
     res.send "return combined rss"

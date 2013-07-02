@@ -1,6 +1,6 @@
 ###
 
-  homeEvent.coffee
+  HomeEvent.coffee
 
 ###
 
