@@ -1,15 +1,162 @@
 extends layout
 
-block content
+//-
+  other Stream
+//-
+
+block otherStream
+
   ul.media-list
 
-    //- #Sample
     li.media
       a.pull-left(href='#')
-        img.media-object(src='/images/no_image.png')
+        img.media-object.others(src='/images/no_image.png')
       .media-body
-        h4.media-heading Media heading
-        p ...
-        button.btn read more
-        button.btn comments (0)
+        a.pull-left(href='#')
+        h5 他のストリーム１
+        p 説明書き
+    hr
 
+    li.media
+      a.pull-left(href='#')
+        img.media-object.others(src='/images/no_image.png')
+      .media-body
+        a.pull-left(href='#')
+        h5 他のストリーム2
+        p 説明書き
+
+
+//-
+  Contents
+//-
+
+block content
+  //- Alert
+  .alert.alert-info
+    button.close(type='button',data-dismiss='alert') &times;
+    | New Feed is Added.
+
+  ul.media-list
+
+    //- #Sample(closed)
+    li.media.well
+      .contents
+
+        //- Image
+        a.pull-left(href='#')
+          img.media-object(src='/images/no_image.png')
+
+        //- Description
+        .media-body
+          h4.media-heading ニュース1
+          small
+            i.icon-comments-alt 
+              |  Comments(0) 
+            i.icon-star-empty 
+              |  Unstarred
+          p サマリー
+
+          //- Button
+          button.btn Read More
+          |    
+          button.btn.btn-info
+            i.icon-star
+            |   Star
+
+
+    //- #Sample(show)
+    li.media
+      .contents.well
+
+        //- Image
+        a.pull-left(href='#')
+          img.media-object.showed(src='/images/no_image.png')
+
+        //- Description
+        .media-body
+          h3.media-heading ニュース２
+          small
+            i.icon-comments-alt 
+              |  Comments(2) 
+            i.icon-star
+              |  Starred
+          p ...
+          p ...
+          p ...
+          p ...
+
+          //- Comments
+          .well.well-small コメント1
+          .well.well-small コメント2
+          input.input-large.search-query#CommentInput(type='text',placeholder="Comment")
+          |  
+          button.btn.btn-info#SubmitComment Submit
+          br
+          br
+
+          //- Button
+          button.btn Close
+          |    
+          button.btn.btn-inverse
+            i.icon-star-empty
+            |   Unstar
+
+
+
+//-
+  Control Panel
+//-
+block utility
+
+  h2 Control Panel
+  hr
+
+  //-
+    Usage
+  //-
+  #usage
+    h4 Usage
+    p unific is Social Feed Reader.
+    button.btn.btn-success#UsageButton  View Usage
+  hr
+
+  //-
+    Add Feed
+  //-
+  #add_feed
+    h4 Add Feed
+    input.span2.search-query#FindFeedInput(type='text',placeholder="input url...")
+    button.btn#FindFeedButton  Find Feed
+    i ex: ' http://news.google.com/news '
+  hr
+
+  //-
+    Add Feed Modal Window
+  //-
+
+
+  //-
+    Edit RSS List
+  //-
+  #edit_feed_list
+    h4 Edit Feed List
+    button.btn#EditFeedButton  Edit Feed
+  hr
+
+  //-
+    Set Password
+  //-
+
+  #password
+    h4 Set Password
+    p when set Password, this stream is locked.
+    p Set no text 'new password', Authentification is canceled.
+    input.span3.search-query#SetPasswordInputCurrentPassword(type='password',placeholder="current password...")
+    input.span3.search-query#SetPasswordInputNewPassword(type='password',placeholder="new password...")
+    input.span3.search-query#SetPasswordInputHint(type='text',placeholder="hint...")
+    button.btn#SetPasswordButton  Change Password
+  hr
+
+  //-
+    Change Background Image
+  //-

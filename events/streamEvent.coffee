@@ -14,6 +14,7 @@ module.exports.StreamEvent = (app) ->
     stream = req.params.stream
     res.render 'stream',
       title: "#{stream}"
+      description: 'Site Description'
 
   rss  : (req,res,next)->
     res.send "return combined rss"

@@ -17,19 +17,24 @@ html
     link(rel='stylesheet', href='/lib/css/bootplus-responsive.min.css')
     link(rel='stylesheet', href='/lib/css/font-awesome.min.css')    
 
+    //- Include User Scripts/Stylesheets
+    !=js('io')
+    !=css('main')
+
+
   body
     .container
       .row
-        .span8.offset2
+        .span2.otherStream
+          block otherStream
+        .span7
           .page-header
             h1= title
               if title != 'unific'
                 small= ' - unific'
+            if description
+              p= description
 
           block content
-
-
-
-    //- Include User Scripts/Stylesheets
-    !=js('io')
-    !=css('main')
+        .span3.utility
+          block utility
