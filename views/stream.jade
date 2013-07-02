@@ -32,9 +32,13 @@ block otherStream
 
 block content
   //- Alert
-  .alert.alert-info
-    button.close(type='button',data-dismiss='alert') &times;
+
+  .alert.alert-info#NewFeedIsAdded
+    button.close &times;
     | New Feed is Added.
+  .alert.alert-warning#AFeedIsDeleted
+    button.close &times;
+    | A Feed Is Unsubscribed.
 
   ul.media-list
 
@@ -124,16 +128,30 @@ block utility
     Add Feed
   //-
   #add_feed
-    h4 Add Feed
+    h4 Subscribe Feed
     input.span2.search-query#FindFeedInput(type='text',placeholder="input url...")
-    button.btn#FindFeedButton  Find Feed
+    button.btn#FindFeedButton Find Feed
     i ex: ' http://news.google.com/news '
-  hr
 
   //-
     Add Feed Modal Window
   //-
+  #CandidatesModalWindow.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+    .modal-header
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+      h3 SubScribe Feeds
+    .modal-body
+      ol#CandidatesList
+    .modal-footer
+      button.btn(data-dismiss='modal', aria-hidden='true') Close
+      button.btn.btn-primary(data-dismiss='modal', aria-hidden='true')#AddFeedButton Subscribe
 
+  //- No Feeds
+  .alert.alert-warning#NoFeedIsFound
+    button.close(type='button') &times;
+    | No Feed is Founded.(invalid url)
+
+  hr
 
   //-
     Edit RSS List
@@ -151,9 +169,9 @@ block utility
     h4 Set Password
     p when set Password, this stream is locked.
     p Set no text 'new password', Authentification is canceled.
-    input.span3.search-query#SetPasswordInputCurrentPassword(type='password',placeholder="current password...")
-    input.span3.search-query#SetPasswordInputNewPassword(type='password',placeholder="new password...")
-    input.span3.search-query#SetPasswordInputHint(type='text',placeholder="hint...")
+    input.small.search-query#SetPasswordInputCurrentPassword(type='password',placeholder="current password...")
+    input.small.search-query#SetPasswordInputNewPassword(type='password',placeholder="new password...")
+    input.small.search-query#SetPasswordInputHint(type='text',placeholder="hint...")
     button.btn#SetPasswordButton  Change Password
   hr
 

@@ -5,6 +5,13 @@
 
 ###
 $ ->
+
+  ###
+  # Initialize
+  ###
+  $('.alert').hide()
+  $('button.close').click (e)->
+    e.currentTarget.parentElement.style.display = "none"
   socket = io.connect()
   path   = window.location.pathname
 
@@ -15,11 +22,9 @@ $ ->
 
   ## Join Room(Stream)
   socket.on "connect", ->
-    console.log 'socket.io connected'
 
     # if toppage
     unless inStream()
-      console.log 'toppage'
 
       ## Request Find-Stream
       $('#GoButton').click ->
@@ -27,7 +32,6 @@ $ ->
 
     # if stream
     else
-      console.log "connect stream: #{path}"
       socket.emit "connect stream", path
    
       ###
@@ -35,9 +39,20 @@ $ ->
       ###
 
       ## Request Find-Feed
+      $('#FindFeedButton').click ->
+        $('#NoFeedIsFound').hide()
+        inputed = $('#FindFeedInput').val()
+        socket.emit 'find feed', inputed
 
       ## Receive Find-Feed
-
+      socket.on 'found feed', (error,candidates)->
+        $('#NoFeedIsFound').show() if error?
+        if candidates?
+          $('#CandidatesModalWindow').find('#CandidatesList').html('')
+          for candidate in candidates
+            candidate.title = candidate.url unless candidate.title?
+            $('#CandidatesList').append "<li><input type='checkbox' value='#{candidate.url}'>  #{candidate.title}</li>"
+          $('#CandidatesModalWindow').modal() 
 
       ###
       # Stream Model Events
@@ -62,6 +77,14 @@ $ ->
       ###
 
       ## Request Add-Feed
+      $('#AddFeedButton').click (e)->
+        urls = []
+        $('#CandidatesList').find(":checkbox:checked").each (i) ->
+          urls[i] = $(this).val()
+        unless urls.length is 0
+          socket.emit 'add feed', urls
+          $('#NewFeedIsAdded').show()
+
 
       ## Receive Delete-Feed
 
