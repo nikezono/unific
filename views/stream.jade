@@ -39,71 +39,81 @@ block content
   .alert.alert-warning#AFeedIsDeleted
     button.close &times;
     | A Feed Is Unsubscribed.
+  .alert.alert-error#SomethingWrong
+    button.close &times;
+    | Sorry! An unexpected error has occurred.
 
-  ul.media-list
+  .well#NoFeedIsAdded
+    button.close &times;
+    | No Feed Is Added.
+
+  ul.media-list#Articles
 
     //- #Sample(closed)
-    li.media.well
-      .contents
+      li.media.well
+        .contents
 
-        //- Image
-        a.pull-left(href='#')
-          img.media-object(src='/images/no_image.png')
+          //- Image
+          a.pull-left(href='#')
+            img.media-object(src='/images/no_image.png')
 
-        //- Description
-        .media-body
-          h4.media-heading ニュース1
-          small
-            i.icon-comments-alt 
-              |  Comments(0) 
-            i.icon-star-empty 
-              |  Unstarred
-          p サマリー
+          //- Description
+          .media-body
+            a(href=url)
+              h4.media-heading title
+                a(href=siteurl)
+                  small   sitename
+            small
+              i.icon-comments-alt 
+                |  Comments(0) 
+              i.icon-star-empty 
+                |  Unstarred
+            p サマリー
 
-          //- Button
-          button.btn Read More
-          |    
-          button.btn.btn-info
-            i.icon-star
-            |   Star
+            //- Button
+            button.btn Read More
+            |    
+            button.btn.btn-info
+              i.icon-star
+              |   Star
 
 
     //- #Sample(show)
-    li.media
-      .contents.well
+      li.media
+        .contents.well
 
-        //- Image
-        a.pull-left(href='#')
-          img.media-object.showed(src='/images/no_image.png')
+          //- Image
+          a.pull-left(href='#')
+            img.media-object.showed(src='/images/no_image.png')
 
-        //- Description
-        .media-body
-          h3.media-heading ニュース２
-          small
-            i.icon-comments-alt 
-              |  Comments(2) 
-            i.icon-star
-              |  Starred
-          p ...
-          p ...
-          p ...
-          p ...
+          //- Description
+          .media-body
+            h3.media-heading ニュース２
+            small
+              i.icon-comments-alt 
+                |  Comments(2) 
+              i.icon-star
+                |  Starred
+            p ...
+            p ...
+            p ...
+            p ...
 
-          //- Comments
-          .well.well-small コメント1
-          .well.well-small コメント2
-          input.input-large.search-query#CommentInput(type='text',placeholder="Comment")
-          |  
-          button.btn.btn-info#SubmitComment Submit
-          br
-          br
+            //- Comments
+            .well.well-small コメント1
+            .well.well-small コメント2
+            input.input-large.search-query#CommentInput(type='text',placeholder="Comment")
+            |  
+            button.btn.btn-info#SubmitComment Submit
+            br
+            br
 
-          //- Button
-          button.btn Close
-          |    
-          button.btn.btn-inverse
-            i.icon-star-empty
-            |   Unstar
+            //- Button
+            button.btn Close
+            |    
+            button.btn.btn-inverse
+              i.icon-star-empty
+              |   Unstar
 
 
 

@@ -18,7 +18,8 @@
     "stylus": "*",
     "nib": "*",
     "st": "*",
-    "direquire" : "*"
+    "direquire" : "*",
+    "parse-rss": "*"
   },
   "devDependencies": {
     "coffee-script": "*",

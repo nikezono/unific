@@ -65,7 +65,7 @@ if process.env.NODE_ENV is 'production'
   mongoose.connect "mongodb://localhost/unific"
 else
   console.info "mongoose connect:unific-dev"
-  mongoose.connect "mongodb://localhost/unific"
+  mongoose.connect "mongodb://localhost/unific-dev"
 
 
 app.configure "development", ->

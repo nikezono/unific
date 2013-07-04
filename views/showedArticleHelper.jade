@@ -1,0 +1,33 @@
+li.media
+  .contents.well
+
+    //- Image
+    a.pull-left(href='#')
+      img.media-object.showed(src='/images/no_image.png')
+
+    //- Description
+    .media-body
+      h3.media-heading= title
+      small
+        i.icon-comments-alt 
+          |  Comments(#{comments.length}) 
+        i.icon-star
+          |  Starred
+      p= compiled
+
+      //- Comments
+      
+      input.input-large.search-query#CommentInput(type='text',placeholder="Comment")
+      |  
+      button.btn.btn-info#SubmitComment Submit
+      br
+      br
+
+      //- Button
+      button.btn Close
+      |    
+      button.btn.btn-inverse
+        i.icon-star-empty
+        |   Unstar
+
+

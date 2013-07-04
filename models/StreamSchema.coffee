@@ -10,20 +10,11 @@
 ###
 
 Mongo = require 'mongoose'
-combiner = require('combine-rss').combiner()
 
 StreamSchema = new Mongo.Schema
   title:       { type: String, unique: yes ,index: yes }
   description: String
-  combiner:    {}
   feeds:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }]
-
-
-# Post-init
-StreamSchema.post 'init', (stream)->
-  stream.combiner = combiner
-  stream.markModified 'combiner'
-  stream.save()
 
 # find-by-name
 StreamSchema.statics.findByTitle = (title, callback) ->

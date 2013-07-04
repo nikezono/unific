@@ -20,7 +20,7 @@ module.exports = exports = (app,io,socket) ->
 
   # Stream Events
   socket.on "get feed_list",        -> StreamEvent.getFeedList     socket
-  socket.on "sync stream",          -> StreamEvent.sync            socket, io
+  socket.on "sync stream",   (data) -> StreamEvent.sync            socket, io, data
   socket.on "change stream", (data) -> StreamEvent.changeProperty  socket, io, data
 
   # Feed Events
