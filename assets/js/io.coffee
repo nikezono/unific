@@ -82,7 +82,9 @@ $ ->
         $('#CandidatesList').find(":checkbox:checked").each (i) ->
           urls[i] = $(this).val()
         unless urls.length is 0
-          socket.emit 'add feed', urls
+          socket.emit 'add feed',
+            urls:urls
+            stream:path
           $('#NewFeedIsAdded').show()
 
 

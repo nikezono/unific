@@ -11,6 +11,7 @@ module.exports.HelperEvent = (app) ->
   _      = require 'underscore'
   async  = require 'async'
 
+  #@todo updateしないとutf-8以外のencodingのwebsiteを読み込めない
   findFeed:(socket,url) ->
     finder url, (error,candidates)-> 
       socket.emit 'found feed',error,candidates
