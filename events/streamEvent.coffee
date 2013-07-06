@@ -43,8 +43,10 @@ module.exports.StreamEvent = (app) ->
     streamname = decodeURIComponent stream
     Stream.findOne title:streamname,(err,stream)->
       socket.emit 'error' if err
+      # Feedの検索
       Feed.find stream:stream._id,{},{},(err,feeds)->
         feed_pages = []
+        # 各ArticleのMerge
         async.forEach feeds,(feed,cb)->
           parser feed.url, (articles)->
             Page.findAndUpdateByArticles articles,feed,(pages)->
@@ -52,11 +54,15 @@ module.exports.StreamEvent = (app) ->
               feed_pages = feed_pages.concat pages
               cb()
         ,->
+          # uniqued
           uniqued = _.uniq feed_pages,false,(obj)->
-            return obj.page.title
-            
+            return obj.page.link or obj.page.title or obj.page.description
+          
+          # sorted(更新降順)
           sorted = _.sortBy(uniqued, (obj)->
             return obj.page.pubDate.getTime()).reverse()
+
+          # Sync Completed
           socket.emit 'sync completed',  sorted
           console.log "#{socket.id} is sync"
 

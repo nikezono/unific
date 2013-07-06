@@ -77,13 +77,20 @@ $ ->
 
       # Sync Object Received
       socket.on 'sync completed' , (pages) ->
-        Articles = Articles.concat pages
-        Articles = _.uniq Articles,(obj)->
-          return obj.page.title
-        $('#NoFeedIsAdded').hide() unless Articles.length is 0
-        $('#Articles').html('')
-        for article in Articles
-          appendArticle(article)
+        # ArticlesとPagesを比較していってPagesから差分だけ取ってくる
+        filterNewArticles Articles,pages, (filtered)->
+          if filtered.length > 0
+            console.log 'new article added' 
+          else
+            console.log 'no article added'
+          Articles = Articles.concat filtered
+          Articles = _.uniq Articles,(obj)->
+            return obj.page._id
+
+          $('#NoFeedIsAdded').hide() unless Articles.length is 0
+          for article in filtered
+            appendArticle(article)
+          $('#NewArticleIsAdded').show().fadeIn(500) if filtered.length > 0
 
       ## Request List
 
@@ -154,6 +161,14 @@ $ ->
     return false if path is ''
     return true
 
+  filterNewArticles = (Articles,pages,callback)->
+    ids = _.map Articles, (article)->
+      return article.page._id
+    filtered =  _.filter pages, (article)->
+      return false if _.contains ids,article.page._id
+      return true
+    callback(filtered)
+
   appendArticle = (article)-> 
     title       = article.page.title
     comments    = article.page.comments
@@ -161,5 +176,5 @@ $ ->
     url         = article.page.url
     sitename    = article.feed.title
     siteurl     = article.feed.site
-    $('#Articles').append "<li class='media well'><div class='contents'><a href='#' class='pull-left'><img src='/images/no_image.png' class='media-object'/></a><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}<a href=#{siteurl}><small>  #{sitename}</small></a></h4><i class='icon-comments-alt'> 
- Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><p> #{description}</p><button class='btn'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></div></li>"
+    $('#Articles').append("<li class='media well'><div class='contents'><a href='#' class='pull-left'><img src='/images/no_image.png' class='media-object'/></a><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}<a href=#{siteurl}><small>  #{sitename}</small></a></h4><i class='icon-comments-alt'> 
+ Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><p> #{description}</p><button class='btn'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></div></li>").hide().fadeIn(300)

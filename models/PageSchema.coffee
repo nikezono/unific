@@ -33,7 +33,8 @@ PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->
     feed.site = articles[0].meta.link if articles[0]?.meta?.link?
     feed.save()
   async.forEach articles, (article,cb)->
-    desc = article.description.slice(0,140).concat('...') if article.description.length > 140
+    desc = sanitizeHTML(article.description)
+    desc = desc.slice(0,140).concat('...') if article.description.length > 140
     that.findOneAndUpdate
       # condition
       title:article.title
@@ -53,5 +54,12 @@ PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->
       cb()
   ,->
     callback pages
+
+###
+# Private Method
+### 
+sanitizeHTML = (str)->
+  return str.replace /<(.+?)>/g, ''
+
 
 exports.Page = Mongo.model 'pages', PageSchema
