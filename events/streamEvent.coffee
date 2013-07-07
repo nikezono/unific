@@ -60,7 +60,7 @@ module.exports.StreamEvent = (app) ->
           
           # sorted(更新降順)
           sorted = _.sortBy(uniqued, (obj)->
-            return obj.page.pubDate.getTime()).reverse()
+            return obj.page.pubDate.getTime())
 
           # Sync Completed
           socket.emit 'sync completed',  sorted

@@ -58,13 +58,13 @@ $ ->
         socket.emit 'find feed', inputed
 
       ## Receive Find-Feed
-      socket.on 'found feed', (error,candidates)->
+      socket.on 'found feed', (error,response)->
         $('#NoFeedIsFound').show() if error?
-        if candidates?
+        if response.candidates?
           $('#CandidatesModalWindow').find('#CandidatesList').html('')
-          for candidate in candidates
-            candidate.title = candidate.url unless candidate.title?
-            candCheckbox = "<li><input type='checkbox' title= '#{candidate.title}' value='#{candidate.url}'>  #{candidate.title}</li>"
+          for candidate in response.candidates
+            candidate.sitetitle = "#{candidate.sitename} - #{candidate.title or 'feed'}"
+            candCheckbox = "<li><input type='checkbox' siteurl=#{response.url} title= '#{candidate.sitetitle}' value='#{candidate.url}'>  #{candidate.sitetitle}</li>"
             $('#CandidatesList').append candCheckbox
           $('#CandidatesModalWindow').modal() 
 
@@ -112,6 +112,7 @@ $ ->
           urls.push
             url:$(this).val()
             title:$(this).attr('title')
+            siteurl:$(this).attr('siteurl')
         unless urls.length is 0
           socket.emit 'add feed',
             urls  :urls
@@ -173,8 +174,9 @@ $ ->
     title       = article.page.title
     comments    = article.page.comments
     description = article.page.description
+    pubDate     = moment(article.page.pubDate).fromNow()
     url         = article.page.url
     sitename    = article.feed.title
     siteurl     = article.feed.site
-    $('#Articles').append("<li class='media well'><div class='contents'><a href='#' class='pull-left'><img src='/images/no_image.png' class='media-object'/></a><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}<a href=#{siteurl}><small>  #{sitename}</small></a></h4><i class='icon-comments-alt'> 
- Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><p> #{description}</p><button class='btn'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></div></li>").hide().fadeIn(300)
+    $('#Articles').prepend("<li class='media well'><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}   <a href='#{siteurl}''>   <small>#{sitename}</small></a></h4><i class='icon-pencil'> #{pubDate}</i>  <i class='icon-comments-alt'> 
+ Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><p>#{description}</p><button class='btn'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></li>").hide().fadeIn(300)

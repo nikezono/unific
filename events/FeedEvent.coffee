@@ -25,12 +25,12 @@ module.exports.FeedEvent = (app) ->
           title : param.title
           url   : param.url
           stream: stream._id
-          alive : true
         ,
           title : param.title
           url   : param.url
           stream: stream._id
           alive : true
+          site  : param.siteurl
         , upsert: true,(err,feed)->
           console.error err if err
           cb()

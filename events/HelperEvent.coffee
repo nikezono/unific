@@ -14,4 +14,6 @@ module.exports.HelperEvent = (app) ->
   #@todo updateしないとutf-8以外のencodingのwebsiteを読み込めない
   findFeed:(socket,url) ->
     finder url, (error,candidates)-> 
-      socket.emit 'found feed',error,candidates
+      socket.emit 'found feed',error,
+        candidates:candidates
+        url: url

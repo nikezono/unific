@@ -1,0 +1,19 @@
+li.media.well
+  .media-body
+    a(href= 'url')
+      h4.media-heading title
+        a(href='siteurl')
+          small=  'sitename'
+      i.icon-pencil
+        |  #{'date'}
+      i.icon-comments-alt 
+        |  Comments(#{'0'}) 
+      i.icon-star-empty  starred
+    p=  'description'
+
+    //- Button
+    button.btn Read More
+    |    
+    button.btn.btn-info
+      i.icon-star
+      |   Star

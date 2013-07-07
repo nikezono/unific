@@ -29,9 +29,6 @@ PageSchema = new Mongo.Schema
 PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->
   that = this
   pages = []
-  unless feed.site?
-    feed.site = articles[0].meta.link if articles[0]?.meta?.link?
-    feed.save()
   async.forEach articles, (article,cb)->
     desc = sanitizeHTML(article.description)
     desc = desc.slice(0,140).concat('...') if article.description.length > 140
@@ -40,10 +37,10 @@ PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->
       title:article.title
       feed : feed._id
     ,
-      title:article.title
-      url  :article.link
-      feed :feed._id
-      pubDate:article.pubdate
+      title      :article.title
+      url        :article.link
+      feed       :feed._id
+      pubDate    :article.pubdate
       description:desc
     , upsert: true , (err,page) ->
       console.error err if err
