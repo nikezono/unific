@@ -40,12 +40,12 @@ $ ->
 
       ###
       # SetInterval Sync
-      # Now Setting: 5 minutes
+      # Now Setting: 1 minutes
       ###
       setInterval ->
         console.log 'sync'
         socket.emit('sync stream',path)
-      ,1000*30
+      ,1000*60
    
       ###
       # Helper Events
@@ -140,11 +140,22 @@ $ ->
 
         ## Request Page Contents
         $('.btn-toggle').click (e)->
-          socket.emit 'get page',
-            dom: $(this).parent().find('p').attr('id')
-            url: $(this).parent().find('a').attr('href')
+          if $(this).text() is 'Close'
+            $(this).parent().find('p.desc').show()
+            $(this).parent().find('p.contents').hide()
+            $(this).text('Read More')
+          else
+            socket.emit 'get page',
+              domid: $(this).parent().find('p.desc').attr('id')
+              url  : $(this).parent().find('a').attr('href')
 
         ## Receive Page Contents
+        socket.on 'got page',(data)->
+          content = decodeURIComponent data.res.content
+          $dom = $(document).find("##{data.domid}")
+          $dom.hide()
+          $dom.parent().find('p.contents').html(content)
+          $dom.parent().find('.btn-toggle').text('Close')
 
         ## Request Add Star
 
@@ -189,4 +200,4 @@ $ ->
     siteurl     = article.feed.site
     $('#Articles').prepend("<li class='media well'><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}   
       <a href='#{siteurl}''>   <small>#{sitename}</small></a></h4><i class='icon-pencil'> #{pubDate}</i>  <i class='icon-comments-alt'> 
- Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><p id='#{id}'>#{description}</p><button class='btn btn-toggle'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></li>").hide().fadeIn(300)
+ Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><br><br><p class ='desc' id='#{id}'>#{description}</p><p class='contents'></p><button class='btn btn-toggle'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></li>").hide().fadeIn(300)
