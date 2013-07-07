@@ -13,7 +13,6 @@ module.exports = exports = (app,io,socket) ->
   StreamEvent  = Events.StreamEvent  app
   FeedEvent    = Events.FeedEvent    app
   PageEvent    = Events.PageEvent    app
-  CommentEvent = Events.CommentEvent app
 
   # Helper Events
   socket.on "find feed",     (url)  -> HelperEvent.findFeed        socket, url
@@ -33,6 +32,6 @@ module.exports = exports = (app,io,socket) ->
   socket.on "get page",      (data) -> PageEvent.getContents       socket, data
   socket.on "add star",      (data) -> PageEvent.addStar           socket, data
   socket.on "delete star",   (data) -> PageEvent.deleteStar        socket, data
+  socket.on "add comment",   (data) -> PageEvent.addComment        socket, data
 
-  # Comment Events
-  socket.on "add comment",   (data) -> CommentEvent.addComment     socket, data
+

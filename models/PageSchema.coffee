@@ -7,7 +7,7 @@
   * url          [String]     元記事のurl
   * readable     [String]     readabilityを通したあとのhtml/text
   * starred      [Bool]       スターが付けられているか
-  * comments     [ObjectId]   CommentオブジェクトのArray
+  * comments     [Array]   String Array
   * feed         [ObjectId]   親Feed
 
 ###
@@ -23,7 +23,7 @@ PageSchema = new Mongo.Schema
   readable:    String
   starred:     Boolean
   pubDate:     Date
-  comments:    [{ type: Mongo.Schema.Types.ObjectId, ref: 'comments' }]
+  comments:    [String]
   feed:        { type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }
 
 PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->

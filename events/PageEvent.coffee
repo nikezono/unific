@@ -11,6 +11,8 @@ module.exports.PageEvent = (app) ->
   ###
   ex = require 'extractcontent'
 
+  Page   = app.get("models").Page
+
   ###
   # socket.io events
   ###
@@ -28,3 +30,14 @@ module.exports.PageEvent = (app) ->
 
   deleteStar: (socket,data) ->
     console.log data
+
+  addComment:(socket,data)->
+    Page.findOne _id:data.domid, (err,page)->
+      return socket.emit 'error' if err
+      page.comments.push data.comment
+      page.save()
+      socket.emit 'comment added',
+        domid:data.domid
+        comment:data.comment
+        page:page
+

@@ -140,22 +140,28 @@ $ ->
 
         ## Request Page Contents
         $('.btn-toggle').click (e)->
+          $dom = $(this).parent()
           if $(this).text() is 'Close'
-            $(this).parent().find('p.desc').show()
-            $(this).parent().find('p.contents').hide()
+            $dom.find('p.desc').show()
+            $dom.find('p.contents').hide()
             $(this).text('Read More')
+          else if $dom.find('p.contents').text() isnt ''
+            $dom.find('p.desc').hide()
+            $dom.find('p.contents').show()
+            $dom.find('.btn-toggle').text('Close')
           else
             socket.emit 'get page',
-              domid: $(this).parent().find('p.desc').attr('id')
-              url  : $(this).parent().find('a').attr('href')
+              domid: $dom.attr('id')
+              url  : $dom.find('a').attr('href')
 
         ## Receive Page Contents
         socket.on 'got page',(data)->
           content = decodeURIComponent data.res.content
           $dom = $(document).find("##{data.domid}")
-          $dom.hide()
-          $dom.parent().find('p.contents').html(content)
-          $dom.parent().find('.btn-toggle').text('Close')
+          $dom.find('p.desc').hide()
+          $dom.find('p.contents').show()
+          $dom.find('p.contents').html(content)
+          $dom.find('.btn-toggle').text('Close')
 
         ## Request Add Star
 
@@ -167,8 +173,20 @@ $ ->
         ###
 
         ## Request Add Comment
+        $('.submitComment').click (e)->
+          $dom = $(this).parent()
+          comment = $dom.find('.inputComment').val()
+          if comment?
+            socket.emit 'add comment',
+              domid: $dom.attr('id')
+              comment: comment
 
         ## Receive Add Comment
+        socket.on 'comment added', (data)->
+          $dom = $(document).find("##{data.domid}")
+          $dom.find('.comments').append("<div class= 'well well-small'>#{data.comment}</div><br>")
+          num = Number($dom.find('.commentsLength').text())
+          $dom.find('.commentsLength').text(num+1)
 
         ## Some Error has Received
         socket.on 'error', ->
@@ -198,6 +216,45 @@ $ ->
     url         = article.page.url
     sitename    = article.feed.title
     siteurl     = article.feed.site
-    $('#Articles').prepend("<li class='media well'><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}   
-      <a href='#{siteurl}''>   <small>#{sitename}</small></a></h4><i class='icon-pencil'> #{pubDate}</i>  <i class='icon-comments-alt'> 
- Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><br><br><p class ='desc' id='#{id}'>#{description}</p><p class='contents'></p><button class='btn btn-toggle'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></li>").hide().fadeIn(300)
+
+    ## Comment HTML
+    commentHTML = ''
+    for comment in article.page.comments
+      commentHTML += "
+        <div class= 'well well-small'>#{comment}</div>"
+
+
+    $('#Articles').prepend("
+    <li class='media well'>
+      <div class='media-body' id='#{id}'>
+        <a href=#{url}>
+          <h4 class='media-heading'>#{title}   
+            <a href='#{siteurl}''>
+               <small>#{sitename}</small>
+            </a>
+          </h4>
+        </a>
+        <i class='icon-pencil'> #{pubDate}</i>
+        <i class='icon-comments-alt'>  Comments(<num class='commentsLength'>#{comments.length}</num>) </i>
+        <div class= 'starred'>
+          <i class='icon-star-empty'> starred</i>
+        </div>
+        <br>
+        <p class ='desc'>#{description}</p>
+        <p class='contents'></p>
+        <div class='comments'>
+        " + commentHTML + "
+        </div>
+        <input type='text' placeholder='Comment...' class='inputComment input-medium search-query'>
+        <button  class='btn submitComment'><i class='icon-comment-alt'></i>  Comment</button>
+        <button class='btn btn-toggle'><i class='icon-hand-right'></i>  Read More</button>
+        <button class='btn btn-info'><i class='icon-star'></i>  Star</button>
+      </div>
+    </li>").hide().fadeIn(500)
+
+
+
+
+
+
+
