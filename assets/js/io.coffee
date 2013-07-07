@@ -178,5 +178,6 @@ $ ->
     url         = article.page.url
     sitename    = article.feed.title
     siteurl     = article.feed.site
-    $('#Articles').prepend("<li class='media well'><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}   <a href='#{siteurl}''>   <small>#{sitename}</small></a></h4><i class='icon-pencil'> #{pubDate}</i>  <i class='icon-comments-alt'> 
+    $('#Articles').prepend("<li class='media well'><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}   
+      <a href='#{siteurl}''>   <small>#{sitename}</small></a></h4><i class='icon-pencil'> #{pubDate}</i>  <i class='icon-comments-alt'> 
  Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><p>#{description}</p><button class='btn'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></li>").hide().fadeIn(300)
