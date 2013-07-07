@@ -7,6 +7,10 @@
 module.exports.PageEvent = (app) ->
 
   ###
+  # dependency
+  ###
+
+  ###
   # socket.io events
   ###
 

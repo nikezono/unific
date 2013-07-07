@@ -90,6 +90,7 @@ $ ->
           $('#NoFeedIsAdded').hide() unless Articles.length is 0
           for article in filtered
             appendArticle(article)
+          PageAndCommentEvent()
           $('#NewArticleIsAdded').show().fadeIn(500) if filtered.length > 0
 
       ## Request List
@@ -133,27 +134,34 @@ $ ->
 
       ###
       # Page Model Events
+      # prependされるためPackage
       ###
+      PageAndCommentEvent = ->
 
-      ## Request Page Contents
+        ## Request Page Contents
+        $('.btn-toggle').click (e)->
+          socket.emit 'get page',
+            dom: $(this).parent().find('p').attr('id')
+            url: $(this).parent().find('a').attr('href')
 
-      ## Receive Page Contents
+        ## Receive Page Contents
 
-      ## Request Add Star
+        ## Request Add Star
 
-      ## Receive Add Star
+        ## Receive Add Star
 
-      ###
-      # Comment Model Events
-      ###
+        ###
+        # Comment Model Events
+        # prependされるためpackage
+        ###
 
-      ## Request Add Comment
+        ## Request Add Comment
 
-      ## Receive Add Comment
+        ## Receive Add Comment
 
-      ## Some Error has Received
-      socket.on 'error', ->
-        $('#SomethingWrong').show()
+        ## Some Error has Received
+        socket.on 'error', ->
+          $('#SomethingWrong').show()
 
   ###
   # private methods
@@ -172,6 +180,7 @@ $ ->
 
   appendArticle = (article)-> 
     title       = article.page.title
+    id          = article.page._id
     comments    = article.page.comments
     description = article.page.description
     pubDate     = moment(article.page.pubDate).fromNow()
@@ -180,4 +189,4 @@ $ ->
     siteurl     = article.feed.site
     $('#Articles').prepend("<li class='media well'><div class='media-body'><a href=#{url}><h4 class='media-heading'>#{title}   
       <a href='#{siteurl}''>   <small>#{sitename}</small></a></h4><i class='icon-pencil'> #{pubDate}</i>  <i class='icon-comments-alt'> 
- Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><p>#{description}</p><button class='btn'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></li>").hide().fadeIn(300)
+ Comments(#{comments.length}) </i><i class='icon-star-empty'> starred</i></a><p id='#{id}'>#{description}</p><button class='btn btn-toggle'>Read More</button>   <button class='btn btn-info'><i class='icon-star'></i>  Star</button></div></li>").hide().fadeIn(300)

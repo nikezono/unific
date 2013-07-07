@@ -10,6 +10,7 @@ module.exports.StreamEvent = (app) ->
   parser = require 'parse-rss'
   RSS    = require 'rss'
   _      = require 'underscore'
+  url    = require 'url'
 
   Stream = app.get("models").Stream
   Feed   = app.get("models").Feed
@@ -58,10 +59,9 @@ module.exports.StreamEvent = (app) ->
       ,->
         xml = feed.xml()
         console.log xml
-        res.writeHead 200,
+        res.set
           "Content-Type": "text/xml"
-        res.write xml
-        res.end()
+        res.send xml
 
   ###
   # socket.io events
@@ -86,6 +86,7 @@ module.exports.StreamEvent = (app) ->
   # Helper Methods
   ###
   findArticlesByStream: (streamname,callback)->
+    that = @
     Stream.findOne title:streamname,(err,stream)->
       return callback err,null if err
       # Feedの検索
@@ -93,13 +94,20 @@ module.exports.StreamEvent = (app) ->
         feed_pages = []
         # 各ArticleのMerge
         async.forEach feeds,(feed,cb)->
-          console.log feed
-          parser feed.url, (articles)->
-            console.log articles
-            Page.findAndUpdateByArticles articles,feed,(pages)->
-              return callback err,null if err
+          urlObj = url.parse(feed.url)
+          # 入れ子
+          if urlObj.hostname is ('localhost' or 'unific.net')
+            substreamname = urlObj.pathname.split('/')[1]
+            that.findArticlesByStream substreamname,(err,pages)->
               feed_pages = feed_pages.concat pages
               cb()
+          else
+            # 外部サイト
+            parser feed.url, (articles)->
+              Page.findAndUpdateByArticles articles,feed,(pages)->
+                return callback err,null if err
+                feed_pages = feed_pages.concat pages
+                cb()
         ,->
           # uniqued
           uniqued = _.uniq feed_pages,false,(obj)->
