@@ -45,7 +45,7 @@ $ ->
       setInterval ->
         console.log 'sync'
         socket.emit('sync stream',path)
-      ,1000*60*5
+      ,1000*30
    
       ###
       # Helper Events
