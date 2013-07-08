@@ -119,7 +119,7 @@ module.exports.StreamEvent = (app) ->
           uniqued = _.uniq delnulled,false,(obj)->
             return obj.page.link or obj.page.title or obj.page.description or obj.page.url
           
-          # sorted(更新降順)
+          # sorted(更新昇順)
           sorted = _.sortBy(uniqued, (obj)->
             return obj.page.pubDate.getTime())
 

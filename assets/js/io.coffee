@@ -86,9 +86,14 @@ $ ->
             console.log 'new article added' 
           else
             console.log 'no article added'
+          #マージ
           Articles = Articles.concat filtered
+          #重複削除
           Articles = _.uniq Articles,(obj)->
-            return obj.page._id
+            return obj.page.link or obj.page._id
+          #更新昇順
+          filtered = _.sortBy filtered, (obj)->
+            return Date.parse obj.page.pubDate
 
           $('#NoFeedIsAdded').hide() unless Articles.length is 0
           for article in filtered
@@ -215,7 +220,7 @@ $ ->
     id          = article.page._id
     comments    = article.page.comments
     description = article.page.description
-    pubDate     = moment(article.page.pubDate).fromNow()
+    pubDate     = article.page.pubDate
     url         = article.page.url
     sitename    = article.feed.title
     siteurl     = article.feed.site
@@ -226,34 +231,38 @@ $ ->
       commentHTML += "
         <div class= 'well well-small'>#{comment}</div>"
 
-
-    $('#Articles').prepend("
-    <li class='media well'>
-      <div class='media-body' id='#{id}'>
-        <a href=#{url}>
-          <h4 class='media-heading'>#{title}   
-            <a href='#{siteurl}''>
-               <small>#{sitename}</small>
-            </a>
-          </h4>
-        </a>
-        <i class='icon-pencil'> #{pubDate}</i>
-        <i class='icon-comments-alt'>  Comments(<num class='commentsLength'>#{comments.length}</num>) </i>
-        <span class= 'starred'>
-          <i class='icon-star-empty'> starred</i>
-        </span>
-        <br><br>
-        <p class ='desc'>#{description}</p>
-        <p class='contents'></p>
-        <div class='comments'>
-        " + commentHTML + "
+    ## Articlesのfeedの先頭よりpubDateが新しければprepend
+    topPubDate  = $('#Articles').find('li:first').attr('pubDate')
+    thisPubDate = Date.parse(pubDate)
+    console.log "#{thisPubDate} > #{topPubDate}"
+    if ( thisPubDate > topPubDate) or (topPubDate is undefined)
+      $('#Articles').prepend("
+      <li class='media well' pubDate= '#{Date.parse pubDate}'>
+        <div class='media-body' id='#{id}'>
+          <a href=#{url}>
+            <h4 class='media-heading'>#{title}   
+              <a href='#{siteurl}''>
+                 <small>#{sitename}</small>
+              </a>
+            </h4>
+          </a>
+          <i class='icon-pencil'> #{moment(article.page.pubDate).fromNow()}</i>
+          <i class='icon-comments-alt'>  Comments(<num class='commentsLength'>#{comments.length}</num>) </i>
+          <span class= 'starred'>
+            <i class='icon-star-empty'> starred</i>
+          </span>
+          <br><br>
+          <p class ='desc'>#{description}</p>
+          <p class='contents'></p>
+          <div class='comments'>
+          " + commentHTML + "
+          </div>
+          <input type='text' placeholder='Comment...' class='inputComment input-medium search-query'>
+          <button  class='btn submitComment'><i class='icon-comment-alt'></i>  Comment</button>
+          <button class='btn btn-toggle'><i class='icon-hand-right'></i>  Read More</button>
+          <button class='btn btn-info'><i class='icon-star'></i>  Star</button>
         </div>
-        <input type='text' placeholder='Comment...' class='inputComment input-medium search-query'>
-        <button  class='btn submitComment'><i class='icon-comment-alt'></i>  Comment</button>
-        <button class='btn btn-toggle'><i class='icon-hand-right'></i>  Read More</button>
-        <button class='btn btn-info'><i class='icon-star'></i>  Star</button>
-      </div>
-    </li>").hide().fadeIn(500)
+      </li>").hide().fadeIn(500)
 
 
 
