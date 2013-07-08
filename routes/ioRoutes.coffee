@@ -32,6 +32,6 @@ module.exports = exports = (app,io,socket) ->
   socket.on "get page",      (data) -> PageEvent.getContents       socket, data
   socket.on "add star",      (data) -> PageEvent.addStar           socket, data
   socket.on "delete star",   (data) -> PageEvent.deleteStar        socket, data
-  socket.on "add comment",   (data) -> PageEvent.addComment        socket, data
+  socket.on "add comment",   (data) -> PageEvent.addComment        socket, io, data
 
 

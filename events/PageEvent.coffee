@@ -31,12 +31,12 @@ module.exports.PageEvent = (app) ->
   deleteStar: (socket,data) ->
     console.log data
 
-  addComment:(socket,data)->
+  addComment:(socket,io,data)->
     Page.findOne _id:data.domid, (err,page)->
       return socket.emit 'error' if err
       page.comments.push data.comment
       page.save()
-      socket.emit 'comment added',
+      io.sockets.emit 'comment added',
         domid:data.domid
         comment:data.comment
         page:page

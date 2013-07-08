@@ -16,6 +16,8 @@ module.exports.StreamEvent = (app) ->
   Feed   = app.get("models").Feed
   Page   = app.get("models").Page
 
+  domain = app.get 'domain'
+
   ###
   # http request
   ###
@@ -95,8 +97,9 @@ module.exports.StreamEvent = (app) ->
         # 各ArticleのMerge
         async.forEach feeds,(feed,cb)->
           urlObj = url.parse(feed.url)
-          # 入れ子
-          if urlObj.hostname is ('localhost' or 'unific.net')
+          # 親子関係のときobjectを返す
+          console.info domain
+          if urlObj.hostname in domain
             substreamname = urlObj.pathname.split('/')[1]
             that.findArticlesByStream substreamname,(err,pages)->
               feed_pages = feed_pages.concat pages
@@ -117,7 +120,12 @@ module.exports.StreamEvent = (app) ->
           sorted = _.sortBy(uniqued, (obj)->
             return obj.page.pubDate.getTime())
 
-          return callback null, sorted
+          console.log sorted
+
+          # limited(降順50件)
+          limited = sorted.slice 0, 50 if sorted.length > 50
+          
+          return callback null, limited or sorted
 
 
 ###
