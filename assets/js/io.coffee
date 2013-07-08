@@ -15,6 +15,7 @@ $ ->
   socket = io.connect()
   path   = (window.location.pathname).substr(1)
   Articles = []
+  first    = true
 
   ###
   # Events
@@ -35,8 +36,10 @@ $ ->
       socket.emit "connect stream", path
 
       # first sync
-      socket.emit 'sync stream', path
-      $('#NoFeedIsAdded').show() if Articles.length is 0
+      if first
+        socket.emit 'sync stream', path
+        $('#NoFeedIsAdded').show() if Articles.length is 0
+        first = false
 
       ###
       # SetInterval Sync
@@ -212,7 +215,7 @@ $ ->
     id          = article.page._id
     comments    = article.page.comments
     description = article.page.description
-    pubDate     = moment(article.page.pubDate,"YYYYMMDD").fromNow()
+    pubDate     = moment(article.page.pubDate).fromNow()
     url         = article.page.url
     sitename    = article.feed.title
     siteurl     = article.feed.site

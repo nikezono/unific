@@ -60,7 +60,6 @@ module.exports.StreamEvent = (app) ->
         cb()
       ,->
         xml = feed.xml()
-        console.log xml
         res.set
           "Content-Type": "text/xml"
         res.send xml
@@ -98,7 +97,6 @@ module.exports.StreamEvent = (app) ->
         async.forEach feeds,(feed,cb)->
           urlObj = url.parse(feed.url)
           # 親子関係のときobjectを返す
-          console.info domain
           if urlObj.hostname in domain
             substreamname = urlObj.pathname.split('/')[1]
             that.findArticlesByStream substreamname,(err,pages)->
