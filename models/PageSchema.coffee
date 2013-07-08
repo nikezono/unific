@@ -30,8 +30,8 @@ PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->
   that = this
   pages = []
   async.forEach articles, (article,cb)->
-    desc = sanitizeHTML(article.description)
-    desc = desc.slice(0,140).concat('...') if article.description.length > 140
+    desc = sanitizeHTML(article.description) if article.description
+    desc = desc.slice(0,140).concat('...') if article.description?.length > 140
     that.findOneAndUpdate
       # condition
       title:article.title

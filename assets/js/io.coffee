@@ -212,7 +212,7 @@ $ ->
     id          = article.page._id
     comments    = article.page.comments
     description = article.page.description
-    pubDate     = moment(article.page.pubDate).fromNow()
+    pubDate     = moment(article.page.pubDate,"YYYYMMDD").fromNow()
     url         = article.page.url
     sitename    = article.feed.title
     siteurl     = article.feed.site
@@ -236,10 +236,10 @@ $ ->
         </a>
         <i class='icon-pencil'> #{pubDate}</i>
         <i class='icon-comments-alt'>  Comments(<num class='commentsLength'>#{comments.length}</num>) </i>
-        <div class= 'starred'>
+        <span class= 'starred'>
           <i class='icon-star-empty'> starred</i>
-        </div>
-        <br>
+        </span>
+        <br><br>
         <p class ='desc'>#{description}</p>
         <p class='contents'></p>
         <div class='comments'>

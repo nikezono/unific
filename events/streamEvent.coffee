@@ -112,19 +112,22 @@ module.exports.StreamEvent = (app) ->
                 feed_pages = feed_pages.concat pages
                 cb()
         ,->
+          #ヌル記事の削除
+          delnulled = _.filter feed_pages,(obj)->
+            return false unless obj.page?
+            return true
+
           # uniqued
-          uniqued = _.uniq feed_pages,false,(obj)->
-            return obj.page.link or obj.page.title or obj.page.description
+          uniqued = _.uniq delnulled,false,(obj)->
+            return obj.page.link or obj.page.title or obj.page.description or obj.page.url
           
           # sorted(更新降順)
           sorted = _.sortBy(uniqued, (obj)->
             return obj.page.pubDate.getTime())
 
-          console.log sorted
-
           # limited(降順50件)
-          limited = sorted.slice 0, 50 if sorted.length > 50
-          
+          limited = sorted.slice sorted.length-50 if sorted.length > 50
+
           return callback null, limited or sorted
 
 
