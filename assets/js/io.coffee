@@ -233,9 +233,10 @@ $ ->
 
     ## Articlesのfeedの先頭よりpubDateが新しければprepend
     topPubDate  = $('#Articles').find('li:first').attr('pubDate')
+    topTitle    = $('#Articles').find('li:first').find('h4').text()
     thisPubDate = Date.parse(pubDate)
-    console.log "#{thisPubDate} > #{topPubDate}"
-    if ( thisPubDate > topPubDate) or (topPubDate is undefined)
+    console.log "#{thisPubDate} >= #{topPubDate}"
+    if ( thisPubDate >= topPubDate) or (topPubDate is undefined) and (topTitle isnt title)
       $('#Articles').prepend("
       <li class='media well' pubDate= '#{Date.parse pubDate}'>
         <div class='media-body' id='#{id}'>
