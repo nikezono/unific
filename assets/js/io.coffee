@@ -14,7 +14,6 @@ $ ->
     e.currentTarget.parentElement.style.display = "none"
   socket = io.connect()
   path   = (window.location.pathname).substr(1)
-  Articles = []
   first    = true 
 
   ###
@@ -43,7 +42,7 @@ $ ->
       # first sync
       if first
         socket.emit 'sync stream', path
-        $('#NoFeedIsAdded').show() if Articles.length is 0
+        $('#NoFeedIsAdded').show() if $Articles.html() is ''
         first = false
 
       ###
@@ -52,7 +51,7 @@ $ ->
       ###
       setInterval ->
         console.log 'sync'
-        socket.emit('sync stream',path)
+        socket.emit 'sync stream',path
       ,1000*60
    
       ###
@@ -85,26 +84,15 @@ $ ->
 
       # Sync Object Received
       socket.on 'sync completed' , (pages) ->
-        # ArticlesとPagesを比較していってPagesから差分だけ取ってくる
-        filterNewArticles Articles,pages, (filtered)->
-          if filtered.length > 0
-            console.log 'new article added' 
-          else
-            console.log 'no article added'
-          #マージ
-          Articles = Articles.concat filtered
-          #重複削除
-          Articles = _.uniq Articles,(obj)->
-            return obj.page.link or obj.page._id
-          #更新昇順
-          filtered = _.sortBy filtered, (obj)->
-            return Date.parse obj.page.pubDate
+        #更新昇順
+        filtered = _.sortBy pages, (obj)->
+          return Date.parse obj.page.pubDate
 
-          $('#NoFeedIsAdded').hide() unless Articles.length is 0
-          for article in filtered
-            appendArticle(article)
-          PageAndCommentEvent()
-          $('#NewArticleIsAdded').show().fadeIn(500) if filtered.length > 0
+        $('#NoFeedIsAdded').hide() unless pages.length is 0
+        for article in filtered
+          appendArticle(article)
+        PageAndCommentEvent()
+        $('#NewArticleIsAdded').show().fadeIn(500) if filtered.length > 0
 
       ## Request List
       $('#EditFeedButton').click (e)->
@@ -130,6 +118,7 @@ $ ->
       ## Receive Edit Feed List
       socket.on 'edit completed', ->
         $('#FeedListIsEditted').show()
+        $Articles.html('')
         console.log 'sync by feed_list editted'
         socket.emit 'sync stream', path
 
@@ -231,15 +220,6 @@ $ ->
     return false if path is ''
     return true
 
-  # 現在のArticlesとserverからemitされたpagesの差分を取得
-  filterNewArticles = (Articles,pages,callback)->
-    ids = _.map Articles, (article)->
-      return article.page._id
-    filtered =  _.filter pages, (article)->
-      return false if _.contains ids,article.page._id
-      return true
-    callback(filtered)
-
   # 記事の追加
   appendArticle = (article)-> 
     variables = 
@@ -260,13 +240,16 @@ $ ->
     ## Articlesのfeedの先頭よりpubDateが新しければprepend
     topPubDate  = $Articles.find('li:first').attr('pubDate')
     thisPubDate = Date.parse(variables.pubDate)
+    pubDateIsNewer = ( thisPubDate >= topPubDate)
+    noArticles   = (topPubDate is undefined)
 
     ## トップのタイトルと追加しようとしている記事のタイトルが一緒ならPrependしない
     topTitle    = $Articles.find('li:first').find('h4').text()
     thisTitle   = variables.title
+    topTitleIsDifferent = (topTitle isnt thisTitle)
 
     ## Prepend
-    if ( thisPubDate >= topPubDate) or (topPubDate is undefined) and (topTitle isnt thisTitle)
+    if (pubDateIsNewer and topTitleIsDifferent) or noArticles
       $Articles.prepend( ViewHelper.mediaHead(variables) + commentHTML + ViewHelper.mediaFoot()).hide().fadeIn(500)
 
 
