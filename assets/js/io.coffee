@@ -20,6 +20,7 @@ $ ->
   socket = io.connect()
   path   = (window.location.pathname).substr(1)
   first    = true 
+  Articles = []
 
   ###
   # Dom 
@@ -238,15 +239,14 @@ $ ->
     pubDateIsNewer = ( thisPubDate >= topPubDate)
     noArticles   = (topPubDate is undefined)
 
-    ## トップのタイトルと追加しようとしている記事のタイトルが一緒ならPrependしない
-    topTitle    = $Articles.find('li:first').find('h4').text()
-    thisTitle   = variables.title
-    topTitleIsDifferent = (topTitle isnt thisTitle)
+    ## 同名記事はPrependしない
+    thisTitle = variables.title
+    duplicate = thisTitle in Articles
 
     ## Prepend
-    if (pubDateIsNewer and topTitleIsDifferent) or noArticles
+    if (pubDateIsNewer and not duplicate) or noArticles
       $Articles.prepend( ViewHelper.mediaHead(variables) + commentHTML + ViewHelper.mediaFoot()).hide().fadeIn(500)
-
+      Articles.push thisTitle
 
 
 
