@@ -7,11 +7,16 @@
 $ ->
 
   ###
-  # Initialize
+  # Init Event
   ###
   $('.alert').hide()
   $('button.close').click (e)->
     e.currentTarget.parentElement.style.display = "none"
+
+  ###
+  # Page Global Variables
+  ###
+
   socket = io.connect()
   path   = (window.location.pathname).substr(1)
   first    = true 
@@ -156,30 +161,20 @@ $ ->
       ###
       PageAndCommentEvent = ->
 
-        ## Request Page Contents
-        $('.btn-toggle').click (e)->
-          $dom = $(this).parent()
-          if $(this).text() is 'Close'
-            $dom.find('p.desc').show()
-            $dom.find('p.contents').hide()
-            $(this).text('Read More')
-          else if $dom.find('p.contents').text() isnt ''
-            $dom.find('p.desc').hide()
-            $dom.find('p.contents').show()
-            $dom.find('.btn-toggle').text('Close')
-          else
-            socket.emit 'get page',
-              domid: $dom.attr('id')
-              url  : $dom.find('a').attr('href')
+        ## FancyBox
+        $(".fancy").fancybox
+          fitToView : false
+          width   : '70%'
+          height    : '100%'
+          autoSize  : true
+          closeClick  : true
+          openEffect  : 'none'
+          closeEffect : 'none'
 
-        ## Receive Page Contents
-        socket.on 'got page',(data)->
-          content = decodeURIComponent data.res.content
-          $dom = $(document).find("##{data.domid}")
-          $dom.find('p.desc').hide()
-          $dom.find('p.contents').show()
-          $dom.find('p.contents').html(content)
-          $dom.find('.btn-toggle').text('Close')
+        ## Read More
+        $('.read-more').click (e)->
+          $dom = $(this).parent()
+          $dom.find('a.fancy').click()
 
         ## Request Add Star
 

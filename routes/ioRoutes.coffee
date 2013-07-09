@@ -27,7 +27,6 @@ module.exports = exports = (app,io,socket) ->
   socket.on "edit feed_list",(data) -> FeedEvent.editFeedList      socket, data
 
   # Page Events
-  socket.on "get page",      (data) -> PageEvent.getContents       socket, data
   socket.on "add star",      (data) -> PageEvent.addStar           socket, data
   socket.on "delete star",   (data) -> PageEvent.deleteStar        socket, data
   socket.on "add comment",   (data) -> PageEvent.addComment        socket, io, data

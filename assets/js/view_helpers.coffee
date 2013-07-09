@@ -21,6 +21,8 @@ root.ViewHelper =
     return "
       <li class='media well' pubDate= '#{Date.parse obj.pubDate}'>
         <div class='media-body' id='#{obj.id}'>
+          <a href=#{obj.url} class='fancy fancybox.iframe'>
+          </a>
           <a href=#{obj.url}>
             <h4 class='media-heading'>#{obj.title}   
               <a href='#{obj.siteurl}''>
@@ -47,7 +49,7 @@ root.ViewHelper =
           </div>
           <input type='text' placeholder='Comment...' class='inputComment input-medium search-query'>
           <button  class='btn submitComment'><i class='icon-comment-alt'></i>  Comment</button>
-          <button class='btn btn-toggle'><i class='icon-hand-right'></i>  Read More</button>
+          <button class='btn btn-inverse btn-toggle read-more'><i class='icon-hand-right'></i>  Read More</button>
           <button class='btn btn-info'><i class='icon-star'></i>  Star</button>
         </div>
       </li>"
