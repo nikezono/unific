@@ -15,10 +15,15 @@ $ ->
   socket = io.connect()
   path   = (window.location.pathname).substr(1)
   Articles = []
-  first    = true
+  first    = true 
 
   ###
-  # Events
+  # Dom 
+  ###
+  $Articles = $('#Articles')
+
+  ###
+  # Events()
   ###
 
   ## Join Room(Stream)
@@ -67,8 +72,8 @@ $ ->
           $('#CandidatesModalWindow').find('#CandidatesList').html('')
           for candidate in response.candidates
             candidate.sitetitle = "#{candidate.sitename} - #{candidate.title or 'feed'}"
-            candCheckbox = "<li><input type='checkbox' siteurl=#{response.url} title= '#{candidate.sitetitle}' value='#{candidate.url}'>  #{candidate.sitetitle}</li>"
-            $('#CandidatesList').append candCheckbox
+            candidate.url       = response.siteurl
+            $('#CandidatesList').append ViewHelper.candCheckbox(candidate)
           $('#CandidatesModalWindow').modal() 
 
       ###
@@ -102,8 +107,31 @@ $ ->
           $('#NewArticleIsAdded').show().fadeIn(500) if filtered.length > 0
 
       ## Request List
+      $('#EditFeedButton').click (e)->
+        socket.emit 'get feed_list', path
 
       ## Receive List
+      socket.on 'got feed_list', (list)->
+        if list?
+          $('#EditFeedModalWindow').find('#FeedList').html('')
+          for feed in list
+            $('#FeedList').append ViewHelper.feedList(feed)
+          $('#EditFeedModalWindow').modal()
+
+      ## Request Edit Feed List
+      $('#ApplyEditFeedButton').click (e)->
+        urls = []
+        $('#EditFeedModalWindow').find('#FeedList').find(":checkbox:checked").each ->
+          urls.push $(this).attr('url')
+        socket.emit 'edit feed_list',
+          urls: urls
+          stream:path
+
+      ## Receive Edit Feed List
+      socket.on 'edit completed', ->
+        $('#FeedListIsEditted').show()
+        console.log 'sync by feed_list editted'
+        socket.emit 'sync stream', path
 
       ## Request Change Property
 
@@ -132,13 +160,6 @@ $ ->
         $('#NewFeedIsAdded').show()
         console.log 'sync'
         socket.emit 'sync stream', path
-
-
-      ## Receive Delete-Feed
-
-      ## Request Active-Feed
-
-      ## Request Inactive-Feed
 
       ###
       # Page Model Events
@@ -192,9 +213,10 @@ $ ->
         ## Receive Add Comment
         socket.on 'comment added', (data)->
           $dom = $(document).find("##{data.domid}")
-          $dom.find('.comments').append("<div class= 'well well-small'>#{data.comment}</div><br>")
-          num = Number($dom.find('.commentsLength').text())
-          $dom.find('.commentsLength').text(num+1)
+          $dom.find('.comments').html('')
+          for comment in data.comments
+            $dom.find('.comments').append("<blockquote>#{comment}</blockquote>")
+          $dom.find('.commentsLength').text(data.comments.length)
 
         ## Some Error has Received
         socket.on 'error', ->
@@ -203,10 +225,13 @@ $ ->
   ###
   # private methods
   ###
+
+  # 現在パスからStream内かTopPageか判定
   inStream = ->
     return false if path is ''
     return true
 
+  # 現在のArticlesとserverからemitされたpagesの差分を取得
   filterNewArticles = (Articles,pages,callback)->
     ids = _.map Articles, (article)->
       return article.page._id
@@ -215,57 +240,34 @@ $ ->
       return true
     callback(filtered)
 
+  # 記事の追加
   appendArticle = (article)-> 
-    title       = article.page.title
-    id          = article.page._id
-    comments    = article.page.comments
-    description = article.page.description
-    pubDate     = article.page.pubDate
-    url         = article.page.url
-    sitename    = article.feed.title
-    siteurl     = article.feed.site
+    variables = 
+      title       : article.page.title
+      id          : article.page._id
+      comments    : article.page.comments
+      description : article.page.description
+      pubDate     : article.page.pubDate
+      url         : article.page.url
+      sitename    : article.feed.title
+      siteurl     : article.feed.site
 
     ## Comment HTML
     commentHTML = ''
     for comment in article.page.comments
-      commentHTML += "
-        <div class= 'well well-small'>#{comment}</div>"
+      commentHTML += ViewHelper.comment(comment)
 
     ## Articlesのfeedの先頭よりpubDateが新しければprepend
-    topPubDate  = $('#Articles').find('li:first').attr('pubDate')
-    topTitle    = $('#Articles').find('li:first').find('h4').text()
-    thisPubDate = Date.parse(pubDate)
-    console.log "#{thisPubDate} >= #{topPubDate}"
-    if ( thisPubDate >= topPubDate) or (topPubDate is undefined) and (topTitle isnt title)
-      $('#Articles').prepend("
-      <li class='media well' pubDate= '#{Date.parse pubDate}'>
-        <div class='media-body' id='#{id}'>
-          <a href=#{url}>
-            <h4 class='media-heading'>#{title}   
-              <a href='#{siteurl}''>
-                 <small>#{sitename}</small>
-              </a>
-            </h4>
-          </a>
-          <i class='icon-pencil'> #{moment(article.page.pubDate).fromNow()}</i>
-          <i class='icon-comments-alt'>  Comments(<num class='commentsLength'>#{comments.length}</num>) </i>
-          <span class= 'starred'>
-            <i class='icon-star-empty'> starred</i>
-          </span>
-          <br><br>
-          <p class ='desc'>#{description}</p>
-          <p class='contents'></p>
-          <div class='comments'>
-          " + commentHTML + "
-          </div>
-          <input type='text' placeholder='Comment...' class='inputComment input-medium search-query'>
-          <button  class='btn submitComment'><i class='icon-comment-alt'></i>  Comment</button>
-          <button class='btn btn-toggle'><i class='icon-hand-right'></i>  Read More</button>
-          <button class='btn btn-info'><i class='icon-star'></i>  Star</button>
-        </div>
-      </li>").hide().fadeIn(500)
+    topPubDate  = $Articles.find('li:first').attr('pubDate')
+    thisPubDate = Date.parse(variables.pubDate)
 
+    ## トップのタイトルと追加しようとしている記事のタイトルが一緒ならPrependしない
+    topTitle    = $Articles.find('li:first').find('h4').text()
+    thisTitle   = variables.title
 
+    ## Prepend
+    if ( thisPubDate >= topPubDate) or (topPubDate is undefined) and (topTitle isnt thisTitle)
+      $Articles.prepend( ViewHelper.mediaHead(variables) + commentHTML + ViewHelper.mediaFoot()).hide().fadeIn(500)
 
 
 

@@ -18,15 +18,13 @@ module.exports = exports = (app,io,socket) ->
   socket.on "find feed",     (url)  -> HelperEvent.findFeed        socket, url
 
   # Stream Events
-  socket.on "get feed_list",        -> StreamEvent.getFeedList     socket
+  socket.on "get feed_list", (data) -> StreamEvent.getFeedList     socket, data
   socket.on "sync stream",   (data) -> StreamEvent.sync            socket, io, data
   socket.on "change stream", (data) -> StreamEvent.changeProperty  socket, io, data
 
   # Feed Events
   socket.on "add feed",      (data) -> FeedEvent.addFeed           socket, data
-  socket.on "delete feed",   (data) -> FeedEvent.deleteFeed        socket, data
-  socket.on "active feed",   (data) -> FeedEvent.activeFeed        socket, data
-  socket.on "inactive feed", (data) -> FeedEvent.inactiveFeed      socket, data
+  socket.on "edit feed_list",(data) -> FeedEvent.editFeedList      socket, data
 
   # Page Events
   socket.on "get page",      (data) -> PageEvent.getContents       socket, data

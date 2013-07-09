@@ -19,7 +19,7 @@ module.exports.FeedEvent = (app) ->
   addFeed:(socket,data) -> 
     streamname = decodeURIComponent data.stream
     Stream.findByTitle streamname, (err,stream)->
-      socket.emit 'error' if err
+      return socket.emit 'error' if err
       async.forEach data.urls, (param,cb)->
         Feed.findOneAndUpdate
           title : param.title
@@ -39,11 +39,22 @@ module.exports.FeedEvent = (app) ->
         socket.emit 'add-feed succeed'
 
 
-  deleteFeed:(socket,data) ->
-    console.log data
+  editFeedList:(socket,data) ->
+    streamname = decodeURIComponent data.stream
+    Stream.findByTitle streamname, (err,stream)->
+      return socket.emit 'error' if err
+      Feed.find stream:stream._id,{},{},(err,feeds)->
+        return socket.emit 'error' if err
+        async.forEach feeds, (feed,cb)->
+          if feed.url in data.urls
+            feed.alive = true
+            feed.save()
+          else
+            feed.alive = false
+            feed.save()
+          cb()
+        , ->
+          socket.emit 'edit completed'
 
-  activeFeed:(socket,data) ->
-    console.log data
 
-  inactiveFeed:(socket,data) ->
-    console.log data
+

@@ -67,8 +67,13 @@ module.exports.StreamEvent = (app) ->
   ###
   # socket.io events
   ###
-  getFeedList: (socket) ->
-    console.log socket
+  getFeedList: (socket,stream) ->
+    streamname = decodeURIComponent stream
+    Stream.findOne title:streamname,(err,stream)->
+      return socket.emit 'error' if err
+      Feed.find stream:stream._id,{},{},(err,feeds)->
+        return socket.emit 'error' if err or (feeds.length is 0)
+        socket.emit 'got feed_list', feeds
 
   sync : (socket,io,stream) ->
     streamname = decodeURIComponent stream
@@ -91,7 +96,10 @@ module.exports.StreamEvent = (app) ->
     Stream.findOne title:streamname,(err,stream)->
       return callback err,null if err
       # Feedの検索
-      Feed.find stream:stream._id,{},{},(err,feeds)->
+      Feed.find 
+        stream:stream._id
+        alive :true
+      ,{},{},(err,feeds)->
         feed_pages = []
         # 各ArticleのMerge
         async.forEach feeds,(feed,cb)->

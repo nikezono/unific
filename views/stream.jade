@@ -32,15 +32,15 @@ block otherStream
 block content
   //- Alert
 
-  .alert.alert-info#NewFeedIsAdded
+  .alert.alert-success#NewFeedIsAdded
     button.close &times;
     | New Feed is Added.
   .alert.alert-info#NewArticleIsAdded
     button.close &times;
     | New Article is Added.
-  .alert.alert-warning#AFeedIsDeleted
+  .alert.alert-success#FeedListIsEditted
     button.close &times;
-    | A Feed Is Unsubscribed.
+    | Feed List Is Editted.
   .alert.alert-error#SomethingWrong
     button.close &times;
     | Sorry! An unexpected error has occurred.
@@ -142,7 +142,7 @@ block utility
   #add_feed
     h4 Subscribe Feed
     input.span2.search-query#FindFeedInput(type='text',placeholder="input url...")
-    button.btn#FindFeedButton Find Feed
+    button.btn.btn-warning#FindFeedButton Find Feed
     i ex: ' http://news.google.com/news '
 
   //-
@@ -170,8 +170,22 @@ block utility
   //-
   #edit_feed_list
     h4 Edit Feed List
-    button.btn#EditFeedButton  Edit Feed
+    button.btn.btn-danger#EditFeedButton  Edit Feed
   hr
+
+  //-
+    Edit Feed Modal Window
+  //-
+  #EditFeedModalWindow.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+    .modal-header
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+      h3 Edit Feed List
+    .modal-body
+      ol#FeedList
+    .modal-footer
+      button.btn(data-dismiss='modal', aria-hidden='true') Close
+      button.btn.btn-primary(data-dismiss='modal', aria-hidden='true')#ApplyEditFeedButton Apply Changes
+
 
   //-
     Set Password

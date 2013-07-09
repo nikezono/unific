@@ -9,7 +9,10 @@ module.exports.PageEvent = (app) ->
   ###
   # dependency
   ###
+
+  # こいつ最高にいけてない
   ex = require 'extractcontent'
+  _  = require 'underscore'
 
   Page   = app.get("models").Page
 
@@ -35,9 +38,10 @@ module.exports.PageEvent = (app) ->
     Page.findOne _id:data.domid, (err,page)->
       return socket.emit 'error' if err
       page.comments.push data.comment
+      page.comments = _.uniq page.comments, (comment)->
+        return comment
       page.save()
       io.sockets.emit 'comment added',
         domid:data.domid
-        comment:data.comment
-        page:page
+        comments:page.comments
 
