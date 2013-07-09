@@ -11,7 +11,7 @@ root.ViewHelper =
 
   feedList    : (feed) ->
     "<li>
-      <input type='checkbox' url= '#{feed.url}' #{'checked' if feed.alive}>
+      <input type='checkbox' url= '#{feed.url}' #{'checked' if feed.alive is true}>
       #{feed.title}
       <small> #{feed.site} </small>
      </li>
