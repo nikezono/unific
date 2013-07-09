@@ -71,7 +71,7 @@ $ ->
           $('#CandidatesModalWindow').find('#CandidatesList').html('')
           for candidate in response.candidates
             candidate.sitetitle = "#{candidate.sitename} - #{candidate.title or 'feed'}"
-            candidate.url       = response.siteurl
+            candidate.url       = response.url
             $('#CandidatesList').append ViewHelper.candCheckbox(candidate)
           $('#CandidatesModalWindow').modal() 
 
