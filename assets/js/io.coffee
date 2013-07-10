@@ -77,7 +77,7 @@ $ ->
           $('#CandidatesModalWindow').find('#CandidatesList').html('')
           for candidate in response.candidates
             candidate.sitetitle = "#{candidate.sitename} - #{candidate.title or 'feed'}"
-            candidate.url       = response.url
+            candidate.siteurl       = response.url
             $('#CandidatesList').append ViewHelper.candCheckbox(candidate)
           $('#CandidatesModalWindow').modal() 
 
@@ -124,6 +124,7 @@ $ ->
       ## Receive Edit Feed List
       socket.on 'edit completed', ->
         $('#FeedListIsEditted').show()
+        Articles = []
         $Articles.html('')
         console.log 'sync by feed_list editted'
         socket.emit 'sync stream', path

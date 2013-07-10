@@ -6,7 +6,7 @@ root.ViewHelper =
 
   candCheckbox: (candidate)->
     "<li>
-      <input type='checkbox' siteurl=#{candidate.url} title= '#{candidate.sitetitle}' value='#{candidate.url}'>  #{candidate.sitetitle}
+      <input type='checkbox' siteurl=#{candidate.siteurl} title= '#{candidate.sitetitle}' value='#{candidate.url}'>  #{candidate.sitetitle}
     </li>"
 
   feedList    : (feed) ->

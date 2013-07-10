@@ -19,8 +19,7 @@
     "nib": "*",
     "st": "*",
     "direquire" : "*",
-    "parse-rss": "*",
-    "extractcontent" : "*"
+    "parse-rss": "*"
   },
   "devDependencies": {
     "coffee-script": "*",

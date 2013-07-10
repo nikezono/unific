@@ -10,8 +10,6 @@ module.exports.PageEvent = (app) ->
   # dependency
   ###
 
-  # こいつ最高にいけてない
-  ex = require 'extractcontent'
   _  = require 'underscore'
 
   Page   = app.get("models").Page
@@ -19,14 +17,6 @@ module.exports.PageEvent = (app) ->
   ###
   # socket.io events
   ###
-
-  getContents:(socket,data) ->
-    ex.extractFromUrl data.url, (error, result) ->
-      return socket.emit 'error' if error
-      result.content = encodeURIComponent result.content.replace(/\n/g,'<br>')
-      return socket.emit 'got page',
-        res:result
-        domid:data.domid
 
   addStar: (socket,data) ->
     console.log data
