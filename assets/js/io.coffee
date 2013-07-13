@@ -77,7 +77,7 @@ $ ->
           $('#CandidatesModalWindow').find('#CandidatesList').html('')
           for candidate in response.candidates
             candidate.sitetitle = "#{candidate.sitename} - #{candidate.title or 'feed'}"
-            candidate.siteurl       = response.url
+            candidate.siteurl   = response.url
             $('#CandidatesList').append ViewHelper.candCheckbox(candidate)
           $('#CandidatesModalWindow').modal() 
 
@@ -98,6 +98,7 @@ $ ->
         for article in filtered
           appendArticle(article)
         PageAndCommentEvent()
+        StarButtonEvent()
         $('#NewArticleIsAdded').show().fadeIn(500) if filtered.length > 0
 
       ## Request List
@@ -157,10 +158,43 @@ $ ->
         console.log 'sync'
         socket.emit 'sync stream', path
 
+
+
       ###
       # Page Model Events
-      # prependされるためPackage
+      # prependされるためjQueryEventはPackageにまとめる
       ###
+
+      ## Receive Add Star
+      socket.on 'star added', (data)->
+        $dom = $(document).find("##{data.domid}")
+        $dom.find('span.starred').html(ViewHelper.starredIcon(true))
+        $dom.find('span.starButton').html(ViewHelper.starredButton(true))
+        StarButtonEvent()
+
+      ## Receive Delete Star
+      socket.on 'star deleted', (data)->
+        $dom = $(document).find("##{data.domid}")
+        $dom.find('span.starred').html(ViewHelper.starredIcon(false))
+        $dom.find('span.starButton').html(ViewHelper.starredButton(false))
+        StarButtonEvent()
+
+      ## Receive Add Comment
+      socket.on 'comment added', (data)->
+        $dom = $(document).find("##{data.domid}")
+        $dom.find('.comments').html('')
+        for comment in data.comments
+          $dom.find('.comments').append("<blockquote>#{comment}</blockquote>")
+        $dom.find('.commentsLength').text(data.comments.length)
+
+      ## Some Error has Received
+      socket.on 'error', ->
+        $('#SomethingWrong').show()
+
+      ###
+      # PrependされるjQuery Events
+      ###
+
       PageAndCommentEvent = ->
 
         ## FancyBox
@@ -178,6 +212,19 @@ $ ->
           $dom = $(this).parent()
           $dom.find('a.fancy').click()
 
+        ## Request Add Comment
+        $('.submitComment').click (e)->
+          $dom = $(this).parent()
+          comment = $dom.find('.inputComment').val()
+          if comment?
+            socket.emit 'add comment',
+              domid: $dom.attr('id')
+              comment:comment
+              stream :path
+
+
+
+      StarButtonEvent = ->
         ## Request Add/Delete Star
         $('.starredButton').click (e)->
           $dom = $(this).parent().parent()
@@ -189,45 +236,6 @@ $ ->
             socket.emit 'delete star',
               domid: $dom.attr('id')
               stream:path
-
-        ## Receive Add Star
-        socket.on 'star added', (data)->
-          $dom = $(document).find("##{data.domid}")
-          $dom.find('span.starred').html(ViewHelper.starredIcon(true))
-          $dom.find('span.starButton').html(ViewHelper.starredButton(true))
-
-        ## Receive Delete Star
-        socket.on 'star deleted', (data)->
-          $dom = $(document).find("##{data.domid}")
-          $dom.find('span.starred').html(ViewHelper.starredIcon(false))
-          $dom.find('span.starButton').html(ViewHelper.starredButton(false))
-
-        ###
-        # Comment Model Events
-        # prependされるためpackage
-        ###
-
-        ## Request Add Comment
-        $('.submitComment').click (e)->
-          $dom = $(this).parent()
-          comment = $dom.find('.inputComment').val()
-          if comment?
-            socket.emit 'add comment',
-              domid: $dom.attr('id')
-              comment:comment
-              stream :path
-
-        ## Receive Add Comment
-        socket.on 'comment added', (data)->
-          $dom = $(document).find("##{data.domid}")
-          $dom.find('.comments').html('')
-          for comment in data.comments
-            $dom.find('.comments').append("<blockquote>#{comment}</blockquote>")
-          $dom.find('.commentsLength').text(data.comments.length)
-
-        ## Some Error has Received
-        socket.on 'error', ->
-          $('#SomethingWrong').show()
 
   ###
   # private methods
