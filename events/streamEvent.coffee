@@ -75,7 +75,7 @@ module.exports.StreamEvent = (app) ->
         return socket.emit 'error' if err or (feeds.length is 0)
         socket.emit 'got feed_list', feeds
 
-  sync : (socket,io,stream) ->
+  sync : (socket,stream) ->
     streamname = decodeURIComponent stream
     @findArticlesByStream streamname, (err,articles)->
       return socket.emit 'error' if err
@@ -126,15 +126,31 @@ module.exports.StreamEvent = (app) ->
           # uniqued
           uniqued = _.uniq delnulled,false,(obj)->
             return obj.page.link or obj.page.title or obj.page.description or obj.page.url
-          
-          # sorted(更新昇順)
-          sorted = _.sortBy(uniqued, (obj)->
-            return obj.page.pubDate.getTime())
 
-          # limited(降順50件)
-          limited = sorted.slice sorted.length-50 if sorted.length > 50
+          async.parallel [(cb)->
+            ## スター付きの記事を抽出
+            starred = _.filter uniqued, (obj)->
+              return obj.page.starred is true
+            cb(null,starred)
+          ,(cb)->
+            ## スター無しから更新昇順50件
 
-          return callback null, limited or sorted
+            unstarred = _.filter uniqued, (obj)->
+              return obj.page.starred is false
+
+            # sorted(更新昇順)
+            sorted = _.sortBy unstarred, (obj)->
+              return obj.page.pubDate.getTime()
+
+            # limited(昇順50件)
+            limited = sorted.slice sorted.length-50 if sorted.length > 50
+            cb(null,limited or sorted)
+          ],(err,results)->
+            merged = results[0].concat(results[1])
+            res  = _.sortBy merged, (obj)->
+              return obj.page.pubDate.getTime()
+
+            return callback null, res
 
 
 ###

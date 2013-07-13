@@ -178,9 +178,29 @@ $ ->
           $dom = $(this).parent()
           $dom.find('a.fancy').click()
 
-        ## Request Add Star
+        ## Request Add/Delete Star
+        $('.starredButton').click (e)->
+          $dom = $(this).parent().parent()
+          act  = $(this).attr('value')
+          if act is 'star'
+            socket.emit 'add star',
+              domid: $dom.attr('id')
+          else if act is 'unstar'
+            socket.emit 'delete star',
+              domid: $dom.attr('id')
+              stream:path
 
         ## Receive Add Star
+        socket.on 'star added', (data)->
+          $dom = $(document).find("##{data.domid}")
+          $dom.find('span.starred').html(ViewHelper.starredIcon(true))
+          $dom.find('span.starButton').html(ViewHelper.starredButton(true))
+
+        ## Receive Delete Star
+        socket.on 'star deleted', (data)->
+          $dom = $(document).find("##{data.domid}")
+          $dom.find('span.starred').html(ViewHelper.starredIcon(false))
+          $dom.find('span.starButton').html(ViewHelper.starredButton(false))
 
         ###
         # Comment Model Events
@@ -194,7 +214,8 @@ $ ->
           if comment?
             socket.emit 'add comment',
               domid: $dom.attr('id')
-              comment: comment
+              comment:comment
+              stream :path
 
         ## Receive Add Comment
         socket.on 'comment added', (data)->
@@ -228,6 +249,7 @@ $ ->
       url         : article.page.url
       sitename    : article.feed.title
       siteurl     : article.feed.site
+      starred     : article.page.starred
 
     ## Comment HTML
     commentHTML = ''
@@ -246,7 +268,7 @@ $ ->
 
     ## Prepend
     if (pubDateIsNewer and not duplicate) or noArticles
-      $Articles.prepend( ViewHelper.mediaHead(variables) + commentHTML + ViewHelper.mediaFoot()).hide().fadeIn(500)
+      $Articles.prepend( ViewHelper.mediaHead(variables) + commentHTML + ViewHelper.mediaFoot(variables)).hide().fadeIn(500)
       Articles.push thisTitle
 
 

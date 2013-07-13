@@ -5,7 +5,6 @@
   * title        [String]     ページのタイトル
   * description  [String]     見出し
   * url          [String]     元記事のurl
-  * readable     [String]     readabilityを通したあとのhtml/text
   * starred      [Bool]       スターが付けられているか
   * comments     [Array]   String Array
   * feed         [ObjectId]   親Feed
@@ -20,8 +19,7 @@ PageSchema = new Mongo.Schema
   title:       { type: String, index: yes }
   description: String
   url:         String
-  readable:    String
-  starred:     Boolean
+  starred:     { type: Boolean, default: false }
   pubDate:     Date
   comments:    [String]
   feed:        { type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }

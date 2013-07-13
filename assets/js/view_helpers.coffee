@@ -17,6 +17,18 @@ root.ViewHelper =
      </li>
     "
 
+  starredIcon  : (bool)->
+    if bool
+      return    "<i class='icon-star'> Starred</i>"
+    else
+      return    "<i class='icon-star-empty'> Unstarred</i>"
+
+  starredButton : (bool)->
+    if bool
+      starred = "<button class='btn btn-danger starredButton' value='unstar'><i class='icon-star-empty'></i>  Unstar</button>"
+    else
+      starred = "<button class='btn btn-info starredButton' value='star'><i class='icon-star'></i>  Star</button>"
+
   mediaHead: (obj)->
     return "
       <li class='media well' pubDate= '#{Date.parse obj.pubDate}'>
@@ -33,7 +45,7 @@ root.ViewHelper =
           <i class='icon-pencil'> #{moment(obj.pubDate).fromNow()}</i>
           <i class='icon-comments-alt'>  Comments(<num class='commentsLength'>#{obj.comments.length}</num>) </i>
           <span class= 'starred'>
-            <i class='icon-star-empty'> Unstarred</i>
+          " + @starredIcon(obj.starred) + "
           </span>
           <br><br>
           <p class ='desc'>#{obj.description}</p>
@@ -44,13 +56,16 @@ root.ViewHelper =
           return "
           <blockquote>#{body}</blockquote>
           "
-  mediaFoot: ->
+  mediaFoot: (obj)->
+
     return "
           </div>
           <input type='text' placeholder='Comment...' class='inputComment input-medium search-query'>
           <button  class='btn submitComment'><i class='icon-comment-alt'></i>  Comment</button>
           <button class='btn btn-inverse btn-toggle read-more'><i class='icon-hand-right'></i>  Read More</button>
-          <button class='btn btn-info'><i class='icon-star'></i>  Star</button>
+          <span class='starButton'>
+          " + @starredButton(obj.starred) + "
+          </span>
         </div>
       </li>"
 
