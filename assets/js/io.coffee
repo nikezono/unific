@@ -25,7 +25,42 @@ $ ->
   ###
   # Dom 
   ###
-  $Articles = $('#Articles')
+
+  # In Toppage
+  $GoButton        = $('#GoButton')
+  $GoInput         = $('#GoInput')
+
+  # Stream
+  $Articles        = $('#Articles')
+
+  ## Input
+  $FindFeedInput   = $('#FindFeedInput')
+
+  ## Button
+  $FindFeedButton  = $('#FindFeedButton')
+  $AddFeedButton   = $('#AddFeedButton')
+  $EditFeedButton  = $('#EditFeedButton')
+  $ApplyEditFeed   = $('#ApplyEditFeedButton')
+
+  ## Window
+  $CandidatesModal = $('#CandidatesModalWindow')
+  $EditFeedModal   = $('#EditFeedModalWindow')
+
+  ## List
+  $CandidatesList  = $('#CandidatesList')
+  $FeedList        = $('#FeedList')
+
+  ## Alert
+  $NoFeedIsAdded   = $('#NoFeedIsAdded')
+  $NoFeedIsFound   = $('#NoFeedIsFound')
+  $NoFeed          = $('#NoFeedIsAdded')
+  $NewArticle      = $('#NewArticleIsAdded')
+  $NewFeed         = $('#NewFeedIsAdded')
+  $EdittedList     = $('#FeedListIsEditted')
+  $SomethingWrong  = $('#SomethingWrong')
+
+
+
 
   ###
   # Events()
@@ -38,8 +73,8 @@ $ ->
     unless inStream()
 
       ## Request Find-Stream
-      $('#GoButton').click ->
-        window.location.href = $('#GoInput').val()
+      $GoButton.click ->
+        window.location.href = $GoInput.val()
 
     # if stream
     else
@@ -48,7 +83,7 @@ $ ->
       # first sync
       if first
         socket.emit 'sync stream', path
-        $('#NoFeedIsAdded').show() if $Articles.html() is ''
+        $NoFeedIsAdded.show() if $Articles.html() is ''
         first = false
 
       ###
@@ -65,21 +100,20 @@ $ ->
       ###
 
       ## Request Find-Feed
-      $('#FindFeedButton').click ->
-        $('#NoFeedIsFound').hide()
-        inputed = $('#FindFeedInput').val()
-        socket.emit 'find feed', inputed
+      $FindFeedButton.click ->
+        $NoFeedIsFound.hide()
+        socket.emit 'find feed', $FindFeedInput.val()
 
       ## Receive Find-Feed
       socket.on 'found feed', (error,response)->
-        $('#NoFeedIsFound').show() if error?
+        $NoFeedIsFound.show() if error?
         if response.candidates?
-          $('#CandidatesModalWindow').find('#CandidatesList').html('')
+          $CandidatesList.html('')
           for candidate in response.candidates
             candidate.sitetitle = "#{candidate.sitename} - #{candidate.title or 'feed'}"
             candidate.siteurl   = response.url
-            $('#CandidatesList').append ViewHelper.candCheckbox(candidate)
-          $('#CandidatesModalWindow').modal() 
+            $CandidatesList.append ViewHelper.candCheckbox(candidate)
+          $CandidatesModal.modal() 
 
       ###
       # Stream Model Events
@@ -94,29 +128,29 @@ $ ->
         filtered = _.sortBy pages, (obj)->
           return Date.parse obj.page.pubDate
 
-        $('#NoFeedIsAdded').hide() unless pages.length is 0
+        $NoFeed.hide() unless pages.length is 0
         for article in filtered
           appendArticle(article)
         PageAndCommentEvent()
         StarButtonEvent()
-        $('#NewArticleIsAdded').show().fadeIn(500) if filtered.length > 0
+        showFade $NewArticle if filtered.length > 0
 
       ## Request List
-      $('#EditFeedButton').click (e)->
+      $EditFeedButton.click (e)->
         socket.emit 'get feed_list', path
 
       ## Receive List
       socket.on 'got feed_list', (list)->
         if list?
-          $('#EditFeedModalWindow').find('#FeedList').html('')
+          $FeedList.html('')
           for feed in list
-            $('#FeedList').append ViewHelper.feedList(feed)
-          $('#EditFeedModalWindow').modal()
+            $FeedList.append ViewHelper.feedList(feed)
+          $EditFeedModal.modal()
 
       ## Request Edit Feed List
-      $('#ApplyEditFeedButton').click (e)->
+      $ApplyEditFeed.click (e)->
         urls = []
-        $('#EditFeedModalWindow').find('#FeedList').find(":checkbox:checked").each ->
+        $FeedList.find(":checkbox:checked").each ->
           urls.push $(this).attr('url')
         socket.emit 'edit feed_list',
           urls: urls
@@ -124,7 +158,7 @@ $ ->
 
       ## Receive Edit Feed List
       socket.on 'edit completed', ->
-        $('#FeedListIsEditted').show()
+        showFade $EdittedList
         Articles = []
         $Articles.html('')
         console.log 'sync by feed_list editted'
@@ -140,9 +174,9 @@ $ ->
       ###
 
       ## Request Add-Feed
-      $('#AddFeedButton').click (e)->
+      $AddFeedButton.click (e)->
         urls  = []
-        $('#CandidatesList').find(":checkbox:checked").each ->
+        $CandidatesList.find(":checkbox:checked").each ->
           urls.push
             url:$(this).val()
             title:$(this).attr('title')
@@ -154,7 +188,7 @@ $ ->
 
       ## Add Feed Succeed
       socket.on 'add-feed succeed',->
-        $('#NewFeedIsAdded').show()
+        showFade $NewFeed
         console.log 'sync'
         socket.emit 'sync stream', path
 
@@ -189,7 +223,7 @@ $ ->
 
       ## Some Error has Received
       socket.on 'error', ->
-        $('#SomethingWrong').show()
+        showFade $SomethingWrong
 
       ###
       # PrependされるjQuery Events
@@ -240,6 +274,11 @@ $ ->
   ###
   # private methods
   ###
+  showFade = ($dom)->
+    $dom.toggle('fade',500)
+    setTimeout ->
+      $dom.toggle('fade',500)
+    ,5000
 
   # 現在パスからStream内かTopPageか判定
   inStream = ->

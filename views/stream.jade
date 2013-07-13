@@ -3,6 +3,19 @@ extends layout
 //-
   notification
 //-
+block notification
+  .alert.alert-success#NewFeedIsAdded
+    button.close &times;
+    | New Feed.
+  .alert.alert-info#NewArticleIsAdded
+    button.close &times;
+    | New Article.
+  .alert.alert-success#FeedListIsEditted
+    button.close &times;
+    | Feed-List Editted.
+  .alert.alert-error#SomethingWrong
+    button.close &times;
+    | Error!.
 
 
 //-
@@ -10,24 +23,13 @@ extends layout
 //-
 
 block content
-  //- Alert
 
-  .alert.alert-success#NewFeedIsAdded
-    button.close &times;
-    | New Feed is Added.
-  .alert.alert-info#NewArticleIsAdded
-    button.close &times;
-    | New Article is Added.
-  .alert.alert-success#FeedListIsEditted
-    button.close &times;
-    | Feed List Is Editted.
-  .alert.alert-error#SomethingWrong
-    button.close &times;
-    | Sorry! An unexpected error has occurred.
-
+  //- When no feed or article
   .well#NoFeedIsAdded
     button.close &times;
     | No Feed Is Added.
+
+
 
   ul.media-list#Articles
 
