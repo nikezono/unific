@@ -16,7 +16,7 @@ module.exports.FeedEvent = (app) ->
   # socket.io events
   ###
 
-  addFeed:(socket,data) -> 
+  addFeed:(socket,io,data) -> 
     streamname = decodeURIComponent data.stream
     Stream.findByTitle streamname, (err,stream)->
       return socket.emit 'error' if err
@@ -36,10 +36,10 @@ module.exports.FeedEvent = (app) ->
           cb()
       ,->
         console.info "Stream:#{stream.title} add feed"
-        socket.emit 'add-feed succeed'
+        io.sockets.to(data.stream).emit 'add-feed succeed'
 
 
-  editFeedList:(socket,data) ->
+  editFeedList:(socket,io,data) ->
     streamname = decodeURIComponent data.stream
     Stream.findByTitle streamname, (err,stream)->
       return socket.emit 'error' if err
@@ -54,7 +54,7 @@ module.exports.FeedEvent = (app) ->
             feed.save()
           cb()
         , ->
-          socket.emit 'edit completed'
+          io.sockets.to(data.stream).emit 'edit completed'
 
 
 
