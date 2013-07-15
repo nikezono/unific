@@ -168,20 +168,23 @@ block utility
       button.btn(data-dismiss='modal', aria-hidden='true') Close
       button.btn.btn-primary(data-dismiss='modal', aria-hidden='true')#ApplyEditFeedButton Apply Changes
 
+  //-
+    Merge Stream
+  //-
 
   //-
     Set Password
   //-
 
-  #password
-    h4 Set Password
-    p when set Password, this stream is locked.
-    p Set no text 'new password', Authentification is canceled.
-    input.small.search-query#SetPasswordInputCurrentPassword(type='password',placeholder="current password...")
-    input.small.search-query#SetPasswordInputNewPassword(type='password',placeholder="new password...")
-    input.small.search-query#SetPasswordInputHint(type='text',placeholder="hint...")
-    button.btn#SetPasswordButton  Change Password
-  hr
+    #password
+      h4 Set Password
+      p when set Password, this stream is locked.
+      p Set no text 'new password', Authentification is canceled.
+      input.small.search-query#SetPasswordInputCurrentPassword(type='password',placeholder="current password...")
+      input.small.search-query#SetPasswordInputNewPassword(type='password',placeholder="new password...")
+      input.small.search-query#SetPasswordInputHint(type='text',placeholder="hint...")
+      button.btn#SetPasswordButton  Change Password
+    hr
 
   //-
     Change Background Image

@@ -125,15 +125,17 @@ $ ->
       # Sync Object Received
       socket.on 'sync completed' , (pages) ->
         #更新昇順
-        filtered = _.sortBy pages, (obj)->
+        sorted = _.sortBy pages, (obj)->
           return Date.parse obj.page.pubDate
 
         $NoFeed.hide() unless pages.length is 0
-        for article in filtered
-          appendArticle(article)
+        appended = false
+        for article in sorted
+          appended = appendArticle(article)
         PageAndCommentEvent()
         StarButtonEvent()
-        showFade $NewArticle if filtered.length > 0
+        showFade $NewArticle if appended
+        
 
       ## Request List
       $EditFeedButton.click (e)->
@@ -256,8 +258,6 @@ $ ->
               comment:comment
               stream :path
 
-
-
       StarButtonEvent = ->
         ## Request Add/Delete Star
         $('.starredButton').click (e)->
@@ -286,6 +286,7 @@ $ ->
     return true
 
   # 記事の追加
+  # @return [Boolean] 追加されたらtrue されなければfalse
   appendArticle = (article)-> 
     variables = 
       title       : article.page.title
@@ -317,7 +318,9 @@ $ ->
     if (pubDateIsNewer and not duplicate) or noArticles
       $Articles.prepend( ViewHelper.mediaHead(variables) + commentHTML + ViewHelper.mediaFoot(variables)).hide().fadeIn(500)
       Articles.push thisTitle
-
+      return true
+    else
+      return false
 
 
 
