@@ -1,1 +1,1 @@
-body{margin-top:10px;margin-left:0}body #notification{margin-top:120px}body #utility hr{border-bottom:none}
+body{margin-top:10px;margin-left:0}body #notification{position:fixed;width:11%;margin-top:120px}body #contents{position:relative;left:15%;width:60%}body #utility{position:fixed;left:75%;width:20%}body #utility hr{border-bottom:none}
