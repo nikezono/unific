@@ -35,7 +35,7 @@ module.exports.HelperEvent = (app) ->
     ).on("error", (exception) ->
       console.log "exception:" + exception
     ).on("close", ->
-      Stream.findOne {title:data.stream}, (err,stream)->
+      Stream.findOne title:streamname, (err,stream)->
         return socket.emit 'error' if err?
         stream.background = bgpath
         stream.save()
@@ -46,8 +46,8 @@ module.exports.HelperEvent = (app) ->
     writeStream.end()
 
   clearBg:(socket,io,data) ->
-    streamname = decodeURIComponent stream
-    Stream.findOne {title:streamname}, (err,stream)->
+    streamname = decodeURIComponent data.stream
+    Stream.findOne title:streamname, (err,stream)->
       return socket.emit 'error' if err?
       stream.background = undefined
       stream.save()

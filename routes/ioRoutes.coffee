@@ -22,9 +22,9 @@ module.exports = exports = (app,io,socket) ->
   # Stream Events
   socket.on "get feed_list", (data) -> StreamEvent.getFeedList     socket, data
   socket.on "sync stream",   (data) -> StreamEvent.sync            socket, data
-  socket.on "change desc", (data) -> StreamEvent.changeDesc      socket, io, data
+  socket.on "change desc",   (data) -> StreamEvent.changeDesc      socket, io, data
 
-  # Feed Event
+  # Feed Events
   socket.on "add feed",      (data) -> FeedEvent.addFeed           socket, io,data
   socket.on "edit feed_list",(data) -> FeedEvent.editFeedList      socket, io,data
 
