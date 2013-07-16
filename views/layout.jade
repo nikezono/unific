@@ -1,7 +1,10 @@
 doctype 5
 html
   head
-    title= title
+    if title != 'unific'
+      title= title + ' - unific'
+    else
+      title= 'unific'
 
     //-
       Atom/RSS Feed
