@@ -14,13 +14,24 @@ module.exports.HelperEvent = (app) ->
   path   = require "path"
 
   Stream = app.get('models').Stream
+  domain = app.get('domain')
+  port   = app.get('port')
 
   #@todo updateしないとutf-8以外のencodingのwebsiteを読み込めない
   findFeed:(socket,url) ->
-    finder url, (error,candidates)-> 
-      socket.emit 'found feed',error,
-        candidates:candidates
-        url: url
+    if url.match /^(http:\/\/|https:\/\/)/
+      finder url, (error,candidates)-> 
+        socket.emit 'found feed',error,
+          candidates:candidates
+          url: url
+    else
+      Stream.findByTitle url,(err,stream)->
+        return socket.emit 'found feed', 'not found stream' unless stream?
+        feedurl = "http://#{domain[0]}:#{port}/#{url}"
+        finder feedurl, (error,candidates)-> 
+          socket.emit 'found feed',error,
+            candidates:candidates
+            url: url
 
   uploadBg:(socket,io,data)->
     streamname = decodeURIComponent data.stream
