@@ -37,6 +37,7 @@ $ ->
   ## Input
   $FindFeedInput   = $('#FindFeedInput')
   $InputImage      = $('#ImageInput')
+  $InputDesc       = $('#Description')
 
   ## Button
   $FindFeedButton  = $('#FindFeedButton')
@@ -194,6 +195,16 @@ $ ->
         $Background.css
           backgroundImage:'none'
           opacity:'0.2'
+
+      ## Request Change Description
+      $InputDesc.keyup ->
+        socket.emit 'change desc',
+          text:$InputDesc.text()
+          stream:path
+
+      ## Receive Change Description
+      socket.on 'desc changed', (data)->
+        $InputDesc.text(data.text)
 
       ###
       # Feed Model Events

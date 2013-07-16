@@ -33,6 +33,7 @@ html
     !=js('view_helpers')
     !=js('io')
     !=css('main')
+
   body
     if background
       #AbsoluteBackground(style="background-image:url(#{background});opacity:0.2")
@@ -49,7 +50,7 @@ html
               if title != 'unific'
                 small= ' - unific'
             if description
-              p= description
+              p#Description(contenteditable=true)= description
 
           block content
         .span3#utility

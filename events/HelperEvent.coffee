@@ -23,6 +23,7 @@ module.exports.HelperEvent = (app) ->
         url: url
 
   uploadBg:(socket,io,data)->
+    streamname = decodeURIComponent data.stream
     
     writeFile = data.file
     writePath = path.resolve 'public','images',"background","#{data.name}"
@@ -45,7 +46,8 @@ module.exports.HelperEvent = (app) ->
     writeStream.end()
 
   clearBg:(socket,io,data) ->
-    Stream.findOne {title:data.stream}, (err,stream)->
+    streamname = decodeURIComponent stream
+    Stream.findOne {title:streamname}, (err,stream)->
       return socket.emit 'error' if err?
       stream.background = undefined
       stream.save()

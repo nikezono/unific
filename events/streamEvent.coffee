@@ -85,8 +85,15 @@ module.exports.StreamEvent = (app) ->
 
       
 
-  changeProperty: (socket,io,data) ->
-    console.log socket
+  changeDesc: (socket,io,data) ->
+    streamname = decodeURIComponent data.stream
+    Stream.findOne title:streamname, (err,stream)->
+      return socket.emit 'error' if err
+      stream.description = data.text
+      stream.save()
+      socket.broadcast.to(data.stream).emit 'desc changed',
+        text:data.text
+
 
   ###
   # Helper Methods
