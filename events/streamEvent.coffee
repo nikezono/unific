@@ -36,7 +36,7 @@ module.exports.StreamEvent = (app) ->
 
   rss  : (req,res,next) ->
     streamname = req.params.stream
-    @findArticlesByStream streamname, (err,articles)->
+    @findArticlesByStream streamname,'', (err,articles)->
       return socket.emit 'error' if err
       # lets create an rss feed 
       feed = new RSS
@@ -77,7 +77,7 @@ module.exports.StreamEvent = (app) ->
 
   sync : (socket,stream) ->
     streamname = decodeURIComponent stream
-    @findArticlesByStream streamname, (err,articles)->
+    @findArticlesByStream streamname,'', (err,articles)->
       return socket.emit 'error' if err
       # Sync Completed
       socket.emit 'sync completed',  articles
@@ -98,7 +98,13 @@ module.exports.StreamEvent = (app) ->
   ###
   # Helper Methods
   ###
-  findArticlesByStream: (streamname,callback)->
+
+  # ストリームからArticlesを再帰的に探してきてマージする
+  # 重い
+  # @streamname  [String] ストリームの名前
+  # @parent      [String](Optional) 親ストリームの名前（再帰）
+  # @callback    [Function](err,feeds)  マージされたフィード
+  findArticlesByStream: (streamname,parent,callback)->
     that = @
     Stream.findOne title:streamname,(err,stream)->
       return callback err,null if err
@@ -111,12 +117,17 @@ module.exports.StreamEvent = (app) ->
         # 各ArticleのMerge
         async.forEach feeds,(feed,cb)->
           urlObj = url.parse(feed.url)
+
           # 親子関係のときobjectを返す
           if urlObj.hostname in domain
             substreamname = urlObj.pathname.split('/')[1]
-            that.findArticlesByStream substreamname,(err,pages)->
-              feed_pages = feed_pages.concat pages
+            # ループ離脱（フォロー相手に自分が含まれていれば除く)
+            if substreamname is parent
               cb()
+            else
+              that.findArticlesByStream substreamname,streamname,(err,pages)->
+                feed_pages = feed_pages.concat pages
+                cb()
           else
             # 外部サイト
             parser feed.url, (articles)->
