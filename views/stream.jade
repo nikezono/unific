@@ -43,8 +43,9 @@ block utility
   //-
   #usage
     h4 Usage
-    p unific is Social Feed Reader.
-    button.btn.btn-success#UsageButton  View Usage
+    button.btn.btn-success#UsageButton
+      i.icon-book
+      |     View Usage
   hr
 
   //-
@@ -53,7 +54,9 @@ block utility
   #add_feed
     h4 Subscribe Feed
     input.span2.search-query#FindFeedInput(type='text',placeholder="input url...")
-    button.btn.btn-warning#FindFeedButton Find Feed
+    button.btn.btn-warning#FindFeedButton
+      i.icon-search
+      |     Find Feed
     br
     i ex: ' http://www3.nhk.or.jp/news '
 
@@ -69,7 +72,9 @@ block utility
   //-
   #edit_feed_list
     h4 Edit Feed List
-    button.btn.btn-danger#EditFeedButton  Edit Feed
+    button.btn.btn-danger#EditFeedButton
+      i.icon-list
+      |    Edit Feed
   hr
 
   //-
@@ -78,7 +83,9 @@ block utility
   #ChangeBackgroundImage
     h4 Change Background
     input#ImageInput(type='file',accept="image/*")
-    button.btn.btn-inverse#ClearBg Clear
+    button.btn.btn-inverse#ClearBg
+      i.icon-remove-circle
+      |     Clear
   hr
 
 block modals

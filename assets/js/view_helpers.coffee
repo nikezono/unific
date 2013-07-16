@@ -48,7 +48,7 @@ root.ViewHelper =
           " + @starredIcon(obj.starred) + "
           </span>
           <br><br>
-          <p class ='desc'>#{obj.description}</p>
+          <p class='desc'>#{obj.description}</p>
           <p class='contents'></p>
           <div class='comments'>
     "
@@ -57,7 +57,6 @@ root.ViewHelper =
           <blockquote>#{body}</blockquote>
           "
   mediaFoot: (obj)->
-
     return "
           </div>
           <input type='text' placeholder='Comment...' class='inputComment input-medium search-query'>
