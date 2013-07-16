@@ -1,7 +1,7 @@
 extends layout
 
 //-
-  notification
+  notifications
 //-
 block notification
   .alert.alert-success#NewFeedIsAdded
@@ -17,11 +17,9 @@ block notification
     button.close &times;
     | Error!.
 
-
 //-
   Contents
 //-
-
 block content
 
   //- When no feed or article
@@ -29,77 +27,8 @@ block content
     button.close &times;
     | No Feed Is Added.
 
-
-
+  //- Articles
   ul.media-list#Articles
-
-    //- #Sample(closed)
-      li.media.well
-        .contents
-
-          //- Image
-          a.pull-left(href='#')
-            img.media-object(src='/images/no_image.png')
-
-          //- Description
-          .media-body
-            a(href=url)
-              h4.media-heading title
-                a(href=siteurl)
-                  small   sitename
-            small
-              i.icon-comments-alt 
-                |  Comments(0) 
-              i.icon-star-empty 
-                |  Unstarred
-            p サマリー
-
-            //- Button
-            button.btn Read More
-            |    
-            button.btn.btn-info
-              i.icon-star
-              |   Star
-
-
-    //- #Sample(show)
-      li.media
-        .contents.well
-
-          //- Image
-          a.pull-left(href='#')
-            img.media-object.showed(src='/images/no_image.png')
-
-          //- Description
-          .media-body
-            h3.media-heading ニュース２
-            small
-              i.icon-comments-alt 
-                |  Comments(2) 
-              i.icon-star
-                |  Starred
-            p ...
-            p ...
-            p ...
-            p ...
-
-            //- Comments
-            .well.well-small コメント1
-            .well.well-small コメント2
-            input.input-large.search-query#CommentInput(type='text',placeholder="Comment")
-            |  
-            button.btn.btn-info#SubmitComment Submit
-            br
-            br
-
-            //- Button
-            button.btn Close
-            |    
-            button.btn.btn-inverse
-              i.icon-star-empty
-              |   Unstar
-
-
 
 //-
   Control Panel
@@ -128,19 +57,6 @@ block utility
     br
     i ex: ' http://news.google.com/news '
 
-  //-
-    Add Feed Modal Window
-  //-
-  #CandidatesModalWindow.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-    .modal-header
-      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-      h3 SubScribe Feeds
-    .modal-body
-      ol#CandidatesList
-    .modal-footer
-      button.btn(data-dismiss='modal', aria-hidden='true') Close
-      button.btn.btn-primary(data-dismiss='modal', aria-hidden='true')#AddFeedButton Subscribe
-
   //- No Feeds
   .alert.alert-warning#NoFeedIsFound
     button.close(type='button') &times;
@@ -157,6 +73,17 @@ block utility
   hr
 
   //-
+    Change Background Image
+  //-
+  #ChangeBackgroundImage
+    h4 Change Background
+    input#ImageInput(type='file',accept="image/*")
+    button.btn.btn-inverse#ClearBg Clear
+  hr
+
+block modals
+
+  //-
     Edit Feed Modal Window
   //-
   #EditFeedModalWindow.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
@@ -170,23 +97,14 @@ block utility
       button.btn.btn-primary(data-dismiss='modal', aria-hidden='true')#ApplyEditFeedButton Apply Changes
 
   //-
-    Merge Stream
+    Add Feed Modal Window
   //-
-
-  //-
-    Set Password
-  //-
-
-    #password
-      h4 Set Password
-      p when set Password, this stream is locked.
-      p Set no text 'new password', Authentification is canceled.
-      input.small.search-query#SetPasswordInputCurrentPassword(type='password',placeholder="current password...")
-      input.small.search-query#SetPasswordInputNewPassword(type='password',placeholder="new password...")
-      input.small.search-query#SetPasswordInputHint(type='text',placeholder="hint...")
-      button.btn#SetPasswordButton  Change Password
-    hr
-
-  //-
-    Change Background Image
-  //-
+  #CandidatesModalWindow.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+    .modal-header
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+      h3 SubScribe Feeds
+    .modal-body
+      ol#CandidatesList
+    .modal-footer
+      button.btn(data-dismiss='modal', aria-hidden='true') Close
+      button.btn.btn-primary(data-dismiss='modal', aria-hidden='true')#AddFeedButton Subscribe

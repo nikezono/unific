@@ -27,7 +27,7 @@ module.exports.StreamEvent = (app) ->
     Stream.findByTitle title,(err,stream)->
       if stream?
         return render(res,stream)
-      else 
+      else
         Stream.create 
           title:title
           description:'description (click to edit)'
@@ -157,8 +157,10 @@ module.exports.StreamEvent = (app) ->
 # Private Methods
 ###
 render = (res,stream)->
+  console.log stream.background
   res.render 'stream',
     title: stream.title
     description: stream.description
+    background:stream.background
     feeds: stream.feeds
     rss  : "/#{stream.title}/rss"

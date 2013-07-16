@@ -5,6 +5,7 @@
   * title [String] タイトル
   * description [String] ページ上部の説明
   * feeds [ObjectId] ObjectIdのArray
+  * background [String] Background_Imageのパス(通常は,/public/images/title.filetype)
   * password [String] BasicAuthのパスワード
 
 ###
@@ -14,6 +15,7 @@ Mongo = require 'mongoose'
 StreamSchema = new Mongo.Schema
   title:       { type: String, unique: yes ,index: yes }
   description: String
+  background:  String
   feeds:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }]
 
 # find-by-name

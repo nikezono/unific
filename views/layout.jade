@@ -33,9 +33,11 @@ html
     !=js('view_helpers')
     !=js('io')
     !=css('main')
-
-
   body
+    if background
+      #AbsoluteBackground(style="background-image:url(#{background});opacity:0.2")
+    else
+      #AbsoluteBackground
     .container
       .row
         .span2#notification
@@ -52,3 +54,5 @@ html
           block content
         .span3#utility
           block utility
+
+        block modals

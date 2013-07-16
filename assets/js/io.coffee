@@ -32,15 +32,18 @@ $ ->
 
   # Stream
   $Articles        = $('#Articles')
+  $Background      = $('#AbsoluteBackground')
 
   ## Input
   $FindFeedInput   = $('#FindFeedInput')
+  $InputImage      = $('#ImageInput')
 
   ## Button
   $FindFeedButton  = $('#FindFeedButton')
   $AddFeedButton   = $('#AddFeedButton')
   $EditFeedButton  = $('#EditFeedButton')
   $ApplyEditFeed   = $('#ApplyEditFeedButton')
+  $ClearBackground = $('#ClearBg') 
 
   ## Window
   $CandidatesModal = $('#CandidatesModalWindow')
@@ -58,8 +61,6 @@ $ ->
   $NewFeed         = $('#NewFeedIsAdded')
   $EdittedList     = $('#FeedListIsEditted')
   $SomethingWrong  = $('#SomethingWrong')
-
-
 
 
   ###
@@ -166,10 +167,33 @@ $ ->
         console.log 'sync by feed_list editted'
         socket.emit 'sync stream', path
 
-      ## Request Change Property
+      ## Request Change Background
+      $InputImage.change (e)->
+        file = event.target.files[0]
+        fileReader = new FileReader()
+        upload file, (binary)->
+          socket.emit "upload bg", 
+            file : binary
+            name : file.name
+            stream : path
 
-      ## Receive Change Property
+      ## Receive Change Background
+      socket.on 'bg uploaded', (path)->
+        bgpath = "url(#{path})" ? "none"
+        $Background.css
+          backgroundImage:bgpath
+          opacity:'0.2'
 
+      ## Request Clear Background
+      $ClearBackground.click (e)->
+        socket.emit 'clear bg',
+          stream: path
+
+      ## Receive Clear Background
+      socket.on 'bg cleared',->
+        $Background.css
+          backgroundImage:'none'
+          opacity:'0.2'
 
       ###
       # Feed Model Events
@@ -284,6 +308,14 @@ $ ->
   inStream = ->
     return false if path is ''
     return true
+
+  # Upload
+  upload = (file,callback) ->
+    fileReader = new FileReader()
+    data = {}
+    fileReader.readAsBinaryString file
+    fileReader.onload = (event) ->
+      callback event.target.result
 
   # 記事の追加
   # @return [Boolean] 追加されたらtrue されなければfalse

@@ -16,6 +16,8 @@ module.exports = exports = (app,io,socket) ->
 
   # Helper Events
   socket.on "find feed",     (url)  -> HelperEvent.findFeed        socket, url
+  socket.on "upload bg",     (data) -> HelperEvent.uploadBg        socket, io, data
+  socket.on "clear bg",      (data) -> HelperEvent.clearBg         socket, io, data
 
   # Stream Events
   socket.on "get feed_list", (data) -> StreamEvent.getFeedList     socket, data
