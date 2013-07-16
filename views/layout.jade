@@ -19,7 +19,7 @@ html
     script(src='/lib/js/jquery-ui.min.js')
     script(src='/lib/js/bootstrap.min.js')
     script(src='/lib/js/moment.min.js')
-    script(src='/lib/js/chardin.min.js')
+    script(src='/lib/js/chardinjs.min.js')
 
     //- FancyBox
     script(src='/lib/js/jquery.fancybox.pack.js')
@@ -29,7 +29,7 @@ html
     link(rel='stylesheet', href='/lib/css/bootplus.min.css')
     link(rel='stylesheet', href='/lib/css/bootplus-responsive.min.css')
     link(rel='stylesheet', href='/lib/css/font-awesome.min.css')    
-    link(rel='stylesheet', href='/lib/css/chardin.css')    
+    link(rel='stylesheet', href='/lib/css/chardinjs.css')    
 
     //- Include User Scripts/Stylesheets
     !=js('view_helpers')
@@ -52,7 +52,7 @@ html
               if title != 'unific'
                 small= ' - unific'
             if description
-              p#Description(contenteditable=true)= description
+              p#Description(data-intro='説明文を変更できます。',data-position='left',contenteditable=true)= description
 
           block content
         .span3#utility

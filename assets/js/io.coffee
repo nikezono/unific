@@ -45,6 +45,7 @@ $ ->
   $EditFeedButton  = $('#EditFeedButton')
   $ApplyEditFeed   = $('#ApplyEditFeedButton')
   $ClearBackground = $('#ClearBg') 
+  $UsageButton     = $('#UsageButton')
 
   ## Window
   $CandidatesModal = $('#CandidatesModalWindow')
@@ -101,6 +102,14 @@ $ ->
       # Helper Events
       ###
 
+      ## Usage Button
+      $UsageButton.click ->
+        $Articles.css
+          zIndex:10
+        $('body').chardinJs('start')
+      $('body').click ->
+        $('body :not(#UsageButton)').chardinJs('stop')
+    
       ## Request Find-Feed
       $FindFeedButton.click ->
         $NoFeedIsFound.hide()
