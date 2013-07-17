@@ -9,7 +9,8 @@ html
     //-
       Atom/RSS Feed
     //-
-    link(rel="alternate",type="application/rss+xml",href="#{rss}")
+    if rss
+      link(rel="alternate",type="application/rss+xml",href="#{rss}")
 
     //-
        Include Library (Primaly)

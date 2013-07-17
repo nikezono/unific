@@ -6,7 +6,6 @@
 
 module.exports.FeedEvent = (app) ->
 
-  combiner = require('combine-rss').combiner()  
   async    = require 'async'
 
   Stream = app.get("models").Stream
