@@ -189,6 +189,7 @@ $ ->
 
       ## Receive Change Background
       socket.on 'bg uploaded', (path)->
+        console.log path
         bgpath = "url(#{path})" ? "none"
         $Background.css
           backgroundImage:bgpath
