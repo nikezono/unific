@@ -16,8 +16,6 @@ app = express()
 
 # all environments
 connect =
-  assets: (require 'connect-assets')
-    buildDir: 'public'
   static: (require 'st')
     url: '/'
     path: path.resolve 'public'
@@ -33,7 +31,7 @@ app.configure ->
 
   # env
   app.set 'env', process.env.NODE_ENV || 'development'
-  app.set 'port', process.env.PORT or 3000
+  app.set 'port', process.env.PORT || 3000
   app.set 'domain', ['localhost','unific.net','unific.nikezono.net','net45-dhcp160.sfc.keio.ac.jp']
 
   # views
@@ -51,8 +49,7 @@ app.configure ->
   app.use express.bodyParser()
   app.use express.methodOverride()
 
-  # assets
-  app.use connect.assets
+  # static
   app.use connect.static
 
   # router
