@@ -36,6 +36,7 @@ root.ViewHelper =
           <a href=#{obj.url} class='fancy fancybox.iframe'></a>
           <a href=#{obj.url}>
             <h4 class='media-heading'>
+              <img src='#{obj.favicon}'\>
               #{obj.title}   
               <a href='#{obj.siteurl}'>
                 <small>
