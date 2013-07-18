@@ -2,4 +2,8 @@
 .DS_Store
 node_modules
 .nodectl.run
-public/images/background/*
+
+public/images/background/*.png
+public/images/background/*.jpeg
+public/images/background/*.gif
+public/images/background/*.jpg
