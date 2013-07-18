@@ -33,12 +33,14 @@ root.ViewHelper =
     return "
       <li class='media well' pubDate= '#{Date.parse obj.pubDate}'>
         <div class='media-body' id='#{obj.id}'>
-          <a href=#{obj.url} class='fancy fancybox.iframe'>
-          </a>
+          <a href=#{obj.url} class='fancy fancybox.iframe'></a>
           <a href=#{obj.url}>
-            <h4 class='media-heading'>#{obj.title}   
-              <a href='#{obj.siteurl}''>
-                 <small>#{obj.sitename}</small>
+            <h4 class='media-heading'>
+              #{obj.title}   
+              <a href='#{obj.siteurl}'>
+                <small>
+                  #{obj.sitename}
+                </small>
               </a>
             </h4>
           </a>

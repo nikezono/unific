@@ -11,7 +11,7 @@
     "socket.io":"*",
     "express": "*",
     "coffee-script": "*",
-    "jade": "*",
+    "jade": "0.32",
     "connect-asset": "*",
     "connect-assets": "*",
     "mongoose": "*",
