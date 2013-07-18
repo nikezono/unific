@@ -12,8 +12,6 @@
     "express": "*",
     "coffee-script": "*",
     "jade": "0.32",
-    "connect-asset": "*",
-    "connect-assets": "*",
     "mongoose": "*",
     "stylus": "*",
     "nib": "*",
