@@ -35,9 +35,6 @@ html
     link(rel='stylesheet', href='/lib/css/font-awesome.min.css')
     link(rel='stylesheet', href='/lib/css/chardinjs.css')
 
-    //- Include User Scripts/Stylesheets
-    script(src='/js/view_helpers.js')
-    script(src='/js/io.js')
     link(rel='stylesheet', href='/css/main.css')
 
   body
@@ -63,3 +60,23 @@ html
           block utility
 
         block modals
+
+  //- Include User Scripts
+
+  //- Variables
+  script(src='/js/globalObject.js')
+
+  //- Helpers
+  script(src='/js/viewHelper.js')
+  script(src='/js/domHelper.js')
+
+  //- Events
+  script(src='/js/domEvent.js')
+  script(src='/js/homeEvent.js')
+  script(src='/js/streamEvent.js')
+  script(src='/js/feedEvent.js')
+  script(src='/js/pageEvent.js')
+
+  //- Main
+  script(src='/js/routes.js')
+  script(src='/js/main.js')
