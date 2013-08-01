@@ -65,6 +65,12 @@ else
   console.info "mongoose connect:unific-dev"
   mongoose.connect "mongodb://localhost/unific-dev"
 
+# Batch Processing
+# 5分おきにRSSフィードを全件探索
+updater = (app.get 'helper').updateStream(app)
+setInterval ->
+  updater.update()
+,1000*60*5
 
 app.configure "development", ->
   app.use express.errorHandler()

@@ -57,18 +57,12 @@ appendArticle = (article)->
   for comment in article.page.comments
     commentHTML += ViewHelper.comment(comment)
 
-  ## Articlesのfeedの先頭よりpubDateが新しければprepend
-  topPubDate     = $Articles.find('li:first').attr('pubDate')
-  thisPubDate    = Date.parse(variables.pubDate)
-  pubDateIsNewer = ( thisPubDate >= topPubDate)
-  noArticles     = (topPubDate is undefined)
-
   ## 同名記事はPrependしない
   thisTitle      = variables.title
   duplicate      = thisTitle in Articles
 
-  ## Prepend
-  if (pubDateIsNewer and not duplicate) or noArticles
+  ## 記事が存在しないか、重複していなければ、Prepend
+  if not latestPubDate()? or not duplicate
     $Articles.prepend( ViewHelper.mediaHead(variables) + commentHTML + ViewHelper.mediaFoot(variables)).hide().fadeIn(500)
     $dom = $Articles.find("##{variables.id}")
     router.attachDomEvent $dom

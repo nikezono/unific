@@ -16,6 +16,7 @@ StreamSchema = new Mongo.Schema
   title:       { type: String, unique: yes ,index: yes }
   description: String
   background:  String
+  articles :   Mongo.Schema.Types.Mixed
   feeds:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }]
 
 # find-by-name

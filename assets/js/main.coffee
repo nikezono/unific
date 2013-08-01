@@ -36,7 +36,9 @@ $ ->
 
     # 初回読み込み
     if first
-      socket.emit 'sync stream', path
+      socket.emit 'sync stream',
+        stream:path
+        latest:latestPubDate()
       $NoFeedIsAdded.show() if $Articles.html() is ''
       first = false
     
@@ -46,6 +48,8 @@ $ ->
     ###
     setInterval ->
       console.log 'sync by 1minutes'
-      socket.emit 'sync stream',path
+      socket.emit 'sync stream',
+        stream:path
+        latest:latestPubDate()
     ,1000*60
 

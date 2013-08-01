@@ -7,7 +7,6 @@
 module.exports.StreamEvent = (app) ->
 
   async  = require 'async'
-  parser = require 'parse-rss'
   RSS    = require 'rss'
   _      = require 'underscore'
   url    = require 'url'
@@ -36,7 +35,7 @@ module.exports.StreamEvent = (app) ->
 
   rss  : (req,res,next) ->
     streamname = req.params.stream
-    @findArticlesByStream streamname,'', (err,articles)->
+    @getDiff streamname,data.latest, (err,articles)->
       return socket.emit 'error' if err
       # lets create an rss feed 
       feed = new RSS
@@ -75,9 +74,10 @@ module.exports.StreamEvent = (app) ->
         return socket.emit 'error' if err or (feeds.length is 0)
         socket.emit 'got feed_list', feeds
 
-  sync : (socket,stream) ->
-    streamname = decodeURIComponent stream
-    @findArticlesByStream streamname,'', (err,articles)->
+  sync : (socket,data) ->
+    console.info "socket #{socket.id} request sync. stream:#{data.stream} latest:#{data.latest}"
+    streamname = decodeURIComponent data.stream
+    @getDiff streamname,data.latest, (err,articles)->
       return socket.emit 'error' if err
       # Sync Completed
       socket.emit 'sync completed',  articles
@@ -99,83 +99,23 @@ module.exports.StreamEvent = (app) ->
   # Helper Methods
   ###
 
-  # ストリームからArticlesを再帰的に探してきてマージする
-  # 重い
+  # ストリームから最新記事Objectを取得し、差分を返却する
   # @streamname  [String] ストリームの名前
-  # @parent      [String](Optional) 親ストリームの名前（再帰）
-  # @callback    [Function](err,feeds)  マージされたフィード
-  findArticlesByStream: (streamname,parent,callback)->
-    that = @
+  # @latest      [Number] clientの最新記事のpubDate(Unix Time)
+  # @callback    [Function](err,feeds) 差分
+  getDiff: (streamname,latest,callback) ->
     Stream.findOne title:streamname,(err,stream)->
-      return callback err,null if err
-      # Feedの検索
-      Feed.find 
-        stream:stream._id
-        alive :true
-      ,{},{},(err,feeds)->
-        feed_pages = []
-        # 各ArticleのMerge
-        async.forEach feeds,(feed,cb)->
-          urlObj = url.parse(feed.url)
-
-          # 親子関係のときobjectを返す
-          if urlObj.hostname in domain
-            substreamname = urlObj.pathname.split('/')[1]
-            # ループ離脱（フォロー相手に自分が含まれていれば除く)
-            if substreamname is parent
-              cb()
-            else
-              that.findArticlesByStream substreamname,streamname,(err,pages)->
-                feed_pages = feed_pages.concat pages
-                cb()
-          else
-            # 外部サイト
-            parser feed.url, (articles)->
-              Page.findAndUpdateByArticles articles,feed,(pages)->
-                return callback err,null if err
-                feed_pages = feed_pages.concat pages
-                cb()
-        ,->
-          #ヌル記事の削除
-          delnulled = _.filter feed_pages,(obj)->
-            return false unless obj.page?
-            return true
-
-          # uniqued
-          uniqued = _.uniq delnulled,false,(obj)->
-            return obj.page.link or obj.page.title or obj.page.description or obj.page.url
-
-          async.parallel [(cb)->
-            ## スター付きの記事を抽出
-            starred = _.filter uniqued, (obj)->
-              return obj.page.starred is true
-            cb(null,starred)
-          ,(cb)->
-            ## スター無しから更新昇順50件
-
-            unstarred = _.filter uniqued, (obj)->
-              return obj.page.starred is false
-
-            # sorted(更新昇順)
-            sorted = _.sortBy unstarred, (obj)->
-              return obj.page.pubDate.getTime()
-
-            # limited(昇順50件)
-            limited = sorted.slice sorted.length-50 if sorted.length > 50
-            cb(null,limited or sorted)
-          ],(err,results)->
-            merged = results[0].concat(results[1])
-            res  = _.sortBy merged, (obj)->
-              return obj.page.pubDate.getTime()
-
-            return callback null, res
-
+      return callback err,null if err?
+      if not latest?
+        return callback null,stream.articles
+      articles = _.filter stream.articles,(article)->
+        return article.pubDate > latest
+      callback null,articles
 
 ###
 # Private Methods
 ###
 render = (res,stream)->
-  console.log stream.background
   res.render 'stream',
     title: stream.title
     description: stream.description
