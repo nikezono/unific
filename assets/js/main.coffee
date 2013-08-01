@@ -44,7 +44,7 @@ $ ->
     
     ###
     # SetInterval Sync
-    # Now Setting: 1 minutes
+    # Now Setting: 5 minutes
     ###
     setInterval ->
       console.log 'sync by 1minutes'
