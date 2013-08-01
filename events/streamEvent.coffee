@@ -35,7 +35,7 @@ module.exports.StreamEvent = (app) ->
 
   rss  : (req,res,next) ->
     streamname = req.params.stream
-    @getDiff streamname,data.latest, (err,articles)->
+    @getDiff streamname,undefined, (err,articles)->
       return socket.emit 'error' if err
       # lets create an rss feed 
       feed = new RSS

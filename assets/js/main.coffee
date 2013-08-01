@@ -51,5 +51,5 @@ $ ->
       socket.emit 'sync stream',
         stream:path
         latest:latestPubDate()
-    ,1000*60
+    ,1000*60*5
 
