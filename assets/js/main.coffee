@@ -28,10 +28,11 @@ $ ->
   ###
 
   socket = io.connect()
+  root.router = routes(socket)
   socket.on "connect", ->
 
     socket.emit "connect stream", path unless _.isEmpty path
-    routes(socket).attachSingleEvent()
+    router.attachSingleEvent()
 
     # 初回読み込み
     if first

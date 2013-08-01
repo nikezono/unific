@@ -1,9 +1,10 @@
 ###
-#
-# ioRoutes.coffee
-# socket.ioのイベントハンドラを定義する
-# PrependされるArticleのDomにbindされるイベント（コメント,Star,Read More...)は、
-# GlobalObject.coffee内で定義し、prependされるたび呼ばれる
+
+  ioRoutes.coffee
+   socket.ioのイベントハンドラを定義する
+   PrependされるArticleのDomにbindされるイベント（コメント,Star,Read More...)は、
+   prependされるたび呼ばれる
+
 ###
 
 root = exports ? this
@@ -21,7 +22,7 @@ root.routes = (socket) ->
     $FindFeedButton.click                  -> StreamEvent.requestFindFeed socket
     socket.on 'found feed', (err,response) -> StreamEvent.receivedFoundFeed err,response
 
-    socket.on 'sync completed',    (pages) -> StreamEvent.syncArticles pages,socket
+    socket.on 'sync completed',    (pages) -> StreamEvent.syncArticles pages
    
     ### DomEvents ###
     $UsageButton.click                     -> DomEvent.pushedUsage()
@@ -53,7 +54,6 @@ root.routes = (socket) ->
 
   ### PageEvent(jQuery) ###
   attachDomEvent:                   ($dom) ->
-    $dom.unbind()
     configureFancyBox $dom
     $dom.find('.read-more').click          -> PageEvent.requestReadMore $dom,socket
     $dom.find('.submitComment').click      -> PageEvent.requestSubmitComment $dom,socket

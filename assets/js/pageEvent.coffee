@@ -12,13 +12,13 @@ root.PageEvent =
     $dom = $(document).find("##{data.domid}")
     $dom.find('span.starred').html(ViewHelper.starredIcon(true))
     $dom.find('span.starButton').html(ViewHelper.starredButton(true))
-    routes(socket).attachDomEvent($dom)
+    router.attachDomEvent($dom)
 
   receivedDeleteStar : (data,socket) ->
     $dom = $(document).find("##{data.domid}")
     $dom.find('span.starred').html(ViewHelper.starredIcon(false))
     $dom.find('span.starButton').html(ViewHelper.starredButton(false))
-    routes(socket).attachDomEvent($dom)
+    router.attachDomEvent($dom)
 
   receivedAddComment : (data) ->
     $dom = $(document).find("##{data.domid}")
