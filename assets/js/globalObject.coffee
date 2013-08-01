@@ -14,11 +14,9 @@ root.Articles = []    # 全Articlesを格納したArray
 ###
 
 root.showFade = ($dom)->
-  $dom.toggle('fade',500)
-  setTimeout ->
-    $dom.toggle('fade',500)
-  ,5000
-
+  $dom.stop(true,true)
+  $dom.toggle('fade',500).delay(3000).toggle('fade',500)
+  
 # Configure FancyBox 
 
 root.configureFancyBox = ($dom)->

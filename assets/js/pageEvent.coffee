@@ -39,7 +39,6 @@ root.PageEvent =
         stream :path
 
   requestChangeStar :($dom,socket)->
-    console.log 'change'
     act  = $dom.find('button.starredButton').attr('value')
     if act is 'star'
       socket.emit 'add star',
