@@ -22,14 +22,20 @@ module.exports.updateStream = (app) ->
   update : ->
     that = @
     console.info "Batch Processing Start"
-    Stream.find {}, (err,streams) ->
-      console.error if err?
-      async.forEach streams, (stream,cb)->
-        that.findArticlesByStream stream,'',(err,articles)->
-          return console.error err if err?
-          stream.articles = articles
-          stream.markModified('articles')
-          stream.save()
+    try
+      Stream.find {}, (err,streams) ->
+        console.error if err?
+        async.forEach streams, (stream,cb)->
+          that.findArticlesByStream stream,'',(err,articles)->
+            return console.error err if err?
+            stream.articles = articles
+            stream.markModified('articles')
+            stream.save()
+    catch error
+      console.error error
+    finally
+      console.info "Batch Processing is Completed."
+
 
   # ストリームからArticlesを再帰的に探してきてマージする
   # @todo 重い
@@ -55,9 +61,11 @@ module.exports.updateStream = (app) ->
           if substreamname is parent
             cb()
           else
-            that.findArticlesByStream substreamname,stream.title,(err,pages)->
-              feed_pages = feed_pages.concat pages
-              cb()
+            Stream.findOne {title:substreamname}, (err,substream)->
+              cb() if err
+              that.findArticlesByStream substream,stream.title,(err,pages)->
+                feed_pages = feed_pages.concat pages
+                cb()
         else
           # 外部サイト
           parser feed.url, (articles)->

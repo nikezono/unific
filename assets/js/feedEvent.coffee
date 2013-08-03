@@ -20,22 +20,24 @@ root.FeedEvent =
     else
       console.log "no feed" # @todo alert
 
-  requestEditFeedList : (that,socket) ->
+  requestEditFeedList : (socket) ->
     urls = []
     $FeedList.find(":checkbox:checked").each ->
-      urls.push $(that).attr('url')
+      urls.push $(this).attr('url')
     socket.emit 'edit feed_list',
       urls: urls
       stream:path
 
   receivedEditFeedList : (socket)->
     showFade $EdittedList
-    Articles = []
+    window.Articles = []
     $Articles.html('')
     console.log 'sync by feed_list editted'
-    socket.emit 'sync stream', path
+    socket.emit 'sync stream',
+      stream:path
+      latest:latestPubDate()
 
-  requestAddFeed : ->
+  requestAddFeed : (socket) ->
     urls  = []
     $CandidatesList.find(":checkbox:checked").each ->
       urls.push
@@ -50,4 +52,6 @@ root.FeedEvent =
   receivedAddFeed : ->
     showFade $NewFeed
     console.log 'sync by add feed'
-    socket.emit 'sync stream', path
+    socket.emit 'sync stream',
+      stream:path
+      latest:latestPubDate()

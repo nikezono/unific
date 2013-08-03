@@ -21,7 +21,7 @@ root.StreamEvent =
     showFade $NewArticle if appended
       
 
-  requestFindFeed : ->
+  requestFindFeed : (socket)->
     $NoFeedIsFound.hide()
     socket.emit 'find feed', $FindFeedInput.val()
 
@@ -60,6 +60,8 @@ appendArticle = (article)->
   ## 同名記事はPrependしない
   thisTitle      = variables.title
   duplicate      = thisTitle in Articles
+
+  #console.log "#{not latestPubDate()} , #{not duplicate}"
 
   ## 記事が存在しないか、重複していなければ、Prepend
   if not latestPubDate()? or not duplicate

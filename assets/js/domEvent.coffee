@@ -8,14 +8,14 @@
 root = exports ? this
 root.DomEvent =
 
- pushedUsage : ->
-  $Articles.css
-    zIndex:10
-  $('body').chardinJs('start')
-  $('body').click ->
-    $('body :not(#UsageButton)').chardinJs('stop')
-  
-  requestUploadImage : (e)->
+  pushedUsage : ->
+    $Articles.css
+      zIndex:10
+    $('body').chardinJs('start')
+    $('body').click ->
+      $('body :not(#UsageButton)').chardinJs('stop')
+    
+  requestUploadImage : (e,socket)->
     ## Request Change Background
     file = event.target.files[0]
     fileReader = new FileReader()
@@ -31,7 +31,8 @@ root.DomEvent =
       backgroundImage:bgpath
       opacity:'0.2'
 
-  requestChangeDesc : ->
+  requestChangeDesc : (socket) ->
+    console.log 'change desc'
     socket.emit 'change desc',
       text:$InputDesc.text()
       stream:path

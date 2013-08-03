@@ -4,5 +4,6 @@
   "watch": true,
   "assets": "assets",
   "output": "public",
+  "port": 3001,
   "minify": true
 }

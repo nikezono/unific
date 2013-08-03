@@ -11,6 +11,8 @@ module.exports.FeedEvent = (app) ->
   Stream = app.get("models").Stream
   Feed   = app.get("models").Feed
 
+  updater = (app.get 'helper').updateStream(app)
+
   ###
   # socket.io events
   ###
@@ -35,10 +37,12 @@ module.exports.FeedEvent = (app) ->
           cb()
       ,->
         console.info "Stream:#{stream.title} add feed"
+        updater.update()
         io.sockets.to(data.stream).emit 'add-feed succeed'
 
 
   editFeedList:(socket,io,data) ->
+    console.info 'editted feed-list by #{socket.id}'
     streamname = decodeURIComponent data.stream
     Stream.findByTitle streamname, (err,stream)->
       return socket.emit 'error' if err

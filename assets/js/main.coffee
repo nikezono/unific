@@ -44,12 +44,12 @@ $ ->
     
     ###
     # SetInterval Sync
-    # Now Setting: 5 minutes
+    # Now Setting: 3 minutes
     ###
     setInterval ->
-      console.log 'sync by 1minutes'
+      console.log 'sync by 3 minutes'
       socket.emit 'sync stream',
         stream:path
         latest:latestPubDate()
-    ,1000*60*5
+    ,1000*60*3
 
