@@ -68,6 +68,7 @@ else
 # Batch Processing
 # 3分おきにRSSフィードを全件探索
 updater = (app.get 'helper').updateStream(app)
+updater.update()
 setInterval ->
   updater.update()
 ,1000*60*3

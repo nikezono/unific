@@ -19,22 +19,27 @@ module.exports.updateStream = (app) ->
 
   domain = app.get 'domain'
 
-  update : ->
+  # バッチ処理によるアップデート
+  # 引数無し -> 非同期実行
+  # @streamname バッチ処理結果を受け取りたいstreamの名前
+  # @callback (articles) コールバック関数
+  update : (streamname,callback)->
     that = @
     console.info "Batch Processing Start"
-    try
-      Stream.find {}, (err,streams) ->
-        console.error if err?
-        async.forEach streams, (stream,cb)->
-          that.findArticlesByStream stream,'',(err,articles)->
+    Stream.find {}, (err,streams) ->
+      console.error if err?
+      async.forEach streams, (stream,cb)->
+        that.findArticlesByStream stream,'',(err,merged)->
+          return console.error err if err?
+          that.manageArticles merged,(err,articles)->
             return console.error err if err?
             stream.articles = articles
             stream.markModified('articles')
             stream.save()
-    catch error
-      console.error error
-    finally
-      console.info "Batch Processing is Completed."
+            callback articles if streamname is stream.title and callback?
+            cb()
+      ,->
+        console.info "Batch Processing is Completed."
 
 
   # ストリームからArticlesを再帰的に探してきてマージする
@@ -67,6 +72,7 @@ module.exports.updateStream = (app) ->
                 feed_pages = feed_pages.concat pages
                 cb()
         else
+          console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
           # 外部サイト
           parser feed.url, (articles)->
             Page.findAndUpdateByArticles articles,feed,(pages)->
@@ -74,40 +80,45 @@ module.exports.updateStream = (app) ->
               feed_pages = feed_pages.concat pages
               cb()
       ,->
-        #ヌル記事の削除
-        delnulled = _.filter feed_pages,(obj)->
-          return false unless obj.page?
-          return true
+        return callback null, feed_pages
 
-        # uniqued
-        uniqued = _.uniq delnulled,false,(obj)->
-          return obj.page.link or obj.page.title or obj.page.description or obj.page.url
+  # マージされた記事の整形
+  # スター付きとスター無しから整形して50件を提示
+  manageArticles : (articles,callback)->
 
-        async.parallel [(cb)->
+    # ヌル記事の削除
+    delnulled = _.filter articles,(obj)->
+      return false unless obj.page?
+      return true
 
-          ## スター付きの記事を抽出
-          starred = _.filter uniqued, (obj)->
-            return obj.page.starred is true
-          cb(null,starred)
+    # uniqued
+    uniqued = _.uniq delnulled,false,(obj)->
+      return obj.page.link or obj.page.title or obj.page.description or obj.page.url
 
-        ,(cb)->
 
-          # スター無し
-          unstarred = _.filter uniqued, (obj)->
-            return obj.page.starred is false
+    async.parallel [(cb)->
 
-          # sorted(更新昇順)
-          sorted = _.sortBy unstarred, (obj)->
-            return obj.page.pubDate.getTime()
+      ## スター付きの記事を抽出
+      starred = _.filter uniqued, (obj)->
+        return obj.page.starred is true
+      cb(null,starred)
 
-          # limited(昇順50件)
-          limited = sorted.slice sorted.length-50 if sorted.length > 50
-          cb(null,limited or sorted)
+    ,(cb)->
 
-        ],(err,results)->
-          merged = results[0].concat(results[1])
-          res  = _.sortBy merged, (obj)->
-            return obj.page.pubDate.getTime()
+      # スター無し
+      unstarred = _.filter uniqued, (obj)->
+        return obj.page.starred is false
 
-          return callback null, res
+      # sorted(更新昇順)
+      sorted = _.sortBy unstarred, (obj)->
+        return obj.page.pubDate.getTime()
 
+      # limited(昇順50件)
+      limited = sorted.slice sorted.length-50 if sorted.length > 50
+      cb(null,limited or sorted)
+
+    ],(err,results)->
+      merged = results[0].concat(results[1])
+      res  = _.sortBy merged, (obj)->
+        return obj.page.pubDate.getTime()
+      return callback err,res

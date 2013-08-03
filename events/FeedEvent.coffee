@@ -37,8 +37,8 @@ module.exports.FeedEvent = (app) ->
           cb()
       ,->
         console.info "Stream:#{stream.title} add feed"
-        updater.update()
-        io.sockets.to(data.stream).emit 'add-feed succeed'
+        updater.update stream.title, (articles)->
+          io.sockets.to(data.stream).emit 'add-feed succeed'
 
 
   editFeedList:(socket,io,data) ->
@@ -57,7 +57,8 @@ module.exports.FeedEvent = (app) ->
             feed.save()
           cb()
         , ->
-          io.sockets.to(data.stream).emit 'edit completed'
+          updater.update streamname,(articles)->
+            io.sockets.to(data.stream).emit 'edit completed'
 
 
 
