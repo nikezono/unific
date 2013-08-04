@@ -51,6 +51,8 @@ root.FeedEvent =
 
   receivedAddFeed : (socket)->
     showFade $NewFeed
+    window.Articles = []
+    $Articles.html('')
     console.log 'sync by add feed'
     socket.emit 'sync stream',
       stream:path
