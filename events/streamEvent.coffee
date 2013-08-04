@@ -106,10 +106,10 @@ module.exports.StreamEvent = (app) ->
   getDiff: (streamname,latest,callback) ->
     Stream.findOne title:streamname,(err,stream)->
       return callback err,null if err?
-      if not latest?
-        return callback null,stream.articles
+      return callback null,stream.articles if not latest?
       articles = _.filter stream.articles,(article)->
-        return article.pubDate > latest
+        #console.log "#{article.page.pubDate.getTime()} > #{latest}?"
+        return article.page.pubDate.getTime() > latest
       callback null,articles
 
 ###
