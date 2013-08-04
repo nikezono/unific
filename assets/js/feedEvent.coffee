@@ -49,7 +49,7 @@ root.FeedEvent =
         urls  :urls
         stream:path
 
-  receivedAddFeed : ->
+  receivedAddFeed : (socket)->
     showFade $NewFeed
     console.log 'sync by add feed'
     socket.emit 'sync stream',

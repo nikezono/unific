@@ -44,7 +44,7 @@ root.routes = (socket) ->
     socket.on 'edit completed',            -> FeedEvent.receivedEditFeedList socket
 
     $AddFeedButton.click                   -> FeedEvent.requestAddFeed socket
-    socket.on 'add-feed succeed',          -> FeedEvent.receivedAddFeed()
+    socket.on 'add-feed succeed',          -> FeedEvent.receivedAddFeed socket
 
     ### PageEvent(socket.io) ###
     socket.on 'star added',         (data) -> PageEvent.receivedAddStar data,socket

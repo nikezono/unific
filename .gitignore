@@ -2,6 +2,7 @@
 .DS_Store
 node_modules
 .nodectl.run
+unific.log
 
 public/images/background/*.png
 public/images/background/*.jpeg
