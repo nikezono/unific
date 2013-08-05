@@ -30,5 +30,9 @@ module.exports = (app, server) ->
       socket.join stream_name
       socket.set 'stream_name', stream_name
 
+    # on Error
+    socket.on "error", (exc)->
+      console.error "socket.io Error:exc"
+
     # Use Router
     (require path.resolve('routes','ioRoutes')) app,io,socket

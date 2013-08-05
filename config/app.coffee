@@ -31,7 +31,7 @@ app.configure ->
 
   # env
   app.set 'env', process.env.NODE_ENV || 'development'
-  app.set 'port', process.env.PORT || 3000
+  app.set 'port', process.env.PORT || 3001
   app.set 'domain', ['localhost','unific.net','unific.nikezono.net','net45-dhcp160.sfc.keio.ac.jp']
 
   # views
