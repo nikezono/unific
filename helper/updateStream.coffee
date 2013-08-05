@@ -22,13 +22,15 @@ module.exports.updateStream = (app) ->
   # バッチ処理によるアップデート
   # 引数無し -> 非同期実行
   # @streamname バッチ処理結果を受け取りたいstreamの名前
+  # @all        全ストリームにアップデートをかけるか。
+  #             falseの場合streamnameに指定されたstreamのみupdate
   # @callback (articles) コールバック関数
-  update : (streamname,callback)->
+  update : (streamname,all,callback)->
+    all = true unless all?
     that = @
     console.info "Batch Processing Start"
-    Stream.find {}, (err,streams) ->
-      console.error if err?
-      async.forEach streams, (stream,cb)->
+    if not all and streamname
+      Stream.findOne title:streamname, (err,stream)->
         that.findArticlesByStream stream,'',(err,merged)->
           return console.error err if err?
           that.manageArticles merged,(err,articles)->
@@ -37,9 +39,24 @@ module.exports.updateStream = (app) ->
             stream.markModified('articles')
             stream.save()
             callback articles if streamname is stream.title and callback?
-            cb()
-      ,->
-        console.info "Batch Processing is Completed."
+        ,->
+          return console.info "Batch Processing is Completed."
+
+    else 
+      Stream.find {}, (err,streams) ->
+        console.error if err?
+        async.forEach streams, (stream,cb)->
+          that.findArticlesByStream stream,'',(err,merged)->
+            return console.error err if err?
+            that.manageArticles merged,(err,articles)->
+              return console.error err if err?
+              stream.articles = articles
+              stream.markModified('articles')
+              stream.save()
+              callback articles if streamname is stream.title and callback?
+              cb()
+        ,->
+          return console.info "Batch Processing is Completed."
 
 
   # ストリームからArticlesを再帰的に探してきてマージする
@@ -83,7 +100,7 @@ module.exports.updateStream = (app) ->
         return callback null, feed_pages
 
   # マージされた記事の整形
-  # スター付きとスター無しから整形して50件を提示
+  # スター付き記事全てととスター無し記事最新50件をマージ
   manageArticles : (articles,callback)->
 
     # ヌル記事の削除
