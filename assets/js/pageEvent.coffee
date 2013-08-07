@@ -32,7 +32,7 @@ root.PageEvent =
 
   requestSubmitComment :($dom,socket)->
     comment = $dom.find('.inputComment').val()
-    if comment?
+    if comment? and comment.length > 0
       socket.emit 'add comment',
         domid: $dom.attr('id')
         comment:comment
