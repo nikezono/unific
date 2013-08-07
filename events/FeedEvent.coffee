@@ -29,6 +29,7 @@ module.exports.FeedEvent = (app) ->
         ,
           title : param.title
           url   : param.url
+          favicon:param.favicon
           stream: stream._id
           alive : true
           site  : param.siteurl

@@ -44,6 +44,7 @@ root.FeedEvent =
         url:$(this).val()
         title:$(this).attr('title')
         siteurl:$(this).attr('siteurl')
+        favicon:$(this).parent().find('img').attr('src')
     unless urls.length is 0
       socket.emit 'add feed',
         urls  :urls

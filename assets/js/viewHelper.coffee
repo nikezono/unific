@@ -9,12 +9,15 @@ root.ViewHelper =
 
   candCheckbox: (candidate)->
     "<li>
-      <input type='checkbox' siteurl=#{candidate.siteurl} title= '#{candidate.sitetitle}' value='#{candidate.url}'>  #{candidate.sitetitle}
+      <input type='checkbox' siteurl=#{candidate.siteurl} title= '#{candidate.sitetitle}' value='#{candidate.url}'>
+      <img src='#{candidate.favicon}'/ class='favicon'>
+        #{candidate.sitetitle}
     </li>"
 
   feedList    : (feed) ->
     "<li>
       <input type='checkbox' url= '#{feed.url}' #{'checked' if feed.alive is true}>
+      <img src='#{feed.favicon}'/ class='favicon'>
       #{feed.title}
       <small> #{feed.site} </small>
      </li>
@@ -39,7 +42,7 @@ root.ViewHelper =
           <a href=#{obj.url} class='fancy fancybox.iframe'></a>
           <a href=#{obj.url}>
             <h4 class='media-heading'>
-              <img src='#{obj.favicon}'\>
+              <img src='#{obj.favicon}' class='favicon' \>
               #{obj.title}   
               <a href='#{obj.siteurl}'>
                 <small>

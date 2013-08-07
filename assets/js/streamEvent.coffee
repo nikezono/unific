@@ -48,7 +48,7 @@ appendArticle = (article)->
     pubDate     : article.page.pubDate
     url         : article.page.url
     sitename    : article.feed.title
-    favicon     : (article.feed.site.match(/http:\/\/.+?\//))+'favicon.ico'
+    favicon     : article.feed.favicon
     siteurl     : article.feed.site
     starred     : article.page.starred
 
