@@ -91,9 +91,9 @@ module.exports.updateStream = (app) ->
         else
           console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
           # 外部サイト
-          parser feed.url, (articles)->
+          parser feed.url, (err,articles)->
+            return callback err,null if err
             Page.findAndUpdateByArticles articles,feed,(pages)->
-              return callback err,null if err
               feed_pages = feed_pages.concat pages
               cb()
       ,->
