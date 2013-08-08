@@ -25,13 +25,13 @@ module.exports.StreamEvent = (app) ->
     title = req.params.stream
     Stream.findByTitle title,(err,stream)->
       if stream?
-        return render(res,stream)
+        return render(req,res,stream)
       else
         Stream.create 
           title:title
           description:'description (click to edit)'
         ,(err,stream)->
-          return render(res,stream)
+          return render(req,res,stream)
 
   rss  : (req,res,next) ->
     streamname = req.params.stream
@@ -115,9 +115,10 @@ module.exports.StreamEvent = (app) ->
 ###
 # Private Methods
 ###
-render = (res,stream)->
+render = (req,res,stream)->
   res.render 'stream',
     title: stream.title
+    user : req.user
     description: stream.description
     background:stream.background
     feeds: stream.feeds

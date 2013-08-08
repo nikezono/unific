@@ -17,7 +17,11 @@
     "nib": "*",
     "st": "*",
     "direquire" : "*",
-    "parse-rss": "*"
+    "parse-rss": "*",
+    "passport":"*",
+    "passport-local":"*",
+    "bcrypt":"*",
+    "connect-mongo": "*"
   },
   "devDependencies": {
     "coffee-script": "*",
