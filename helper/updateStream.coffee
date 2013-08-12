@@ -31,14 +31,17 @@ module.exports.updateStream = (app) ->
     console.info "Batch Processing Start"
     if not all and streamname
       Stream.findOne title:streamname, (err,stream)->
+        console.log "Only #{streamname} is updating"
         that.findArticlesByStream stream,'',(err,merged)->
-          return console.error err if err?
+          console.error err unless _.isEmpty(err)
           that.manageArticles merged,(err,articles)->
-            return console.error err if err?
+            console.error err if err?
+
             stream.articles = articles
             stream.markModified('articles')
             stream.save()
-            callback articles if streamname is stream.title and callback?
+            console.log "#{streamname} is Updated."
+            callback articles if callback?
         ,->
           return console.info "Batch Processing is Completed."
 
@@ -46,10 +49,11 @@ module.exports.updateStream = (app) ->
       Stream.find {}, (err,streams) ->
         console.error if err?
         async.forEach streams, (stream,cb)->
+          console.log "#{stream.title} is updating"
           that.findArticlesByStream stream,'',(err,merged)->
-            return console.error err if err?
+            console.error err unless _.isEmpty(err)
             that.manageArticles merged,(err,articles)->
-              return console.error err if err?
+              console.error err unless _.isEmpty(err)
               stream.articles = articles
               stream.markModified('articles')
               stream.save()
@@ -73,6 +77,7 @@ module.exports.updateStream = (app) ->
     ,{},{},(err,feeds)->
       feed_pages = []
       # 各ArticleのMerge
+      errors = []
       async.forEach feeds,(feed,cb)->
         urlObj = url.parse(feed.url)
 
@@ -84,7 +89,7 @@ module.exports.updateStream = (app) ->
             cb()
           else
             Stream.findOne {title:substreamname}, (err,substream)->
-              cb() if err
+              cb() if err?
               that.findArticlesByStream substream,stream.title,(err,pages)->
                 feed_pages = feed_pages.concat pages
                 cb()
@@ -92,12 +97,17 @@ module.exports.updateStream = (app) ->
           console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
           # 外部サイト
           parser feed.url, (err,articles)->
-            return callback err,null if err
+            if err
+              errors.push
+                stream:stream.title
+                feed: feed.title
+                error:err
+
             Page.findAndUpdateByArticles articles,feed,(pages)->
               feed_pages = feed_pages.concat pages
               cb()
       ,->
-        return callback null, feed_pages
+        return callback errors, feed_pages
 
   # マージされた記事の整形
   # スター付き記事全てととスター無し記事最新50件をマージ
