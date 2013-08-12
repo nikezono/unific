@@ -43,7 +43,7 @@ module.exports.updateStream = (app) ->
             console.log "#{streamname} is Updated."
             callback articles if callback?
         ,->
-          return console.info "Batch Processing is Completed."
+          console.info "Batch Processing is Completed."
 
     else 
       Stream.find {}, (err,streams) ->
@@ -52,6 +52,7 @@ module.exports.updateStream = (app) ->
           console.log "#{stream.title} is updating"
           that.findArticlesByStream stream,'',(errors,merged)->
             console.error errors unless _.isEmpty(errors)
+            console.log "stream #{stream.title} articles merged"
             unless _.isEmpty(merged)
               that.manageArticles merged,(err,articles)->
                 console.error errors unless _.isEmpty(errors)
@@ -60,8 +61,10 @@ module.exports.updateStream = (app) ->
                 stream.save()
                 callback articles if streamname is stream.title and callback?
                 cb()
+            else
+              cb()
         ,->
-          return console.info "Batch Processing is Completed."
+          console.info "Batch Processing is Completed."
 
 
   # ストリームからArticlesを再帰的に探してきてマージする
@@ -79,7 +82,9 @@ module.exports.updateStream = (app) ->
       feed_pages = []
       # 各ArticleのMerge
       errors = []
+      return callback null,[] if _.isEmpty(feeds)
       async.forEach feeds,(feed,cb)->
+        console.info "feed #{feed.title} is updating"
         urlObj = url.parse(feed.url)
 
         # 親子関係のときobjectを返す
@@ -104,6 +109,7 @@ module.exports.updateStream = (app) ->
           console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
           # 外部サイト
           parser feed.url, (err,articles)->
+            console.error err if err
             if err
               errors.push
                 stream:stream.title
@@ -114,6 +120,7 @@ module.exports.updateStream = (app) ->
               feed_pages = feed_pages.concat pages
               cb()
       ,->
+        console.log "stream #{stream.title} is find&parsed"
         return callback errors, feed_pages
 
   # マージされた記事の整形
