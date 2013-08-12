@@ -50,15 +50,16 @@ module.exports.updateStream = (app) ->
         console.error if err?
         async.forEach streams, (stream,cb)->
           console.log "#{stream.title} is updating"
-          that.findArticlesByStream stream,'',(err,merged)->
-            console.error err unless _.isEmpty(err)
-            that.manageArticles merged,(err,articles)->
-              console.error err unless _.isEmpty(err)
-              stream.articles = articles
-              stream.markModified('articles')
-              stream.save()
-              callback articles if streamname is stream.title and callback?
-              cb()
+          that.findArticlesByStream stream,'',(errors,merged)->
+            console.error errors unless _.isEmpty(errors)
+            unless _.isEmpty(merged)
+              that.manageArticles merged,(err,articles)->
+                console.error errors unless _.isEmpty(errors)
+                stream.articles = articles
+                stream.markModified('articles')
+                stream.save()
+                callback articles if streamname is stream.title and callback?
+                cb()
         ,->
           return console.info "Batch Processing is Completed."
 
@@ -89,10 +90,16 @@ module.exports.updateStream = (app) ->
             cb()
           else
             Stream.findOne {title:substreamname}, (err,substream)->
-              cb() if err?
-              that.findArticlesByStream substream,stream.title,(err,pages)->
-                feed_pages = feed_pages.concat pages
+              if err?
+                errors.push
+                  stream:substreamname
+                  error:"not found"
                 cb()
+              else
+                that.findArticlesByStream substream,stream.title,(err,pages)->
+                  errors = errors.concat err if _.isEmpty(err)
+                  feed_pages = feed_pages.concat pages
+                  cb()
         else
           console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
           # 外部サイト

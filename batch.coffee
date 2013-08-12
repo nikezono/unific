@@ -2,12 +2,13 @@
 # 3分おきにRSSフィードを全件探索
 
 path = require 'path'
+moment = require 'moment'
 
 app = require path.resolve('config','app')
 updater = app.get('helper').updateStream(app)
-console.log "batch processing worker standby: #{Date.now}"
+console.log "batch processing worker standby: #{moment().format();}"
 updater.update()
 setInterval ->
-  console.log "batch processing loop is called: #{Date.now}"
+  console.log "batch processing loop is called: #{moment().format();}"
   updater.update()
 ,1000*60*3
