@@ -1,0 +1,43 @@
+digraph unific {
+
+  // Dot言語設定
+  graph [nodesep = 0.7];
+  node [shape = record, height = 0.01,
+        fontname = "Helvetica", fontsize = 9];
+  edge [arrowtail = onormal, arrowhead = none];
+
+  // モデル
+  Stream [label = "{Stream|title\ldescription\lbackground}"];
+  Feed   [label = "{Feed|title\lfeed_url\lsite_url\lfavicon}"];
+  Page   [label = "{Page|title\ldescription\lurl}"];
+  User   [label = "{User|name\lemail\lpassword\laccess_token}"];
+  
+  //中間モデル
+  Star   [label = "{Star|user_id\lpage_id}"]
+  RIL    [label = "{RIL|user_id\lpage_id}"]
+  Owner  [label = "{Owner|user_id\lfeed_id}"]
+  Admin  [label = "{Admin|user_id\lfeed_id}"]
+  Subscribe [label = "{Subscribe|user_id\lfeed_id}"]
+
+  // リレーション
+
+  Stream -> Feed[arrowhead=odiamond];
+  Feed -> Page[arrowhead=odiamond];
+
+  Stream -> Owner[arrowhead=normal];
+  User   -> Owner[arrowhead=odiamond];
+
+  Stream -> Admin[arrowhead=odiamond];
+  User   -> Admin[arrowhead=odiamond];
+
+  Subscribe -> Stream[arrowhead=normal];
+  User -> Subscribe[arrowhead=odiamond];
+
+  User -> Star[arrowhead=odiamond];
+  Star -> Page[arrowhead=normal];
+
+  User -> RIL[arrowhead=odiamond];
+  RIL -> Page[arrowhead=normal];
+
+
+}
