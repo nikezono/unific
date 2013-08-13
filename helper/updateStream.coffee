@@ -49,7 +49,6 @@ module.exports.updateStream = (app) ->
       Stream.find {}, (err,streams) ->
         console.error if err?
         async.forEach streams, (stream,cb)->
-          console.log "#{stream.title} is updating"
           that.findArticlesByStream stream,'',(errors,merged)->
             console.error errors unless _.isEmpty(errors)
             console.log "stream #{stream.title} articles merged"
@@ -73,6 +72,7 @@ module.exports.updateStream = (app) ->
   # @parent      [String](Optional) 親ストリームの名前（再帰）
   # @callback    [Function](err,feeds)  マージされたフィード
   findArticlesByStream: (stream,parent,callback)->
+    console.info "#{stream.title} is updating.parent:#{parent}"
     that = @
     # Feedの検索
     Feed.find 
@@ -95,6 +95,7 @@ module.exports.updateStream = (app) ->
             substreamname = urlObj.pathname.split('/')[1]
             # ループ離脱（フォロー相手に自分が含まれていれば除く)
             if substreamname is parent
+              console.info "#{stream.title} follows #{parent}."
               cb()
             else
               Stream.findOne {title:substreamname}, (err,substream)->
@@ -104,6 +105,7 @@ module.exports.updateStream = (app) ->
                     error:"not found"
                   cb()
                 else
+                  console.info "#{stream.title} follows #{substream.title}. Recursive Strategy Start."
                   that.findArticlesByStream substream,stream.title,(err,pages)->
                     errors = errors.concat err if _.isEmpty(err)
                     feed_pages = feed_pages.concat pages
@@ -112,17 +114,21 @@ module.exports.updateStream = (app) ->
             console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
             # 外部サイト
             parser feed.url, (err,articles)->
-              console.error err if err
-              if err
+              if not _.isEmpty(err) 
+                console.error err
                 errors.push
                   stream:stream.title
                   feed: feed.title
                   error:err
                 cb()
-              else
+              else if articles?.length?
+                console.info "#{feed.title} 取得."
                 Page.findAndUpdateByArticles articles,feed,(pages)->
                   feed_pages = feed_pages.concat pages
                   cb()
+              else
+                console.info "#{feed.title} missed."
+                cb()
         ,->
           console.log "stream #{stream.title} is find&parsed"
           return callback errors, feed_pages
