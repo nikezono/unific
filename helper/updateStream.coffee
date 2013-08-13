@@ -55,7 +55,7 @@ module.exports.updateStream = (app) ->
             console.log "stream #{stream.title} articles merged"
             unless _.isEmpty(merged)
               that.manageArticles merged,(err,articles)->
-                console.error errors unless _.isEmpty(errors)
+                console.error err unless _.isEmpty(err)
                 stream.articles = articles
                 stream.markModified('articles')
                 stream.save()
@@ -79,49 +79,53 @@ module.exports.updateStream = (app) ->
       stream:stream._id
       alive :true
     ,{},{},(err,feeds)->
-      feed_pages = []
-      # 各ArticleのMerge
-      errors = []
-      return callback null,[] if _.isEmpty(feeds)
-      async.forEach feeds,(feed,cb)->
-        console.info "feed #{feed.title} is updating"
-        urlObj = url.parse(feed.url)
+      if err? or _.isEmpty(feeds)
+        return callback null,[] if _.isEmpty(feeds)
+      else
+        feed_pages = []
+        # 各ArticleのMerge
+        errors = []
+        
+        async.forEach feeds,(feed,cb)->
+          console.info "feed #{feed.title} is updating"
+          urlObj = url.parse(feed.url)
 
-        # 親子関係のときobjectを返す
-        if urlObj.hostname in domain
-          substreamname = urlObj.pathname.split('/')[1]
-          # ループ離脱（フォロー相手に自分が含まれていれば除く)
-          if substreamname is parent
-            cb()
+          # 親子関係のときobjectを返す
+          if urlObj.hostname in domain
+            substreamname = urlObj.pathname.split('/')[1]
+            # ループ離脱（フォロー相手に自分が含まれていれば除く)
+            if substreamname is parent
+              cb()
+            else
+              Stream.findOne {title:substreamname}, (err,substream)->
+                if err?
+                  errors.push
+                    stream:substreamname
+                    error:"not found"
+                  cb()
+                else
+                  that.findArticlesByStream substream,stream.title,(err,pages)->
+                    errors = errors.concat err if _.isEmpty(err)
+                    feed_pages = feed_pages.concat pages
+                    cb()
           else
-            Stream.findOne {title:substreamname}, (err,substream)->
-              if err?
+            console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
+            # 外部サイト
+            parser feed.url, (err,articles)->
+              console.error err if err
+              if err
                 errors.push
-                  stream:substreamname
-                  error:"not found"
+                  stream:stream.title
+                  feed: feed.title
+                  error:err
                 cb()
               else
-                that.findArticlesByStream substream,stream.title,(err,pages)->
-                  errors = errors.concat err if _.isEmpty(err)
+                Page.findAndUpdateByArticles articles,feed,(pages)->
                   feed_pages = feed_pages.concat pages
                   cb()
-        else
-          console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
-          # 外部サイト
-          parser feed.url, (err,articles)->
-            console.error err if err
-            if err
-              errors.push
-                stream:stream.title
-                feed: feed.title
-                error:err
-
-            Page.findAndUpdateByArticles articles,feed,(pages)->
-              feed_pages = feed_pages.concat pages
-              cb()
-      ,->
-        console.log "stream #{stream.title} is find&parsed"
-        return callback errors, feed_pages
+        ,->
+          console.log "stream #{stream.title} is find&parsed"
+          return callback errors, feed_pages
 
   # マージされた記事の整形
   # スター付き記事全てととスター無し記事最新50件をマージ
