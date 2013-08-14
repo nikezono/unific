@@ -9,7 +9,7 @@ digraph unific {
   // モデル
   Stream [label = "{Stream|title\ldescription\lbackground}"];
   Feed   [label = "{Feed|title\lfeed_url\lsite_url\lfavicon}"];
-  Page   [label = "{Page|title\ldescription\lurl}"];
+  Page   [label = "{Page|title\ldescription\lurl\lstarred_count\lril_count}"];
   User   [label = "{User|name\lemail\lpassword\laccess_token}"];
   
   //中間モデル
@@ -17,11 +17,14 @@ digraph unific {
   RIL    [label = "{RIL|user_id\lpage_id}"]
   Owner  [label = "{Owner|user_id\lfeed_id}"]
   Admin  [label = "{Admin|user_id\lfeed_id}"]
-  Subscribe [label = "{Subscribe|user_id\lfeed_id}"]
-
+  Check  [label = "{Check|user_id\lstream_id}"]
+  Subscribe [label = "{Subscribe|stream_id\lfeed_id}"]
+  
   // リレーション
 
-  Stream -> Feed[arrowhead=odiamond];
+  Stream -> Subscribe[arrowhead=odiamond];
+  Subscribe -> Feed[arrowhead=normal];
+
   Feed -> Page[arrowhead=odiamond];
 
   Stream -> Owner[arrowhead=normal];
@@ -30,8 +33,8 @@ digraph unific {
   Stream -> Admin[arrowhead=odiamond];
   User   -> Admin[arrowhead=odiamond];
 
-  Subscribe -> Stream[arrowhead=normal];
-  User -> Subscribe[arrowhead=odiamond];
+  Check -> Stream[arrowhead=normal];
+  User -> Check[arrowhead=odiamond];
 
   User -> Star[arrowhead=odiamond];
   Star -> Page[arrowhead=normal];

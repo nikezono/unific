@@ -100,9 +100,7 @@ module.exports.updateStream = (app) ->
             else
               Stream.findOne {title:substreamname}, (err,substream)->
                 if err?
-                  errors.push
-                    stream:substreamname
-                    error:"not found"
+                  console.error err
                   return cb()
                 else
                   console.info "#{stream.title} follows #{substream.title}. Recursive Strategy Start."
@@ -116,21 +114,17 @@ module.exports.updateStream = (app) ->
 
             # 外部サイト
             parser feed.url, (err,articles)->
-              console.log "#{feed.title} is returned. error:#{err} articles:#{articles}. articles?.length?:#{articles?.length?}"
-              if not _.isEmpty(err) 
+              console.log "#{feed.title} is returned. error:#{err} articles:#{articles?}. articles?.length?:#{articles?.length?}"
+              unless err? 
                 console.error err
-                errors.push
-                  stream:stream.title
-                  feed: feed.title
-                  error:err
                 return cb()
-              else if articles?.length?
+              if articles?.length?
                 console.info "#{feed.title} 取得."
                 Page.findAndUpdateByArticles articles,feed,(pages)->
                   feed_pages = feed_pages.concat pages
                   return cb()
               else
-                console.info "#{feed.title} missed."
+                console.info "no error but #{feed.title} missed."
                 return cb()
         ,->
           console.log "stream #{stream.title} is find&parsed"
