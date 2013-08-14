@@ -41,9 +41,9 @@ module.exports.updateStream = (app) ->
             stream.markModified('articles')
             stream.save()
             console.log "#{streamname} is Updated."
-            callback articles if callback?
+            return callback articles if callback?
         ,->
-          console.info "Batch Processing is Completed."
+          return console.info "Batch Processing is Completed."
 
     else 
       Stream.find {}, (err,streams) ->
@@ -59,11 +59,11 @@ module.exports.updateStream = (app) ->
                 stream.markModified('articles')
                 stream.save()
                 callback articles if streamname is stream.title and callback?
-                cb()
+                return cb()
             else
-              cb()
+              return cb()
         ,->
-          console.info "Batch Processing is Completed."
+          return console.info "Batch Processing is Completed."
 
 
   # ストリームからArticlesを再帰的に探してきてマージする
@@ -96,39 +96,42 @@ module.exports.updateStream = (app) ->
             # ループ離脱（フォロー相手に自分が含まれていれば除く)
             if substreamname is parent
               console.info "#{stream.title} follows #{parent}."
-              cb()
+              return cb()
             else
               Stream.findOne {title:substreamname}, (err,substream)->
                 if err?
                   errors.push
                     stream:substreamname
                     error:"not found"
-                  cb()
+                  return cb()
                 else
                   console.info "#{stream.title} follows #{substream.title}. Recursive Strategy Start."
                   that.findArticlesByStream substream,stream.title,(err,pages)->
                     errors = errors.concat err if _.isEmpty(err)
                     feed_pages = feed_pages.concat pages
-                    cb()
+                    return cb()
+
           else
             console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
+
             # 外部サイト
             parser feed.url, (err,articles)->
+              console.log "#{feed.title} is returned. error:#{err} articles:#{articles}. articles?.length?:#{articles?.length?}"
               if not _.isEmpty(err) 
                 console.error err
                 errors.push
                   stream:stream.title
                   feed: feed.title
                   error:err
-                cb()
+                return cb()
               else if articles?.length?
                 console.info "#{feed.title} 取得."
                 Page.findAndUpdateByArticles articles,feed,(pages)->
                   feed_pages = feed_pages.concat pages
-                  cb()
+                  return cb()
               else
                 console.info "#{feed.title} missed."
-                cb()
+                return cb()
         ,->
           console.log "stream #{stream.title} is find&parsed"
           return callback errors, feed_pages
