@@ -115,7 +115,7 @@ module.exports.updateStream = (app) ->
             # 外部サイト
             parser feed.url, (err,articles)->
               console.log "#{feed.title} is returned. error:#{err} articles:#{articles?}. articles?.length?:#{articles?.length?}"
-              unless err? 
+              if err? 
                 console.error err
                 return cb()
               if articles?.length?
