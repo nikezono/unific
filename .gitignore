@@ -3,6 +3,8 @@
 node_modules
 .nodectl.run
 unific.log
+*.log
+dump.rdb
 
 public/images/background/*.png
 public/images/background/*.jpeg
