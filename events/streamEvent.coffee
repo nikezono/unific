@@ -127,13 +127,29 @@ module.exports.StreamEvent = (app) ->
       callback null,articles
 
   # ストリームからStar付き記事を取得する
+  # @todo キャッシュしたり処理軽減したり
   getStars: (streamname,callback) ->
     Stream.findOne title:streamname,(err,stream)->
       return callback err,null if err?
-      return callback null,stream.articles if not latest?
-      articles = _.filter stream.articles,(article)->
-        return article.page.starred
-      callback null,articles
+      Feed.find stream:stream._id,(err,feeds)->
+        return callback err,null if err?
+        articles = []
+        console.log feeds
+        async.each feeds,(feed,cb)->
+          Page.find
+            feed:feed._id
+            starred:true
+          , (err,pages)->
+            return cb() if err?
+            async.forEach pages,(page,_cb)->
+              articles = articles.concat
+                feed: feed
+                page: page
+              return _cb()
+            ,->
+              return cb()
+        , ->
+          callback null,articles
 
 ###
 # Private Methods
