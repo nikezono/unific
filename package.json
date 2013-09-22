@@ -18,6 +18,10 @@
     "st": "*",
     "direquire" : "*",
     "parse-rss": "*",
+    "passport":"*",
+    "passport-local":"*",
+    "bcrypt":"*",
+    "connect-mongo": "*",
     "moment":"*"
   },
   "devDependencies": {

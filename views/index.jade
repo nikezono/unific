@@ -1,23 +1,58 @@
 extends layout
 
 block content
+  
+  if message != null
+    h5= message
+
   input.input-large.search-query#GoInput(type='text',placeholder="Type something…")
   button.btn#GoButton Go
 
-  h3 Usage
-  ol
-    li input any keyword which you interests
-    li push 'Go' button
-    li then you found(or created) your feed stream
+  br
 
-  h3 Example
-  ol
-    li
-      a(href='/music') Music
-      p music news stream.
-    li
-      a(href='/nikezono') nikezono
-      p news stream for nikezono(is the developer of unific)
-    li
-      a(href='/masuilab') Masui Lab.
-      p social news stream for Masui Lab.(Keio University)
+  if user != null
+    p
+      | email :
+      = user.name
+    p
+      | name :
+      = user.email
+    a(href='/log_out') ログアウト
+
+  br
+
+  if user == null
+
+    .span3
+      h4 Login
+        form(action='/log_in', method='post')
+          div
+            label Username:
+            input(type='text', name='username')
+            br
+          div
+            label Password:
+            input(type='password', name='password')
+            br
+          div
+            input(type='checkbox', name='rememberme')
+            | Remember Me
+          div
+            input(type='submit', value='Submit')
+
+    .span3
+      h4 Signup
+      form(action='/sign_up', method='post')
+        div
+          label Email:
+          input(type='text', name='email')
+          br
+        div
+          label Username:
+          input(type='text', name='username')
+          br
+        div
+          label Password:
+          input(type='password', name='password')
+        div
+          input(type='submit', value='Submit')
