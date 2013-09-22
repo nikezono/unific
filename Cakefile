@@ -11,3 +11,10 @@ task 'compile:view:helper', 'compile view jade', ->
   cp.spawn "jade"
     ,["views/helpers", "-o", "views/helpers"]
       ,{ stdio: 'inherit'}
+
+task 'compile:dots', 'comiple/docs/*.dot', ->
+  cp.spawn "dot"
+    ,["-Tgif", "docs/class_diagram.dot", "-o","docs/class_diagram.gif"]
+      ,{ stdio: 'inherit'}
+  cp.spawn "open"
+    ,["docs"]

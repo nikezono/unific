@@ -31,14 +31,17 @@ module.exports.updateStream = (app) ->
     console.info "Batch Processing Start"
     if not all and streamname
       Stream.findOne title:streamname, (err,stream)->
+        console.log "Only #{streamname} is updating"
         that.findArticlesByStream stream,'',(err,merged)->
-          return console.error err if err?
+          console.error err unless _.isEmpty(err)
           that.manageArticles merged,(err,articles)->
-            return console.error err if err?
+            console.error err if err?
+
             stream.articles = articles
             stream.markModified('articles')
             stream.save()
-            callback articles if streamname is stream.title and callback?
+            console.log "#{streamname} is Updated."
+            return callback articles if callback?
         ,->
           return console.info "Batch Processing is Completed."
 
@@ -46,15 +49,19 @@ module.exports.updateStream = (app) ->
       Stream.find {}, (err,streams) ->
         console.error if err?
         async.forEach streams, (stream,cb)->
-          that.findArticlesByStream stream,'',(err,merged)->
-            return console.error err if err?
-            that.manageArticles merged,(err,articles)->
-              return console.error err if err?
-              stream.articles = articles
-              stream.markModified('articles')
-              stream.save()
-              callback articles if streamname is stream.title and callback?
-              cb()
+          that.findArticlesByStream stream,'',(errors,merged)->
+            console.error errors unless _.isEmpty(errors)
+            console.log "stream #{stream.title} articles merged"
+            unless _.isEmpty(merged)
+              that.manageArticles merged,(err,articles)->
+                console.error err unless _.isEmpty(err)
+                stream.articles = articles
+                stream.markModified('articles')
+                stream.save()
+                callback articles if streamname is stream.title and callback?
+                return cb()
+            else
+              return cb()
         ,->
           return console.info "Batch Processing is Completed."
 
@@ -65,39 +72,63 @@ module.exports.updateStream = (app) ->
   # @parent      [String](Optional) 親ストリームの名前（再帰）
   # @callback    [Function](err,feeds)  マージされたフィード
   findArticlesByStream: (stream,parent,callback)->
+    console.info "#{stream.title} is updating.parent:#{parent}"
     that = @
     # Feedの検索
     Feed.find 
       stream:stream._id
       alive :true
     ,{},{},(err,feeds)->
-      feed_pages = []
-      # 各ArticleのMerge
-      async.forEach feeds,(feed,cb)->
-        urlObj = url.parse(feed.url)
+      if err? or _.isEmpty(feeds)
+        return callback null,[] if _.isEmpty(feeds)
+      else
+        feed_pages = []
+        # 各ArticleのMerge
+        errors = []
+        
+        async.forEach feeds,(feed,cb)->
+          console.info "feed #{feed.title} is updating"
+          urlObj = url.parse(feed.url)
 
-        # 親子関係のときobjectを返す
-        if urlObj.hostname in domain
-          substreamname = urlObj.pathname.split('/')[1]
-          # ループ離脱（フォロー相手に自分が含まれていれば除く)
-          if substreamname is parent
-            cb()
+          # 親子関係のときobjectを返す
+          if urlObj.hostname in domain
+            substreamname = urlObj.pathname.split('/')[1]
+            # ループ離脱（フォロー相手に自分が含まれていれば除く)
+            if substreamname is parent
+              console.info "#{stream.title} follows #{parent}."
+              return cb()
+            else
+              Stream.findOne {title:substreamname}, (err,substream)->
+                if err?
+                  console.error err
+                  return cb()
+                else
+                  console.info "#{stream.title} follows #{substream.title}. Recursive Strategy Start."
+                  that.findArticlesByStream substream,stream.title,(err,pages)->
+                    errors = errors.concat err if _.isEmpty(err)
+                    feed_pages = feed_pages.concat pages
+                    return cb()
+
           else
-            Stream.findOne {title:substreamname}, (err,substream)->
-              cb() if err
-              that.findArticlesByStream substream,stream.title,(err,pages)->
-                feed_pages = feed_pages.concat pages
-                cb()
-        else
-          console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
-          # 外部サイト
-          parser feed.url, (err,articles)->
-            return callback err,null if err
-            Page.findAndUpdateByArticles articles,feed,(pages)->
-              feed_pages = feed_pages.concat pages
-              cb()
-      ,->
-        return callback null, feed_pages
+            console.log "外部サイト取得:#{feed.title} url:#{feed.url}"
+
+            # 外部サイト
+            parser feed.url, (err,articles)->
+              console.log "#{feed.title} is returned. error:#{err} articles:#{articles?}. articles?.length?:#{articles?.length?}"
+              unless err? 
+                console.error err
+                return cb()
+              if articles?.length?
+                console.info "#{feed.title} 取得."
+                Page.findAndUpdateByArticles articles,feed,(pages)->
+                  feed_pages = feed_pages.concat pages
+                  return cb()
+              else
+                console.info "no error but #{feed.title} missed."
+                return cb()
+        ,->
+          console.log "stream #{stream.title} is find&parsed"
+          return callback errors, feed_pages
 
   # マージされた記事の整形
   # スター付き記事全てととスター無し記事最新50件をマージ
