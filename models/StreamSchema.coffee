@@ -5,8 +5,8 @@
   * title [String] タイトル
   * description [String] ページ上部の説明
   * feeds [ObjectId] ObjectIdのArray
-  * background [String] Background_Imageのパス(通常は,/public/images/title.filetype)
-  * password [String] BasicAuthのパスワード
+  * creater [ObjectId]
+  * subscribers [ObjectId]
 
 ###
 
@@ -15,9 +15,10 @@ Mongo = require 'mongoose'
 StreamSchema = new Mongo.Schema
   title:       { type: String, unique: yes ,index: yes }
   description: String
-  background:  String
-  articles :   Mongo.Schema.Types.Mixed
+  articles:   Mongo.Schema.Types.Mixed
   feeds:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }]
+  creator:      { type: Mongo.Schema.Types.ObjectId, ref: 'users' }
+  subscribers: [{ type: Mongo.Schema.Types.ObjectId, ref: 'users' }]
 
 # find-by-name
 StreamSchema.statics.findByTitle = (title, callback) ->

@@ -6,7 +6,7 @@
   * description  [String]     見出し
   * url          [String]     元記事のurl
   * starred      [Bool]       スターが付けられているか
-  * comments     [Array]   String Array
+  * comments     [Array]      String Array
   * feed         [ObjectId]   親Feed
 
 ###

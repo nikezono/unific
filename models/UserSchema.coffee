@@ -6,6 +6,10 @@
   * name        [String]
   * icon        [String]
   * password    [String]
+  * accessToken
+  * stargazes
+  * subscribes
+  * streams
 
 ###
 
@@ -17,9 +21,12 @@ SALT_WORK_FACTOR = 10;
 UserSchema = new Mongo.Schema
   email:           { type: String, required: true,unique:true, index: yes }
   name:            { type: String, required: true,unique:true }
-  password:        { type: String,required: true,unique:true }
-  icon:            { type: String, default: '' }
-  accessToken:       { type: String }
+  password:        { type: String, required: true,unique:true }
+  icon_url:        { type: String, default: '' }
+  accessToken:     { type: String }
+  stargazes:      [{ type: Mongo.Schema.Types.ObjectId, ref: 'pages' }]
+  subscribes:     [{ type: Mongo.Schema.Types.ObjectId, ref: 'streams' }]
+  streams:        [{ type: Mongo.Schema.Types.ObjectId, ref: 'streams' }]
 
 # Bcrypt middleware
 UserSchema.pre "save", (next) ->
