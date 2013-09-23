@@ -10,7 +10,7 @@ module.exports.HomeEvent = (app) ->
 
   index: (req,res)->
     res.render "index",
-      title :  'unific',
+      title :  'unific'
       user  :  req.user
 
   about: (req,res)->
