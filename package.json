@@ -4,11 +4,11 @@
   "version": "0.0.1",
   "author": "nikezono",
   "dependencies": {
-    "find-rss" : "*",
+    "find-rss": "*",
     "rss": "*",
     "underscore": "*",
     "async": "*",
-    "socket.io":"*",
+    "socket.io": "*",
     "express": "*",
     "coffee-script": "*",
     "jade": "0.32",
@@ -16,17 +16,18 @@
     "stylus": "*",
     "nib": "*",
     "st": "*",
-    "direquire" : "*",
+    "direquire": "*",
     "parse-rss": "*",
-    "passport":"*",
-    "passport-local":"*",
-    "bcrypt":"*",
+    "passport": "*",
+    "passport-local": "*",
+    "bcrypt": "*",
     "connect-mongo": "*",
-    "moment":"*"
+    "moment": "*",
+    "passport.socketio": "~1.2.1"
   },
   "devDependencies": {
     "coffee-script": "*",
-    "assert":"*",
+    "assert": "*",
     "mocha": "*"
   },
   "keywords": [],
@@ -36,9 +37,9 @@
   },
   "main": "",
   "scripts": {
-    "test"   : "./node_modules/.bin/cake test",
+    "test": "./node_modules/.bin/cake test",
     "compile": "./node_modules/.bin/cake compile"
-    },
+  },
   "engines": {
     "node": "*"
   },
