@@ -13,6 +13,7 @@ module.exports.HomeEvent = (app) ->
       title :  'unific'
       user  :  req.user
 
+  # @todo 実装 とりあえずuserのhashを返してる
   about: (req,res)->
     res.send req.user
 
