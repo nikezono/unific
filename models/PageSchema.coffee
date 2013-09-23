@@ -4,10 +4,10 @@
 
   * title        [String]     ページのタイトル
   * description  [String]     見出し
+  * PubDate      [Date]
   * url          [String]     元記事のurl
-  * starred      [Bool]       スターが付けられているか
-  * comments     [Array]      String Array
   * feed         [ObjectId]   親Feed
+  * stargazers   [Array]      Starを付けたUserのObjectId Array
 
 ###
 
@@ -19,10 +19,14 @@ PageSchema = new Mongo.Schema
   title:       { type: String, index: yes }
   description: String
   url:         String
-  starred:     { type: Boolean, default: false }
   pubDate:     Date
-  comments:    [String]
   feed:        { type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }
+  stargazers:  [{ type: Mongo.Schema.Types.ObjectId, ref: 'users' }]
+
+PageSchema.statics.getStarGazersById = (id,callback)->
+  @findOne {_id:id},{},{ populate: 'users' },(err,page)->
+    return callback err,null if err
+    return callback null,page.stargazers
 
 PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->
   that = this
@@ -52,7 +56,7 @@ PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->
 
 ###
 # Private Method
-### 
+###
 sanitizeHTML = (str)->
   return str.replace /<(.+?)>/g, ''
 
