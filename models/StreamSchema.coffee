@@ -25,6 +25,11 @@ StreamSchema.statics.getFeedsById = (id,callback)->
     return callback err,null if err
     return callback null,stream.feeds
 
+StreamSchema.statics.getFeedsByTitle = (title,callback)->
+  @findOne {title:title},{},{ populate: 'feeds' },(err,stream)->
+    return callback err,null if err
+    return callback null,stream.feeds
+
 StreamSchema.statics.getSubScribersById = (id,callback)->
   @findOne {_id:id},{},{ populate: 'users' },(err,stream)->
     return callback err,null if err

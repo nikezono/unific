@@ -6,10 +6,6 @@
 
 module.exports.PageEvent = (app) ->
 
-  ###
-  # dependency
-  ###
-
   _  = require 'underscore'
 
   Page   = app.get("models").Page
