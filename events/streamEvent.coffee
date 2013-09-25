@@ -63,6 +63,7 @@ module.exports.StreamEvent = (app) ->
       socket.emit 'got feed_list', feeds
 
   sync : (socket,data) ->
+    console.log socket.handshake.user
     console.info "socket #{socket.id} request sync. stream:#{data.stream} latest:#{data.latest}"
     streamname = decodeURIComponent data.stream
     latest = data.latest || null

@@ -56,23 +56,24 @@ module.exports.FeedEvent = (app) ->
   editFeedList:(socket,io,data) ->
     console.info 'editted feed-list by #{socket.id}'
     streamname = decodeURIComponent data.stream
-    Stream.findOne title:
-    Stream.getFeedsById stream._id,(err,feeds)->
+    Stream.findOne title:streamname, (err,stream)->
       return socket.emit 'error' if err
-      async.forEach feeds, (feed,cb)->
-        # チェックボックスに✓されていないurlの場合Arrayからwithoutする
-        unless feed.url in data.urls
-          feed.streams = _.without(feed.streams,stream._id)
-          feed.save()
-          stream.feeds = _.without(stream.feeds,feed._id)
-          stream.save()
-        cb()
-      , ->
-        console.info "Stream:#{stream.title} edit feed"
+      Stream.getFeedsById stream._id,(err,feeds)->
+        return socket.emit 'error' if err
+        async.forEach feeds, (feed,cb)->
+          # チェックボックスに✓されていないurlの場合Arrayからwithoutする
+          unless feed.url in data.urls
+            feed.streams = _.without(feed.streams,stream._id)
+            feed.save()
+            stream.feeds = _.without(stream.feeds,feed._id)
+            stream.save()
+          cb()
+        , ->
+          console.info "Stream:#{stream.title} edit feed"
 
-        # @todo リファクタリング iss#41
-        updater.update streamname,false,(articles)->
-          io.sockets.to(data.stream).emit 'edit completed'
+          # @todo リファクタリング iss#41
+          updater.update streamname,false,(articles)->
+            io.sockets.to(data.stream).emit 'edit completed'
 
 
 
