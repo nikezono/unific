@@ -78,16 +78,26 @@ UserSchema.statics.createWithValidate = (data,callback)->
   that = @
 
   # Fully Path is required
-  return callback 'fully pass is required',null unless (data.name and data.email and data.password)
+  return callback '全ての欄を埋めてください',null unless (data.name and data.email and data.password)
 
   # @todo crypt
+  # @todo メールバリデータ
 
-  that.create
-    name: data.name
-    email: data.email
-    password:data.password
-  ,(err,user)-> 
-    return callback err,null if err
-    callback null,user
+  # 一意性
+  uniqueQuery = that.find()
+  uniqueQuery.or
+    name:data.name
+    email:data.email
+  .exec (err,users)->
+    return callback err, nulll if err
+    return callback 'すでにemailかnameが使われています',null if users.length > 0
+
+    that.create
+      name: data.name
+      email: data.email
+      password:data.password
+    ,(err,user)-> 
+      return callback err,null if err
+      callback null,user
 
 exports.User = Mongo.model 'users', UserSchema

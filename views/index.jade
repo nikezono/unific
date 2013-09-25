@@ -1,25 +1,12 @@
 extends layout
 
 block content
+
   
-  if message != null
-    h5= message
-
-  input.input-large.search-query#GoInput(type='text',placeholder="Type something…")
-  button.btn#GoButton Go
-
-  br
-
   if user != null
-    p
-      | email :
-      = user.name
-    p
-      | name :
-      = user.email
-    a(href='/log_out') ログアウト
-
-  br
+    .span3
+      a(href='/my') マイページ
+      a(href='/log_out') ログアウト
 
   if user == null
 

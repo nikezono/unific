@@ -20,9 +20,7 @@ html
     script(src='/socket.io/socket.io.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js')
     script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
-    script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js')
-    script(src='//cdnjs.cloudflare.com/ajax/libs/chardin.js/0.1.2/chardinjs.min.js')
     script(src='/lib/js/bootstrap.min.js')
 
     //- FancyBox
@@ -33,50 +31,11 @@ html
     link(rel='stylesheet', href='/lib/css/bootplus.min.css')
     link(rel='stylesheet', href='/lib/css/bootplus-responsive.min.css')
     link(rel='stylesheet', href='/lib/css/font-awesome.min.css')
-    link(rel='stylesheet', href='/lib/css/chardinjs.css')
-
     link(rel='stylesheet', href='/css/main.css')
 
   body
-    if background
-      #AbsoluteBackground(style="background-image:url(#{background});opacity:0.2")
-    else
-      #AbsoluteBackground
     .container
-      .row
-        .span2#notification
-          block notification
+      block content
 
-        .span7#contents
-          .page-header
-            h1= title
-              if title != 'unific'
-                small= ' - unific'
-            if description
-              p#Description(data-intro='説明文を変更できます。',data-position='left',contenteditable=true)= description
-
-          block content
-        .span3#utility
-          block utility
-
-        block modals
-
-  //- Include User Scripts
-
-  //- Variables
-  script(src='/js/globalObject.js')
-
-  //- Helpers
-  script(src='/js/viewHelper.js')
-  script(src='/js/domHelper.js')
-
-  //- Events
-  script(src='/js/domEvent.js')
-  script(src='/js/homeEvent.js')
-  script(src='/js/streamEvent.js')
-  script(src='/js/feedEvent.js')
-  script(src='/js/pageEvent.js')
-
-  //- Main
-  script(src='/js/routes.js')
+  //- User Scripts
   script(src='/js/main.js')

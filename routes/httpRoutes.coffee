@@ -18,7 +18,7 @@ module.exports = (app,passport) ->
 
   # POST /login
   app.post "/log_in", passport.authenticate "local",
-    successRedirect: "/about"
+    successRedirect: "/my"
     failureRedirect: "/"
 
 
@@ -33,6 +33,7 @@ module.exports = (app,passport) ->
   # homeEvent Controller
   app.get '/',              (req,res,next)-> HomeEvent.index   req,res,next
   app.get '/about',         (req,res,next)-> HomeEvent.about   req,res,next
+  app.get '/my',            (req,res,next)-> HomeEvent.mypage  req,res,next
 
   # streamEvent Controller
   app.get '/:stream',       (req,res,next)-> StreamEvent.index req,res,next
