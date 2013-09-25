@@ -24,6 +24,8 @@ $ ->
   ###
   # Socket.io configration
   ###
+  if _.isEmpty path
+    socket = io.connect()
 
   unless _.isEmpty path
 
