@@ -10,9 +10,10 @@ module.exports.HomeEvent = (app) ->
 
   index: (req,res)->
     res.render "index",
-      title :  'unific',
+      title :  'unific'
       user  :  req.user
 
+  # @todo 実装 とりあえずuserのhashを返してる
   about: (req,res)->
     res.send req.user
 

@@ -30,7 +30,6 @@ app = express()
 # env
 app.set 'env', process.env.NODE_ENV || 'development'
 app.set 'port', process.env.PORT || 3001
-app.set 'domain', ['localhost','unific.net','unific.nikezono.net','net45-dhcp160.sfc.keio.ac.jp']
 
 # views
 app.set "views", path.resolve "views"
@@ -57,6 +56,7 @@ app.configure ->
 
   app.use passport.initialize()
   app.use passport.session()
+
   # Remember Me middleware
   app.use (req, res, next) ->
     if req.method is "POST" and req.url is "/log_in"
@@ -76,11 +76,11 @@ app.configure ->
 (require path.resolve 'routes','httpRoutes') app,passport
 
 if process.env.NODE_ENV is 'production'
-  console.info "mongoose connect:unific"
-  mongoose.connect "mongodb://localhost/unific"
+  console.info "mongoose connect:unific-v2"
+  mongoose.connect "mongodb://localhost/unific-v2"
 else
-  console.info "mongoose connect:unific-dev"
-  mongoose.connect "mongodb://localhost/unific-dev"
+  console.info "mongoose connect:unific-dev-v2"
+  mongoose.connect "mongodb://localhost/unific-dev-v2"
 
 app.configure "development", ->
   app.use express.errorHandler()
