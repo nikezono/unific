@@ -6,24 +6,38 @@
 
 module.exports.HomeEvent = (app) ->
 
+  util = require 'util'
+
   User = app.get('models').User
 
   index: (req,res)->
-    res.render "index",
-      title :  'unific',
-      user  :  req.user
+    if req.user
+      return res.redirect '/home'
+    return res.render "index",
+      title :  'Unific'
+      messages:
+        error:req.flash('error')
+        info: req.flash('info')
 
+  # @todo 実装 とりあえずuserのhashを返してる
   about: (req,res)->
-    res.send req.user
+    res.send "about" + req.user
 
-  postSignUp: (req,res)->
-    User.createWithValidate
-      email: req.param('email')
-      name : req.param('username')
-      password: req.param('password')
-    ,(err,user)-> 
-      if err
-        return res.send 'error',"error : #{err}" 
-      else
-        res.send "user #{user._id} is created"
-    
+  team: (req,res)->
+    res.send "team" + req.user
+
+  # @note populateでStargazesとSubscribesとCreates全部引っ張ってきてるので、
+  # スケーラビリティに欠けるかもしれない。(socket.ioでpartialにpullしたほうがいいかも)
+  mypage: (req,res)->
+    if req.user
+      User.findOne({accessToken:req.user.accessToken})
+      .populate('stargazes')
+      .populate('subscribes')
+      .populate('streams')
+      .exec (err,user)->
+        return res.send "502 Error, #{err}" if err
+        res.render "home",
+          title: user.name + " - Unific"
+          user: user
+    else
+      res.redirect "/"

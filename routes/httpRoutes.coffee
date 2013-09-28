@@ -9,6 +9,7 @@ module.exports = (app,passport) ->
   
   # include events
   HomeEvent   = app.get('events').HomeEvent app
+  AuthEvent   = app.get('events').AuthEvent app,passport
   StreamEvent = app.get('events').StreamEvent app
 
   # Simple route middleware to ensure user is authenticated.
@@ -16,29 +17,16 @@ module.exports = (app,passport) ->
     return next()  if req.isAuthenticated()
     res.redirect "/"
 
-  # POST /login
-  app.post "/log_in", (req, res, next) ->
-    passport.authenticate("local", (err, user, info) ->
-      return next(err)  if err
-      unless user
-        return res.redirect("/")
-      req.logIn user, (err) ->
-        return next(err)  if err
-        return res.redirect "/about"
-
-    ) req, res, next
-
-  app.get "/log_out", (req, res) ->
-    req.logout()
-    req.session.destroy()
-    return res.send "log out"
-
-  # User
-  app.post '/sign_up', (req, res) -> HomeEvent.postSignUp req,res
+  # Auth Event Controller
+  app.post "/log_in",       AuthEvent.logIn
+  app.get "/log_out",       (req,res,next)-> AuthEvent.logOut req,res,next
+  app.post '/sign_up',      (req,res,next)-> AuthEvent.signUp req,res,next
 
   # homeEvent Controller
   app.get '/',              (req,res,next)-> HomeEvent.index   req,res,next
   app.get '/about',         (req,res,next)-> HomeEvent.about   req,res,next
+  app.get '/team',          (req,res,next)-> HomeEvent.team    req,res,next
+  app.get '/home',          (req,res,next)-> HomeEvent.mypage  req,res,next
 
   # streamEvent Controller
   app.get '/:stream',       (req,res,next)-> StreamEvent.index req,res,next

@@ -26,5 +26,4 @@ FeedSchema.statics.getPagesById = (id,callback)->
     return callback err,null if err
     return callback null,feed.pages
 
-
 exports.Feed = Mongo.model 'feeds', FeedSchema
