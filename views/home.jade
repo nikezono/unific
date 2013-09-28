@@ -16,10 +16,20 @@ block content
         .inner
           #home-account-icon
             img(src=user.icon_url,width="44",height="44")
-          #home-account-name
-            a(href="#")
+          .dropdown
+            a#home-account-name(data-toggle='dropdown',href="#")
               = user.name
               span.icon.glyphicon.glyphicon-chevron-down
+            ul#home-dropdown-menu.dropdown-menu(role='menu',aria-labelledby="dLabel")
+              li.presentation
+                a(href="#")
+                  | Change Profile
+              li
+                a(href="#")
+                  | Change Stream
+              li
+                a(href='/log_out')
+                  | Log Out
 
       //- SideBar --//
       #home-sidebar
@@ -98,7 +108,7 @@ block content
                 | Contact Us
 
 
-    //- HOME-RIGHT
+    //- HOME-RIGHT -//
     #home-right
       #home-header
         .inner
