@@ -77,9 +77,23 @@ module.exports.StreamEvent = (app) ->
   sync : (socket,data) ->
     console.info "socket #{socket.id} request sync. stream:#{data.stream} latest:#{data.latest}"
     streamname = decodeURIComponent data.stream
-    @getDiff streamname,data.latest, (err,articles)->
+    # 新着記事とStar付き記事をを取得する
+    that = this
+    async.parallel
+      diff: (cb)->
+        that.getDiff streamname,data.latest, (err,articles)->
+          return cb err,null if err
+          cb null,articles
+          # Sync Completed
+      stars: (cb)->
+        that.getStars streamname,(err,articles)->
+          return cb err,null if err
+          cb null, articles
+    ,(err,results)->
       return socket.emit 'error' if err
-      # Sync Completed
+      articles = results.diff.concat(results.stars)
+      articles = _.sortBy articles,(article)->
+        article.page.pubDate.getTime()
       socket.emit 'sync completed',  articles
       console.log "#{socket.id} is sync"
 
@@ -111,6 +125,31 @@ module.exports.StreamEvent = (app) ->
         #console.log "#{article.page.pubDate.getTime()} > #{latest}?"
         return article.page.pubDate.getTime() > latest
       callback null,articles
+
+  # ストリームからStar付き記事を取得する
+  # @todo キャッシュしたり処理軽減したり
+  getStars: (streamname,callback) ->
+    Stream.findOne title:streamname,(err,stream)->
+      return callback err,null if err?
+      Feed.find stream:stream._id,(err,feeds)->
+        return callback err,null if err?
+        articles = []
+        console.log feeds
+        async.each feeds,(feed,cb)->
+          Page.find
+            feed:feed._id
+            starred:true
+          , (err,pages)->
+            return cb() if err?
+            async.forEach pages,(page,_cb)->
+              articles = articles.concat
+                feed: feed
+                page: page
+              return _cb()
+            ,->
+              return cb()
+        , ->
+          callback null,articles
 
 ###
 # Private Methods
