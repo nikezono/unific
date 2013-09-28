@@ -1,1 +1,1 @@
-!function(){var n;n="undefined"!=typeof exports&&null!==exports?exports:this,n.path=window.location.pathname.substr(1),n.accessToken="",$(function(){var n;return n=io.connect(),n.on("auth",function(n){var t;return t=n})})}.call(this);
+!function(){var n;n="undefined"!=typeof exports&&null!==exports?exports:this,n.path=window.location.pathname.substr(1),n.accessToken="",$(function(){var n;return $(".dropdown-toggle").dropdown(),n=io.connect(),n.on("auth",function(n){var t;return t=n})})}.call(this);

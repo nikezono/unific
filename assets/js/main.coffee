@@ -14,6 +14,7 @@ $ ->
   ###
   # Init Event
   ###
+  $('.dropdown-toggle').dropdown()
   socket = io.connect()
 
   # 以後サーバとの通信に使用するAccessTokenをグローバル変数化する

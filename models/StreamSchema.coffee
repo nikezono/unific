@@ -6,6 +6,7 @@
   * description [String] ページ上部の説明
   * feeds       [ObjectId] ObjectIdのArray
   * creator     [ObjectId]
+  * icon_url    [String]   アイコンのurl
   * subscribers [ObjectId]
 
 ###
@@ -15,7 +16,6 @@ Mongo = require 'mongoose'
 StreamSchema = new Mongo.Schema
   title:       { type: String, unique: yes ,index: yes }
   description: String
-  articles:    Mongo.Schema.Types.Mixed
   icon_url:    { type: String, default: "/images/no_icon_stream.png" }
   feeds:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }]
   creator:      { type: Mongo.Schema.Types.ObjectId, ref: 'users' }
