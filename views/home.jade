@@ -12,14 +12,27 @@ block content
         h1
           a(href="/")
             | UNIFIC
+
       #home-account
         .inner
           #home-account-icon
             img(src=user.icon_url,width="44",height="44")
-          #home-account-name
-            a(href="#")
+
+          //- Dropdown Menu -//
+          .dropdown
+            a#home-account-name(data-toggle='dropdown',href="#")
               = user.name
               span.icon.glyphicon.glyphicon-chevron-down
+            ul#home-dropdown-menu.dropdown-menu(role='menu',aria-labelledby="dLabel")
+              li.presentation
+                a(data-toggle="modal",href="#modal-change-profile")
+                  | ユーザ情報の編集
+              li
+                a(data-toggle="modal",href="#modal-create-stream")
+                  | ストリームの新規作成
+              li
+                a(href='/log_out')
+                  | ログアウト
 
       //- SideBar --//
       #home-sidebar
@@ -98,7 +111,7 @@ block content
                 | Contact Us
 
 
-    //- HOME-RIGHT
+    //- HOME-RIGHT -//
     #home-right
       #home-header
         .inner
@@ -368,6 +381,8 @@ block content
                         .icon.glyphicon.glyphicon-share-alt
         .loading
           img(src="img/loading.gif")
+
+
     #home-alerts
       .alert.alert-danger.alert-dismissable
         | 深刻なエラーが発生しました
@@ -377,3 +392,57 @@ block content
         | 普通のエラーが発生しました
         button(type="button", class="close", data-dismiss="alert", aria-hidden="true")
           | &times;
+
+    //- Create Stream Modal Window -//
+    #modal-change-profile.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4.modal-title ユーザ情報の編集
+          .modal-body
+            .name.form-group
+              label.control-label 名前
+              input.form-control(type='text')
+            .email.form-group
+              label.control-label メールアドレス
+              input.form-control(type='email')
+            .password.form-group
+              label.control-label 現在のパスワード
+              input#oldPassword.form-control(type='password')
+              label.control-label 新しいパスワード
+              input#newPassword.form-control(type='password')
+            br
+            .icon.form-group
+              label.control-label アイコン:
+              input(type='file')
+          .modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
+            button.btn.btn-primary(type='button') Save changes
+
+
+
+
+    //- Create Stream Modal Window -//
+    #modal-create-stream.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4.modal-title ストリームの新規作成
+          .modal-body
+            p 好きな名前のストリームを作成することができます。
+            .name.form-group
+              label.control-label ストリームの名前:
+              input.form-control(type='text')
+            .description.form-group
+              label.control-label ストリームの説明:
+              textarea.form-control(row="3")
+            br
+            .icon.form-group
+              label.control-label アイコン:
+              input(type='file')
+          .modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
+            button.btn.btn-primary(type='button') Save changes
+
