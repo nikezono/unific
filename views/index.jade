@@ -2,38 +2,12 @@ extends layout
 
 block content
 
-  
-  if user != null
-    .span3
-      a(href='/my') マイページ
-      a(href='/log_out') ログアウト
+  if messages
+    p= messages
 
-  if user == null
-
-    .span3
-      h4 Login
-        form(action='/log_in', method='post')
-          div
-            label Username:
-            input(type='text', name='username')
-            br
-          div
-            label Password:
-            input(type='password', name='password')
-            br
-          div
-            input(type='checkbox', name='rememberme')
-            | Remember Me
-          div
-            input(type='submit', value='Submit')
-
-    .span3
-      h4 Signup
-      form(action='/sign_up', method='post')
-        div
-          label Email:
-          input(type='text', name='email')
-          br
+  .span3
+    h4 Login
+      form(action='/log_in', method='post')
         div
           label Username:
           input(type='text', name='username')
@@ -41,5 +15,26 @@ block content
         div
           label Password:
           input(type='password', name='password')
+          br
+        div
+          input(type='checkbox', name='rememberme')
+          | Remember Me
         div
           input(type='submit', value='Submit')
+
+  .span3
+    h4 Signup
+    form(action='/sign_up', method='post')
+      div
+        label Email:
+        input(type='text', name='email')
+        br
+      div
+        label Username:
+        input(type='text', name='username')
+        br
+      div
+        label Password:
+        input(type='password', name='password')
+      div
+        input(type='submit', value='Submit')

@@ -16,6 +16,7 @@ StreamSchema = new Mongo.Schema
   title:       { type: String, unique: yes ,index: yes }
   description: String
   articles:    Mongo.Schema.Types.Mixed
+  icon_url:    { type: String, default: "/images/no_icon_stream.png" }
   feeds:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }]
   creator:      { type: Mongo.Schema.Types.ObjectId, ref: 'users' }
   subscribers: [{ type: Mongo.Schema.Types.ObjectId, ref: 'users' }]

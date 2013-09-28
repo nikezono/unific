@@ -8,15 +8,14 @@
 
 # Dependency
 require.all   = require 'direquire'
+flash         = require 'connect-flash'
 express       = require "express"
 passport      = require 'passport'
 path          = require "path"
 
-secrets       = path.resolve 'config','secrets'
-
 # MongoDB
 mongoose = require "mongoose"
-mongoose.connect   "mongodb://localhost/#{secrets.dbname}"
+mongoose.connect   "mongodb://localhost/unific-v2"
 
 app = express()
 
@@ -35,7 +34,7 @@ app = express()
 # env
 app.set 'env', process.env.NODE_ENV || 'development'
 app.set 'port', process.env.PORT || 3001
-app.set 'secret',process.env.SESSION_SECRET || secrets.session || 'deadbeef'
+app.set 'secret',process.env.SESSION_SECRET || 'deadbeef'
 app.set 'session',connect.session
 
 # views
@@ -58,6 +57,8 @@ app.configure ->
   app.use express.logger("dev")
   app.use express.bodyParser()
   app.use express.methodOverride()
+
+  # Auth
   app.use express.cookieParser() 
   app.use express.session
     secret: app.get 'secret'
@@ -75,11 +76,9 @@ app.configure ->
         req.session.cookie.expires = false
     next()
 
-  # static
   app.use connect.static
-
-  # router
   app.use app.router
+  app.use flash()
 
 # Routes
 (require path.resolve 'routes','httpRoutes') app,passport

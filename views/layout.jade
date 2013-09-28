@@ -1,37 +1,27 @@
 doctype 5
 html
   head
-    if title != 'unific'
-      title= title + ' - unific'
-    else
-      title= 'unific'
+    title= title
 
-    //-
-      Atom/RSS Feed
-    //-
+    //- meta
+    meta(name="viewport",content="width=device-width, initial-scale=1.0")
+    meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+
+    //- Atom/RSS Feed
     if rss
       link(rel="alternate",type="application/rss+xml",href="#{rss}")
-
-    //-
-       Include Library (Primaly)
-    //-
 
     //- javascript
     script(src='/socket.io/socket.io.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js')
     script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js')
-    script(src='/lib/js/bootstrap.min.js')
-
-    //- FancyBox
-    script(src='//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.pack.js')
-    link(rel='stylesheet', href='/lib/css/jquery.fancybox.css', media="screen")
-
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js')
     //- css
-    link(rel='stylesheet', href='/lib/css/bootplus.min.css')
-    link(rel='stylesheet', href='/lib/css/bootplus-responsive.min.css')
-    link(rel='stylesheet', href='/lib/css/font-awesome.min.css')
-    link(rel='stylesheet', href='/css/main.css')
+    link(type="text/css",rel="stylesheet", href="/lib/css/reset.css")
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css')
+    link(type="text/css",rel="stylesheet", href="/css/style.css")
 
   body
     .container

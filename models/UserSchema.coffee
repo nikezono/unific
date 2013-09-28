@@ -22,7 +22,7 @@ UserSchema = new Mongo.Schema
   email:           { type: String, required: true,unique:true, index: yes }
   name:            { type: String, required: true,unique:true }
   password:        { type: String, required: true,unique:true }
-  icon_url:        { type: String, default: '' }
+  icon_url:        { type: String, default: '/images/no_icon_user.png' }
   accessToken:     { type: String }
   stargazes:      [{ type: Mongo.Schema.Types.ObjectId, ref: 'pages' }]
   subscribes:     [{ type: Mongo.Schema.Types.ObjectId, ref: 'streams' }]

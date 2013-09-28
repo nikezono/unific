@@ -22,7 +22,7 @@
     "passport-local": "*",
     "bcrypt": "*",
     "connect-mongo": "~0.3.3",
-    "moment": "*",
+    "moment": "*"
   },
   "devDependencies": {
     "coffee-script": "*",
@@ -32,7 +32,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git@//github.com/nikezono/newstream"
+    "url": "git@//github.com/nikezono/unific"
   },
   "main": "",
   "scripts": {
