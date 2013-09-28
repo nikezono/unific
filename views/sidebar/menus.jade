@@ -1,0 +1,61 @@
+#home-sidebar
+  ul
+    li#searchform
+      form.form-inline(role="form")
+        .icon.glyphicon.glyphicon-search
+        input.form-control(type="search",placeholder="ニュースを検索")
+    li
+      a(href="#")
+        .icon.glyphicon.glyphicon-fire
+        | 人気のストリーム
+    li.selected
+      a(href="#")
+        .icon.glyphicon.glyphicon-inbox
+        | すべて
+        span.badge 10000
+
+    //- Streams which user created -//
+    li
+      a(href="#")
+        .icon.glyphicon.glyphicon-list-alt
+        | 自分のストリーム
+        = "("+ user.streams.length + ")"
+        span.badge 0
+      if user.streams.length > 0
+        ul
+          for stream in user.streams
+            li
+              a(href="/"+stream.title)
+                img(src=stream.icon_url)
+                  | 
+                span.badge
+                  | 88
+              if stream.feeds.length > 0
+              ul
+                for feed in stream.feeds
+                  li
+                    a(href="")
+                      = feed.title
+
+    //- Starred Pages-//
+    li
+      a(href="#")
+        .icon.glyphicon.glyphicon-star
+        |  お気に入り
+        span.badge 99
+    hr
+
+    //- Streams which user subscribed -//
+    li
+      a(href="#")
+        .icon.glyphicon.glyphicon-ok
+        |  フォロー中
+        = "("+ user.subscribes.length + ")"
+      if user.subscribes.length > 0
+        ul
+          for stream in user.subscribes
+            li
+              a(href="")
+                = stream.title
+                span.badge
+                  | 1

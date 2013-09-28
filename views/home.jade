@@ -4,114 +4,27 @@ block content
 
   #home-wrapper
 
-    //- HOME-LEFT -//
+    //- Alerts -//
+    include helper/alert
+
+    //- Modals -//
+    include helper/modal
+
     #home-left
 
       //- Account Information -//
-      #home-logo
-        h1
-          a(href="/")
-            | UNIFIC
+      include sidebar/account
 
-      #home-account
-        .inner
-          #home-account-icon
-            img(src=user.icon_url,width="44",height="44")
+      //- Sidebar Menus -//
+      include sidebar/menus
 
-          //- Dropdown Menu -//
-          .dropdown
-            a#home-account-name(data-toggle='dropdown',href="#")
-              = user.name
-              span.icon.glyphicon.glyphicon-chevron-down
-            ul#home-dropdown-menu.dropdown-menu(role='menu',aria-labelledby="dLabel")
-              li.presentation
-                a(data-toggle="modal",href="#modal-change-profile")
-                  | ユーザ情報の編集
-              li
-                a(data-toggle="modal",href="#modal-create-stream")
-                  | ストリームの新規作成
-              li
-                a(href='/log_out')
-                  | ログアウト
-
-      //- SideBar --//
-      #home-sidebar
-        ul
-          li#searchform
-            form.form-inline(role="form")
-              .icon.glyphicon.glyphicon-search
-              input.form-control(type="search",placeholder="ニュースを検索")
-          li
-            a(href="#")
-              .icon.glyphicon.glyphicon-fire
-              | 人気のストリーム
-          li.selected
-            a(href="#")
-              .icon.glyphicon.glyphicon-inbox
-              | すべて
-              span.badge 10000
-
-          //- Streams which user created -//
-          li
-            a(href="#")
-              .icon.glyphicon.glyphicon-list-alt
-              | 自分のストリーム
-              = "("+ user.streams.length + ")"
-              span.badge 0
-            if user.streams.length > 0
-              ul
-                for stream in user.streams
-                  li
-                    a(href="/"+stream.title)
-                      img(src=stream.icon_url)
-                        | 
-                      span.badge
-                        | 88
-                    if stream.feeds.length > 0
-                    ul
-                      for feed in stream.feeds
-                        li
-                          a(href="")
-                            = feed.title
-
-          //- Starred Pages-//
-          li
-            a(href="#")
-              .icon.glyphicon.glyphicon-star
-              |  お気に入り
-              span.badge 99
-          hr
-
-          //- Streams which user subscribed -//
-          li
-            a(href="#")
-              .icon.glyphicon.glyphicon-ok
-              |  フォロー中
-              = "("+ user.subscribes.length + ")"
-            if user.subscribes.length > 0
-              ul
-                for stream in user.subscribes
-                  li
-                    a(href="")
-                      = stream.title
-                      span.badge
-                        | 1
-
-      #home-bottombar
-        .inner.clearfix
-          ul
-            li
-              a(href="/about")
-                | About
-            li
-              a(href="/team")
-                | Team
-            li
-              a(href="#")
-                | Contact Us
-
-
-    //- HOME-RIGHT -//
+      //- Sidebar Bottoms -//
+      include sidebar/bottoms 
+     
+    //- HOME-RIGHT
+      @note script(type='text/template')で囲む
+      以下未了
+     -//
     #home-right
       #home-header
         .inner
@@ -381,68 +294,3 @@ block content
                         .icon.glyphicon.glyphicon-share-alt
         .loading
           img(src="img/loading.gif")
-
-
-    #home-alerts
-      .alert.alert-danger.alert-dismissable
-        | 深刻なエラーが発生しました
-        button(type="button", class="close", data-dismiss="alert", aria-hidden="true")
-          | &times;
-      .alert.alert-warning.alert-dismissable
-        | 普通のエラーが発生しました
-        button(type="button", class="close", data-dismiss="alert", aria-hidden="true")
-          | &times;
-
-    //- Create Stream Modal Window -//
-    #modal-change-profile.modal.fade
-      .modal-dialog
-        .modal-content
-          .modal-header
-            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-            h4.modal-title ユーザ情報の編集
-          .modal-body
-            .name.form-group
-              label.control-label 名前
-              input.form-control(type='text')
-            .email.form-group
-              label.control-label メールアドレス
-              input.form-control(type='email')
-            .password.form-group
-              label.control-label 現在のパスワード
-              input#oldPassword.form-control(type='password')
-              label.control-label 新しいパスワード
-              input#newPassword.form-control(type='password')
-            br
-            .icon.form-group
-              label.control-label アイコン:
-              input(type='file')
-          .modal-footer
-            button.btn.btn-default(type='button', data-dismiss='modal') Close
-            button.btn.btn-primary(type='button') Save changes
-
-
-
-
-    //- Create Stream Modal Window -//
-    #modal-create-stream.modal.fade
-      .modal-dialog
-        .modal-content
-          .modal-header
-            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-            h4.modal-title ストリームの新規作成
-          .modal-body
-            p 好きな名前のストリームを作成することができます。
-            .name.form-group
-              label.control-label ストリームの名前:
-              input.form-control(type='text')
-            .description.form-group
-              label.control-label ストリームの説明:
-              textarea.form-control(row="3")
-            br
-            .icon.form-group
-              label.control-label アイコン:
-              input(type='file')
-          .modal-footer
-            button.btn.btn-default(type='button', data-dismiss='modal') Close
-            button.btn.btn-primary(type='button') Save changes
-
