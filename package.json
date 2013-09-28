@@ -22,7 +22,8 @@
     "passport-local": "*",
     "bcrypt": "*",
     "connect-mongo": "~0.3.3",
-    "moment": "*"
+    "moment": "*",
+    "connect-flash": "~0.1.1"
   },
   "devDependencies": {
     "coffee-script": "*",

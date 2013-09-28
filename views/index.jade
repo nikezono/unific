@@ -1,12 +1,18 @@
 extends layout
 
 block content
+  
+  .container
 
-  if messages
-    p= messages
+    .col-md-12
+      #home-alerts
+        .alert.alert-info.alert-dismissable
+          =messages.info
+        .alert.alert-danger.alert-dismissable
+          =messages.error
 
-  .span3
-    h4 Login
+    .col-md-6
+      h4 Login
       form(action='/log_in', method='post')
         div
           label Username:
@@ -22,19 +28,19 @@ block content
         div
           input(type='submit', value='Submit')
 
-  .span3
-    h4 Signup
-    form(action='/sign_up', method='post')
-      div
-        label Email:
-        input(type='text', name='email')
-        br
-      div
-        label Username:
-        input(type='text', name='username')
-        br
-      div
-        label Password:
-        input(type='password', name='password')
-      div
-        input(type='submit', value='Submit')
+    .col-md-6
+      h4 Signup
+      form(action='/sign_up', method='post')
+        div
+          label Email:
+          input(type='text', name='email')
+          br
+        div
+          label Username:
+          input(type='text', name='username')
+          br
+        div
+          label Password:
+          input(type='password', name='password')
+        div
+          input(type='submit', value='Submit')

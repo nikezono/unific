@@ -59,6 +59,7 @@ app.configure ->
   app.use express.methodOverride()
 
   # Auth
+  app.use flash()
   app.use express.cookieParser() 
   app.use express.session
     secret: app.get 'secret'
@@ -78,7 +79,6 @@ app.configure ->
 
   app.use connect.static
   app.use app.router
-  app.use flash()
 
 # Routes
 (require path.resolve 'routes','httpRoutes') app,passport
