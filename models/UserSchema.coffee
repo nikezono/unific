@@ -6,6 +6,10 @@
   * name        [String]
   * icon        [String]
   * password    [String]
+  * accessToken
+  * stargazes   [Array] Starを付けたPageのObjectId Array
+  * subscribes  [Array] SubscribeしているStreamのObjectId Array
+  * streams     [Array] CreateしたStreamのObjectId Array
 
 ###
 
@@ -17,9 +21,27 @@ SALT_WORK_FACTOR = 10;
 UserSchema = new Mongo.Schema
   email:           { type: String, required: true,unique:true, index: yes }
   name:            { type: String, required: true,unique:true }
-  password:        { type: String,required: true,unique:true }
-  icon:            { type: String, default: '' }
-  accessToken:       { type: String }
+  password:        { type: String, required: true,unique:true }
+  icon_url:        { type: String, default: '' }
+  accessToken:     { type: String }
+  stargazes:      [{ type: Mongo.Schema.Types.ObjectId, ref: 'pages' }]
+  subscribes:     [{ type: Mongo.Schema.Types.ObjectId, ref: 'streams' }]
+  streams:        [{ type: Mongo.Schema.Types.ObjectId, ref: 'streams' }]
+
+UserSchema.statics.getStreamsById = (id,callback)->
+  @findOne {_id:id},{},{ populate: 'streams' },(err,user)->
+    return callback err,null if err
+    return callback null,user.streams
+
+UserSchema.statics.getSubscribesById = (id,callback)->
+  @findOne {_id:id},{},{ populate: 'streams' },(err,user)->
+    return callback err,null if err
+    return callback null,user.subscribes
+
+UserSchema.statics.getStarGazesById = (id,callback)->
+  @findOne {_id:id},{},{ populate: 'streams' },(err,user)->
+    return callback err,null if err
+    return callback null,user.stargazes
 
 # Bcrypt middleware
 UserSchema.pre "save", (next) ->
@@ -51,6 +73,7 @@ UserSchema.methods.generateRandomToken = ->
     x++
   token
 
+# @todo バリデーション
 UserSchema.statics.createWithValidate = (data,callback)->
   that = @
 
