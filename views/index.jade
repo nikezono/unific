@@ -2,45 +2,33 @@ extends layout
 
 block content
   
-  if message != null
-    h5= message
+  .container
 
-  input.input-large.search-query#GoInput(type='text',placeholder="Type something…")
-  button.btn#GoButton Go
+    .col-md-12
+      #home-alerts
+        .alert.alert-info.alert-dismissable
+          =messages.info
+        .alert.alert-danger.alert-dismissable
+          =messages.error
 
-  br
-
-  if user != null
-    p
-      | email :
-      = user.name
-    p
-      | name :
-      = user.email
-    a(href='/log_out') ログアウト
-
-  br
-
-  if user == null
-
-    .span3
+    .col-md-6
       h4 Login
-        form(action='/log_in', method='post')
-          div
-            label Username:
-            input(type='text', name='username')
-            br
-          div
-            label Password:
-            input(type='password', name='password')
-            br
-          div
-            input(type='checkbox', name='rememberme')
-            | Remember Me
-          div
-            input(type='submit', value='Submit')
+      form(action='/log_in', method='post')
+        div
+          label Username:
+          input(type='text', name='username')
+          br
+        div
+          label Password:
+          input(type='password', name='password')
+          br
+        div
+          input(type='checkbox', name='rememberme')
+          | Remember Me
+        div
+          input(type='submit', value='Submit')
 
-    .span3
+    .col-md-6
       h4 Signup
       form(action='/sign_up', method='post')
         div

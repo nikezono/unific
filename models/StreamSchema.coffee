@@ -16,12 +16,18 @@ StreamSchema = new Mongo.Schema
   title:       { type: String, unique: yes ,index: yes }
   description: String
   articles:    Mongo.Schema.Types.Mixed
+  icon_url:    { type: String, default: "/images/no_icon_stream.png" }
   feeds:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }]
   creator:      { type: Mongo.Schema.Types.ObjectId, ref: 'users' }
   subscribers: [{ type: Mongo.Schema.Types.ObjectId, ref: 'users' }]
 
 StreamSchema.statics.getFeedsById = (id,callback)->
   @findOne {_id:id},{},{ populate: 'feeds' },(err,stream)->
+    return callback err,null if err
+    return callback null,stream.feeds
+
+StreamSchema.statics.getFeedsByTitle = (title,callback)->
+  @findOne {title:title},{},{ populate: 'feeds' },(err,stream)->
     return callback err,null if err
     return callback null,stream.feeds
 

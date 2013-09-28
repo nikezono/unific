@@ -1,0 +1,392 @@
+$TURQUOISE = #1abc9c
+$WET_ASPHALT = #34495e
+$CLOUD = #ecf0f1
+$ASBESTOS = #7f8c8d
+$SILVER = #bdc3c7
+$BELIZE_HOLE  = #2980b9
+$PETER_RIVER = #3498db
+$MIDNIGHT_BLUE = #2c3e50
+
+body
+  margin 0
+  padding 0
+  font-size 14px
+  background-color $CLOUD
+  font-family proxima-nova, 'Proxima Nova', 'Helvetica Neue', Helvetica, sans-serif;
+  *
+    font-family inherit
+a
+  color #007ee5
+  text-decoration none
+a:hover
+  text-decoration none
+ul
+  margin 0
+img
+  max-height 100%
+  max-width 100%
+
+* html .clearfix {
+    display: inline-block;
+}
+.clearfix:after {
+    clear: both;
+    display: block;
+    height: 0;
+    content: " ";
+    visibility: hidden;
+}
+
+
+#home-alerts
+  position fixed
+  top 0
+  right 0
+  width 300px
+  padding 15px
+.loading
+  width 50px
+  margin auto
+  padding 15px 0
+  img
+    display inline-block
+/* Left */
+#home-left
+  position fixed
+  z-index 2
+  width 280px
+  top 0
+  left 0
+  height 100%;
+  background-color $WET_ASPHALT
+  border-right 1px solid #ccc
+  margin-bottom 50px
+  overflow-x hidden
+  overflow-y scroll
+  a
+    color $PETER_RIVER
+  hr
+    margin 0 30px
+  #home-logo
+    padding 15px 30px
+    h1
+      height 44px
+      vertical-align middle
+      display inline
+      margin 0
+      font-weight 100
+      letter-spacing 0.3em
+      a
+        color white
+  /* Account */
+  #home-account
+    padding 0px 30px 15px 30px
+    .inner
+      display table
+      width 100%
+      #home-account-icon
+        display table-cell
+        border 1px solid white
+        height 44px
+        width 44px
+      #home-account-name
+        padding-left 15px
+        display table-cell
+        vertical-align middle
+        text-align right
+        a
+          font-size 15px
+          .icon
+            padding 0 10px
+        a:hover
+          text-decoration underline
+  /* Sidebar */
+  #home-sidebar
+    font-size 15px
+    ul
+      text-align left
+    li
+      cursor pointer
+      position relative
+      &#searchform
+        padding 0 30px
+        background white
+        form
+          width 100%
+          position relative
+          .icon
+            position absolute
+            top 50%
+            margin-top -8px
+            left 0
+            color black
+          input
+            color inherit
+            border-radius 0
+            border none
+            box-shadow none
+            padding-left 28px
+      &#mystream
+        #add-stream-button
+          padding 0
+          .icon
+            padding 0
+      &.selected
+        a
+          background-color $MIDNIGHT_BLUE
+      &:last-child
+        padding-bottom 0
+      a
+        display block
+        padding 15px 30px
+        font-size 15px
+        color white
+        &:hover
+          background-color $MIDNIGHT_BLUE
+        .icon
+          padding-right 15px
+        .badge
+          background-color $PETER_RIVER
+          float right
+          border-radius 2px
+      ul
+        padding-left 45px
+        padding-right 30px
+        li
+          margin-bottom 5px
+          &:last-child
+            margin-bottom 0
+          a
+            font-size 13px
+            padding 0
+            img
+              width 13px
+              height 13px
+              margin-right 5px
+            .icon
+              padding 0!important
+            .badge
+              background-color transparent
+            &:hover
+              text-decoration underline
+              background-color inherit
+          ul
+            padding 5px 0 5px 25px
+
+  /* Bottombar */
+  #home-bottombar
+    margin-top 15px
+    .inner
+      border-top 1px solid white
+      padding 15px 0;
+      margin 0 30px
+      li
+        margin-right 15px
+        float left
+.icon-text
+  padding-right 5px
+/* Right */
+#home-right
+  position absolute
+  left 280px
+  height 100%
+  /* Header */
+  #home-header
+    padding 15px 30px
+    background-color white
+    border-bottom 1px solid #ccc
+    .inner
+      width 100%
+      height 44px
+      h1,h2
+        display inline-block
+        margin 0
+        padding 0
+        font-weight 300
+  /* Content */
+  #home-content
+    padding 30px
+    min-width 640px
+    /* Feeds */
+    #home-content-feeds
+      border 1px solid #ddd
+      margin-bottom 15px
+      .feed-wrapper
+        padding 10px
+        background-color white
+        border-bottom 1px solid #ddd
+        .inner
+          width 100%
+          display table
+          .feed-icon
+            display table-cell
+            vertical-align top
+            width 44px
+            img
+              max-width 50px
+              max-height 50px
+          .feed-center
+            display table-cell
+            padding-left 15px
+            vertical-align top
+          .feed-right
+            width 50px
+            display table-cell
+            vertical-align middle
+            .feed-edit-button
+              position relative
+              .icon
+                padding-right 5px
+            ul.dropdown-menu
+              right 0
+              left auto
+      .feed-wrapper:last-child
+        border-bottom none
+    /* Streams */
+    #home-content-streams
+      .stream-wrapper:nth-child(odd)
+        margin-right 4%
+      .stream-wrapper
+        padding 15px
+        width 48%
+        max-width 100%
+        background-color white
+        border 1px solid #ddd
+        float left
+        margin-bottom 20px
+        .inner
+          width 100%
+          .stream-title
+            font-size 20px
+            .stream-creator
+              font-size 12px
+              float right
+              img
+                margin-left 5px
+                width 15px
+          .stream-above
+            margin-bottom 15px
+          .stream-below
+            width 100%
+            height 100px
+            display table
+            li
+              display table-cell
+            .stream-left
+              width 64px
+              vertical-align top
+              .stream-icon
+                width 64px
+            .stream-center
+              vertical-align top
+              width 100%
+              padding 0 15px
+              .stream-desc
+                max-height 100px
+                overflow hidden
+            .stream-right
+              width 72px
+              vertical-align middle
+              .subscribe-button
+                vertical-align middle
+    /* items */
+    #home-content-items
+      .item-wrapper
+        background-color white
+        margin-bottom 30px
+        border 1px solid #ddd
+        .item-above
+          padding 15px
+          border-bottom 1px solid #ccc
+          .item-thumb
+            width 120px
+            float left
+          .item-info
+            float left
+            .inner
+              width 100%
+            .item-title
+              font-size 18px
+              font-weight bold
+            .item-item-name
+              font-size 14px
+              color #777
+              margin 5px 0
+              .item-favicon
+                height 14px
+                width 14px
+                margin-right 15px
+            .item-desc
+              height 4em
+              overflow hidden
+              text-overflow ellipsis
+              position relative
+          .ellipsis-dot
+            float right
+            padding 1em 15px 0 1em
+            background-color white
+        .item-below
+          padding 5px 15px
+          gradient-gray
+          .item-action-menu
+            float right
+            li
+              float left
+              margin-left 15px
+              a
+                font-size 18px
+      .item-wrapper:last-child
+        margin-bottom 0
+  #home-content-stream
+    .stream-info-wrapper
+      border 1px solid #ccc
+      border-bottom none
+      background-color white
+      padding 15px
+      display table
+      .stream-icon
+        display table-cell
+        vertical-align top
+        width 100px
+        img
+          max-width 100px
+          max-height 100px
+      .stream-info
+        display table-cell
+        padding-left 15px
+        .stream-info-above
+          width 100%
+          margin-bottom 5px
+          .stream-title
+            display table-cell
+            width 100%
+            vertical-align top
+            font-size 22px
+            margin-bottom 10px
+          .stream-control
+            padding-left 15px
+            display table-cell
+            li
+              float left
+        .stream-info-below
+          .stream-desc
+            color black
+    .nav
+      background-color white
+      border 1px solid #ccc
+      margin-bottom 15px
+      li
+        vertical-align middle
+        border-right 1px solid #ccc
+      li:last-child
+        border-right none
+      li.active
+        a
+          color white
+          background-color $PETER_RIVER
+      a
+        font-size 16px
+        border none
+        border-radius 0
+        .icon
+          margin-right 10px

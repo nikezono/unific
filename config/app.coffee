@@ -8,10 +8,14 @@
 
 # Dependency
 require.all   = require 'direquire'
+flash         = require 'connect-flash'
 express       = require "express"
 passport      = require 'passport'
 path          = require "path"
-cluster       = require 'cluster'
+
+# MongoDB
+mongoose = require "mongoose"
+mongoose.connect   "mongodb://localhost/unific-v2"
 
 app = express()
 
@@ -22,24 +26,25 @@ connect =
     path: path.resolve 'public'
     index: no
     passthrough: yes
-
-mongoose = require "mongoose"
+  session: new ((require 'connect-mongo') express)
+    mongoose_connection: mongoose.connections[0]
 
 app = express()
 
 # env
 app.set 'env', process.env.NODE_ENV || 'development'
 app.set 'port', process.env.PORT || 3001
-app.set 'domain', ['localhost','unific.net','unific.nikezono.net','net45-dhcp160.sfc.keio.ac.jp']
+app.set 'secret',process.env.SESSION_SECRET || 'deadbeef'
+app.set 'session',connect.session
 
 # views
 app.set "views", path.resolve "views"
 app.set "view engine", "jade"
 
 # including library
-app.set 'events', require.all path.resolve 'events'
-app.set 'models', require.all path.resolve 'models'
-app.set 'helper', require.all path.resolve 'helper'
+app.set 'events', require.all 'events'
+app.set 'models', require.all 'models'
+app.set 'helper', require.all 'helper'
 
 # passport
 (require path.resolve 'config', 'auth') app,passport
@@ -52,8 +57,13 @@ app.configure ->
   app.use express.logger("dev")
   app.use express.bodyParser()
   app.use express.methodOverride()
-  app.use express.cookieParser('keyboard cat') 
-  app.use express.session({ secret: 'keyboard cat',cookie: { maxAge: 60000 }})
+
+  # Auth
+  app.use flash()
+  app.use express.cookieParser() 
+  app.use express.session
+    secret: app.get 'secret'
+    store: app.get 'session'
 
   app.use passport.initialize()
   app.use passport.session()
@@ -67,21 +77,11 @@ app.configure ->
         req.session.cookie.expires = false
     next()
 
-  # static
   app.use connect.static
-
-  # router
   app.use app.router
 
 # Routes
 (require path.resolve 'routes','httpRoutes') app,passport
-
-if process.env.NODE_ENV is 'production'
-  console.info "mongoose connect:unific-v2"
-  mongoose.connect "mongodb://localhost/unific-v2"
-else
-  console.info "mongoose connect:unific-dev-v2"
-  mongoose.connect "mongodb://localhost/unific-dev-v2"
 
 app.configure "development", ->
   app.use express.errorHandler()
