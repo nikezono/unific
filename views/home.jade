@@ -10,11 +10,6 @@ block content
     //- Modals -//
     include helper/modal
 
-    //- Loading -//
-    .loading
-      img(src="img/loading.gif")
-
-
     //- 
       LEFT SIDEBAR
      -//
@@ -28,7 +23,6 @@ block content
 
       //- Sidebar Bottoms -//
       include sidebar/bottoms 
-     
 
     //- 
       RIGHT CONTENTS
@@ -58,3 +52,8 @@ block content
         //- Articles View -//
         #home-content-items
           include component/items
+
+        //- Loading -//
+        .loading
+          img(src="/images/loading.gif")
+
