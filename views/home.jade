@@ -10,6 +10,14 @@ block content
     //- Modals -//
     include helper/modal
 
+    //- Loading -//
+    .loading
+      img(src="img/loading.gif")
+
+
+    //- 
+      LEFT SIDEBAR
+     -//
     #home-left
 
       //- Account Information -//
@@ -21,276 +29,32 @@ block content
       //- Sidebar Bottoms -//
       include sidebar/bottoms 
      
-    //- HOME-RIGHT
-      @note script(type='text/template')で囲む
-      以下未了
+
+    //- 
+      RIGHT CONTENTS
      -//
     #home-right
+
+      //- Header Title -//
       #home-header
         .inner
           h1
             | @keroxp
-      #home-content
-        #home-content-stream
-          .stream-info-wrapper
-            .stream-icon
-              img(src="img/icon2.png")
-            .stream-info
-              .stream-info-above
-                .stream-title
-                  a(href="#")
-                    | Github
-                  .btn-group.pull-right
-                    button.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
-                      .icon-text.glyphicon.glyphicon-cog
-                      span.caret
-                    ul.dropdown-menu(role="menu")
-                      li
-                        a
-                          | RSSフィードを追加する
-                      li
-                        a
-                          | 情報を変更する
-                      li.divider
-                      li
-                        a
-                          | var
-                .stream-control
-                  button.btn.btn-success
-                    .icon-text.glyphicon.glyphicon-ok
-                    | フォロー中
-              .stream-info-below
-                .stream-desc
-                  | 2013年7月26日金曜日 LEAP MOTION + openFrameworksでアプリケーション開発 先日発売になったLEAP MOTIONが、ようやく手元に届きました。 予約注文をしてから丸一年、予約した事を忘れてしまう程長かったです。 多くのメディアでも取り上げられていますが、LEAP...2013年7月26日金曜日
-          .nav.nav-tabs.nav-justified
-            li
-              a(href="#home-content-items")
-                .icon.glyphicon.glyphicon-signal
-                | ストリーム
-            li.active
-              a(href="#home-content-streams")
-                .icon.glyphicon.glyphicon-list
-                | 登録フィード
-            li
-              a(href="#home-content-users")
-                .icon.glyphicon.glyphicon-user
-                | フォロー中のユーザー
-        #home-content-feeds
-          .feed-wrapper
-            .inner
-              .feed-icon
-                img(src="img/twitter.png")
-              .feed-center
-                .feed-title
-                  a(href="")
-                    | NHKニュース
-                .feed-rss-url
-                    | http://nhk.or.jp/rss
-              .feed-right
-                .feed-edit-button
-                  button.btn.btn-success
-                      span.icon-text.glyphicon.glyphicon-ok
-                      span フォロー中
-          .feed-wrapper
-            .inner
-              .feed-icon
-                img(src="img/icon2.png")
-              .feed-center
-                .feed-title
-                  a(href="")
-                    | Github
-                .feed-rss-url
-                  | http://github.com/rss
-              .feed-right
-                  button.btn.btn-default
-                      span.icon-text.glyphicon.glyphicon-plus
-                      span フォローする
-        #home-content-streams.clearfix
-          .stream-wrapper
-            .inner
-              .stream-above
-                .stream-title
-                  a(href="#")
-                    .icon.glyphicon.glyphicon-signal
-                    |  Github
-                  .stream-creator
-                    | by
-                    a(href="#")
-                      img(src="img/icon.png")
-                      a(href="$#")  @keroxp
-              .stream-below
-                ul
-                  li.stream-left
-                    .stream-icon
-                      img(src="img/icon2.png")
-                  li.stream-center
-                    .stream-desc
-                      | 2013年7月26日金曜日 LEAP MOTION + openFrameworksでアプリケーション開発 先日発売になったLEAP MOTIONが、ようやく手元に届きました。 予約注文をしてから丸一年、予約した事を忘れてしまう程長かったです。 多くのメディアでも取り上げられていますが、LEAP...2013年7月26日金曜日
-                  li.stream-right
-                    button.subscribe-button.btn.btn-danger
-                      span.icon-text.glyphicon.glyphicon-minus
-                      | フォローをやめる
-          .stream-wrapper
-            .inner
-              .stream-above
-                .stream-title
-                  a(href="#")
-                    .icon.glyphicon.glyphicon-signal
-                    |  Twitter
-                  .stream-creator
-                    | by
-                    a(href="#")
-                      img(src="img/icon.png")
-                      a(href="$#")  @keroxp
-              .stream-below
-                ul
-                  li.stream-left
-                    .stream-icon
-                      img(src="img/twitter.png")
-                  li.stream-center
-                    .stream-desc
-                      | 2013年7月26日金曜日 LEAP MOTION + openFrameworksでアプリケーション開発 先日発売になったLEAP MOTIONが、ようやく手元に届きました。 予約注文をしてから丸一年、予約した事を忘れてしまう程長かったです。 多くのメディアでも取り上げられていますが、LEAP...2013年7月26日金曜日
-                  li.stream-right
-                    button.subscribe-button.btn.btn-success
-                      span.icon-text.glyphicon.glyphicon-ok
-                      | フォロー中
-          .stream-wrapper
-            .inner
-              .stream-above
-                .stream-title
-                  a(href="#")
-                    .icon.glyphicon.glyphicon-signal
-                    |  Github
-                  .stream-creator
-                    | by
-                    a(href="#")
-                      img(src="img/icon.png")
-                      a(href="$#")  @keroxp
-              .stream-below
-                ul
-                  li.stream-left
-                    .stream-icon
-                      img(src="img/icon2.png")
-                  li.stream-center
-                    .stream-desc
-                      | 2013年7月26日金曜日 LEAP MOTION + openFrameworksでアプリケーション開発 先日発売になったLEAP MOTIONが、ようやく手元に届きました。 予約注文をしてから丸一年、予約した事を忘れてしまう程長かったです。 多くのメディアでも取り上げられていますが、LEAP...2013年7月26日金曜日
-                  li.stream-right
-                    button.subscribe-button.btn.btn-default
-                      span.icon-text.glyphicon.glyphicon-plus
-                      | フォローする
 
-          .stream-wrapper
-            .inner
-              .stream-above
-                .stream-title
-                  a(href="#")
-                    .icon.glyphicon.glyphicon-signal
-                    |  Twitter
-                  .stream-creator
-                    | by
-                    a(href="#")
-                      img(src="img/icon.png")
-                      a(href="$#")  @keroxp
-              .stream-below
-                ul
-                  li.stream-left
-                    .stream-icon
-                      img(src="img/twitter.png")
-                  li.stream-center
-                    .stream-desc
-                      | 2013年7月26日金曜日 LEAP MOTION + openFrameworksでアプリケーション開発 先日発売になったLEAP MOTIONが、ようやく手元に届きました。 予約注文をしてから丸一年、予約した事を忘れてしまう程長かったです。 多くのメディアでも取り上げられていますが、LEAP...2013年7月26日金曜日
-                  li.stream-right
-                    button.subscribe-button.btn.btn-success
-                      span.icon-text.glyphicon.glyphicon-ok
-                      | フォロー中
+      #home-content
+
+        //- Stream Information -//
+        #home-content-stream
+          include component/stream
+
+        //- Stream's Feeds Information -//
+        #home-content-feeds
+          include component/feeds
+
+        //- Search/Hot Streams View -//
+        #home-content-streams.clearfix
+          include component/streams
+
+        //- Articles View -//
         #home-content-items
-          .item-wrapper
-            .item-above.clearfix
-              .item-info
-                .item-title
-                  a(href="")
-                    | ペットと一緒に避難の方法を学ぶ
-                .item-item-name
-                  img(src="img/favicon.ico",class="item-favicon")
-                  | NHKニュース - NHKニュース 主要ニュース
-                .item-desc
-                  | イランでは、２２日、大規模な軍事パレードが行われ、演説したロウハニ大統領は、核の平和利用の権利があると自国の核開発を正当化したうえで、「欧米側と対等の立場で交渉する用意がある」と述べ、対話による解決を呼びかけました。イランでは、２２日、大規模な軍事パレードが行われ、演説したロウハニ大統領は、核の平和利用の権利があると自国の核開発を正当化したうえで、「欧米側と対等の立場で交渉する用意がある」と述べ、対話による解決を呼びかけました。
-              a.ellipsis-dot(href="#")
-                | 続きを読む...
-            .item-below.clearfix.gradient-gray
-              .item-action-menu
-                ul
-                  li
-                    a
-                      .icon.glyphicon.glyphicon-star-empty
-                  li
-                    a
-                      .icon.glyphicon.glyphicon-share-alt
-          .item-wrapper
-            .item-above.clearfix
-              .item-info
-                .item-title
-                  a(href="")
-                    | ペットと一緒に避難の方法を学ぶ
-                .item-item-name
-                  img(src="img/favicon.ico",class="item-favicon")
-                  | NHKニュース - NHKニュース 主要ニュース
-                .item-desc
-                  | イランでは、２２日、大規模な軍事パレードが行われ、演説したロウハニ大統領は、核の平和利用の権利があると自国の核開発を正当化したうえで、「欧米側と対等の立場で交渉する用意がある」と述べ、対話による解決を呼びかけました。イランでは、２２日、大規模な軍事パレードが行われ、演説したロウハニ大統領は、核の平和利用の権利があると自国の核開発を正当化したうえで、「欧米側と対等の立場で交渉する用意がある」と述べ、対話による解決を呼びかけました。
-              a.ellipsis-dot(href="#")
-                | 続きを読む...
-            .item-below.clearfix.gradient-gray
-              .item-action-menu
-                ul
-                  li
-                    a
-                      .icon.glyphicon.glyphicon-star-empty
-                  li
-                    a
-                      .icon.glyphicon.glyphicon-share-alt
-          .item-wrapper
-            .item-above.clearfix
-              .item-info
-                .item-title
-                  a(href="")
-                    | ペットと一緒に避難の方法を学ぶ
-                .item-item-name
-                  img(src="img/favicon.ico",class="item-favicon")
-                  | NHKニュース - NHKニュース 主要ニュース
-                .item-desc
-                  | イランでは、２２日、大規模な軍事パレードが行われ、演説したロウハニ大統領は、核の平和利用の権利があると自国の核開発を正当化したうえで、「欧米側と対等の立場で交渉する用意がある」と述べ、対話による解決を呼びかけました。イランでは、２２日、大規模な軍事パレードが行われ、演説したロウハニ大統領は、核の平和利用の権利があると自国の核開発を正当化したうえで、「欧米側と対等の立場で交渉する用意がある」と述べ、対話による解決を呼びかけました。
-              a.ellipsis-dot(href="#")
-                | 続きを読む...
-            .item-below.clearfix.gradient-gray
-              .item-action-menu
-                ul
-                  li
-                    a
-                      .icon.glyphicon.glyphicon-star-empty
-                  li
-                    a
-                      .icon.glyphicon.glyphicon-share-alt
-          .item-wrapper
-              .item-above.clearfix
-                .item-info
-                  .item-title
-                    a(href="")
-                      | ペットと一緒に避難の方法を学ぶ
-                  .item-item-name
-                    img(src="img/favicon.ico",class="item-favicon")
-                    | NHKニュース - NHKニュース 主要ニュース
-                  .item-desc
-                    | イランでは、２２日、大規模な軍事パレードが行われ、演説したロウハニ大統領は、核の平和利用の権利があると自国の核開発を正当化したうえで、「欧米側と対等の立場で交渉する用意がある」と述べ、対話による解決を呼びかけました。イランでは、２２日、大規模な軍事パレードが行われ、演説したロウハニ大統領は、核の平和利用の権利があると自国の核開発を正当化したうえで、「欧米側と対等の立場で交渉する用意がある」と述べ、対話による解決を呼びかけました。
-                a.ellipsis-dot(href="#")
-                  | 続きを読む...
-              .item-below.clearfix.gradient-gray
-                .item-action-menu
-                  ul
-                    li
-                      a
-                        .icon.glyphicon.glyphicon-star-empty
-                    li
-                      a
-                        .icon.glyphicon.glyphicon-share-alt
-        .loading
-          img(src="img/loading.gif")
+          include component/items
