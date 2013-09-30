@@ -1,0 +1,51 @@
+//- Change Profile Modal Window -//
+#modal-change-profile.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        h4.modal-title ユーザ情報の編集
+      .modal-body
+        .name.form-group
+          label.control-label 名前
+          input.form-control(type='text')
+        .email.form-group
+          label.control-label メールアドレス
+          input.form-control(type='email')
+        .password.form-group
+          label.control-label 現在のパスワード
+          input#oldPassword.form-control(type='password')
+          label.control-label 新しいパスワード
+          input#newPassword.form-control(type='password')
+        br
+        .icon.form-group
+          label.control-label アイコン:
+          input(type='file')
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Close
+        button.btn.btn-primary(type='button') Save changes
+
+
+//- Create Stream Modal Window -//
+#modal-create-stream.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        h4.modal-title ストリームの新規作成
+      .modal-body
+        p 好きな名前のストリームを作成することができます。
+        .name.form-group
+          label.control-label ストリームの名前:
+          input.form-control(type='text')
+        .description.form-group
+          label.control-label ストリームの説明:
+          textarea.form-control(row="3")
+        br
+        .icon.form-group
+          label.control-label アイコン:
+          input(type='file')
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Close
+        button.btn.btn-primary(type='button') Save changes
+

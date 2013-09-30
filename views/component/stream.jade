@@ -1,0 +1,44 @@
+script(type='text/template')  
+  .stream-info-wrapper
+    .stream-icon
+      img(src="img/icon2.png")
+    .stream-info
+      .stream-info-above
+        .stream-title
+          a(href="#")
+            | Github
+          .btn-group.pull-right
+            button.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
+              .icon-text.glyphicon.glyphicon-cog
+              span.caret
+            ul.dropdown-menu(role="menu")
+              li
+                a
+                  | RSSフィードを追加する
+              li
+                a
+                  | 情報を変更する
+              li.divider
+              li
+                a
+                  | ストリームを削除する
+        .stream-control
+          button.btn.btn-success
+            .icon-text.glyphicon.glyphicon-ok
+            | フォロー中
+      .stream-info-below
+        .stream-desc
+          | 2013年7月26日金曜日 LEAP MOTION + openFrameworksでアプリケーション開発 先日発売になったLEAP MOTIONが、ようやく手元に届きました。 予約注文をしてから丸一年、予約した事を忘れてしまう程長かったです。 多くのメディアでも取り上げられていますが、LEAP...2013年7月26日金曜日
+  .nav.nav-tabs.nav-justified
+    li
+      a(href="#home-content-items")
+        .icon.glyphicon.glyphicon-signal
+        | ストリーム
+    li.active
+      a(href="#home-content-streams")
+        .icon.glyphicon.glyphicon-list
+        | 登録フィード
+    li
+      a(href="#home-content-users")
+        .icon.glyphicon.glyphicon-user
+        | フォロー中のユーザー

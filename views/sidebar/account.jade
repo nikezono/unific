@@ -1,0 +1,25 @@
+#home-logo
+  h1
+    a(href="/")
+      | UNIFIC
+
+#home-account
+  .inner
+    #home-account-icon
+      img(src=user.icon_url,width="44",height="44")
+
+    //- Dropdown Menu -//
+    .dropdown
+      a#home-account-name(data-toggle='dropdown',href="#")
+        = user.name
+        span.icon.glyphicon.glyphicon-chevron-down
+      ul#home-dropdown-menu.dropdown-menu(role='menu',aria-labelledby="dLabel")
+        li.presentation
+          a(data-toggle="modal",href="#modal-change-profile")
+            | ユーザ情報の編集
+        li
+          a(data-toggle="modal",href="#modal-create-stream")
+            | ストリームの新規作成
+        li
+          a(href='/log_out')
+            | ログアウト
