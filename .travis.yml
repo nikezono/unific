@@ -9,4 +9,4 @@ notifications:
   slack:
     masuilab:p4zvcihWTFLz1KwJXYGwJgeZ
 env:
-  - COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=rSPdqRaN5RXbRwx33jbBts9FbKGb10fBH
+  - COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=7BPLqS4aRiqcMZ6MiNcMbBh49fNDbO9Vd
