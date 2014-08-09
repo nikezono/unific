@@ -1,16 +1,6 @@
 unific
 ---
 
-social rss reader on web
+http://unific.net
 
-[unific.net](http://unific.net)
 
----
-
-## つかいかた
-
-    git clone https://github.com/nikezono/unific.git
-    cd unific
-    npm install
-    npm install -i nodectl -g
-    nodectl
