@@ -43,6 +43,8 @@ module.exports = (grunt) ->
           { expand: yes, cwd: 'config/', src: [ '**/*.coffee' ] }
           { expand: yes, cwd: 'events/', src: [ '**/*.coffee' ] }
           { expand: yes, cwd: 'src/', src: [ '**/*.coffee' ] }
+          { expand: yes, cwd: 'assets/', src: [ '**/*.coffee' ] }
+          { expand: yes, cwd: 'routes/', src: [ '**/*.coffee' ] }
           { expand: yes, cwd: 'public/', src: [ '**/*.coffee' ] }
         ]
 
@@ -56,17 +58,19 @@ module.exports = (grunt) ->
           'events/**/*.coffee'
           'config/**/*.coffee'
           'src/**/*.coffee'
+          'assets/**/*.coffee'
+          'routes/**/*.coffee'
           'public/**/*.{coffee,js,jade}'
           'test/**/*.coffee'
         ]
         tasks: [ 'coffeelint','coffee','mochaTest:spec' ]
 
     coffee:
-      multiple:
+      assets:
         expand:true
-        cwd:'src'
+        cwd:'assets/js/'
         src:'*.coffee'
-        dest:'lib/'
+        dest:'public/js/'
         ext:'.js'
 
     clean:
