@@ -68,7 +68,7 @@ module.exports = (grunt) ->
     coffee:
       assets:
         expand:true
-        cwd:'assets/js/'
+        cwd:'assets/coffee/'
         src:'*.coffee'
         dest:'public/js/'
         ext:'.js'

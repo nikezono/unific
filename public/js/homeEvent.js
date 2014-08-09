@@ -1,1 +1,0 @@
-!function(){var e;e="undefined"!=typeof exports&&null!==exports?exports:this,e.HomeEvent={goStream:function(){return window.location.href=$GoInput.val()}}}.call(this);
