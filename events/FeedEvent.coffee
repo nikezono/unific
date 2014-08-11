@@ -25,7 +25,6 @@ module.exports.FeedEvent = (app) ->
       if err
         debug err
         return HelperEvent.error(err,socket)
-      HelperEvent.addWatcher feed
 
       if data.stream
         Subscribe.findOneAndUpdate

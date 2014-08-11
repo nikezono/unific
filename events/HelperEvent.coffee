@@ -1,7 +1,7 @@
 ###
 
   HelperEvent.coffee
-  外部ライブラリのラッパ群
+  なんか切り分けできてないやつ
 
 ###
 
@@ -12,10 +12,12 @@ module.exports.HelperEvent = (app) ->
 
   Stream = app.get('models').Stream
 
+  # 汎用socket.ioエラー
   error: (err,socket)->
     # @todo エラー種別判定してメッセージ変える
     return socket.emit error,"Error:unhandled"
 
+  # find feed or stream
   findFeed:(socket,url) ->
     if url.match /^(http:\/\/|https:\/\/)/
       finder url, (error,candidates)->
