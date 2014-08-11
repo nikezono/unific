@@ -14,6 +14,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-blanket'
   grunt.loadNpmTasks 'grunt-notify'
   grunt.loadNpmTasks 'grunt-coveralls'
+  grunt.loadNpmTasks 'grunt-exec'
 
   grunt.registerTask 'test',     [ 'coffeelint','coffee', 'mochaTest:spec' ]
   grunt.registerTask 'coverage', [ 'clean', 'blanket', 'copy','mochaTest:coverage' ]
@@ -72,6 +73,9 @@ module.exports = (grunt) ->
         src:'*.coffee'
         dest:'public/js/'
         ext:'.js'
+
+    exec:
+      dot:'dot -Tgif docs/*.dot -o docs/*.gif && open docs'
 
     clean:
       coverage:

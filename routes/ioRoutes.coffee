@@ -2,7 +2,7 @@
 
   WebSocket CLUD Events
   AjaxっぽいEventsを全部Socket.ioで行うルーティング
-  
+
 ###
 
 module.exports = exports = (app,io,socket) ->
@@ -15,22 +15,18 @@ module.exports = exports = (app,io,socket) ->
   PageEvent    = Events.PageEvent    app
 
   # Helper Events
-  socket.on "find feed",     (url)  -> HelperEvent.findFeed        socket, url
-  socket.on "upload bg",     (data) -> HelperEvent.uploadBg        socket, io, data
-  socket.on "clear bg",      (data) -> HelperEvent.clearBg         socket, io, data
+  socket.on "findFeed",      (url)  -> HelperEvent.findFeed        socket, url
 
   # Stream Events
-  socket.on "get feed_list", (data) -> StreamEvent.getFeedList     socket, data
-  socket.on "sync stream",   (data) -> StreamEvent.sync            socket, data
-  socket.on "change desc",   (data) -> StreamEvent.changeDesc      socket, io, data
+  socket.on "getFeedList",   (data) -> StreamEvent.getFeedList     socket, data
+  socket.on "subscribeFeed", (data) -> StreamEvent.subscribeFeed   socket, data
+  socket.on "changeDesc",    (data) -> StreamEvent.changeDesc      socket, io, data
 
   # Feed Events
-  socket.on "add feed",      (data) -> FeedEvent.addFeed           socket, io,data
-  socket.on "edit feed_list",(data) -> FeedEvent.editFeedList      socket, io,data
+  socket.on "createFeed",    (data) -> FeedEvent.createFeed        data,socket
 
   # Page Events
-  socket.on "add star",      (data) -> PageEvent.addStar           socket, io,data
-  socket.on "delete star",   (data) -> PageEvent.deleteStar        socket, io,data
-  socket.on "add comment",   (data) -> PageEvent.addComment        socket, io, data
+  socket.on "addStar",       (data) -> PageEvent.addStar           socket, io,data
+  socket.on "addComment",    (data) -> PageEvent.addComment        socket, io, data
 
 

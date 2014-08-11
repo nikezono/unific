@@ -1,20 +1,22 @@
 ###
 
-    app.coffee
-    Expressの設定ファイル
+app.coffee
+Express/Httpの設定ファイル
 
 ###
 
-
-# Dependency
-require.all = require 'direquire'
-express     = require "express"
+# Api Dependencies
 path        = require "path"
-cluster     = require 'cluster'
 
-app = express()
+# Module Dependencies
+require.all  = require 'direquire'
+express      = require "express"
+mongoose     = require "mongoose"
+errorhandler = require 'errorhandler'
+bodyParser   = require 'body-parser'
+morgan       = require 'morgan'
 
-# all environments
+# Static Files
 connect =
   static: (require 'st')
     url: '/'
@@ -22,50 +24,38 @@ connect =
     index: no
     passthrough: yes
 
-mongoose = require "mongoose"
-
 app = express()
 
-#Express Configration
-app.configure ->
+# env
+app.set 'env', process.env.NODE_ENV || 'development'
+app.set 'port', process.env.PORT || 3000
 
-  # env
-  app.set 'env', process.env.NODE_ENV || 'development'
-  app.set 'port', process.env.PORT || 3001
-  app.set 'domain', ['localhost','unific.net','unific.nikezono.net','net45-dhcp160.sfc.keio.ac.jp']
+# views
+app.set "views", path.resolve "views"
+app.set "view engine", "jade"
+app.disable 'x-powered-by'
 
-  # views
-  app.set "views", path.resolve "views"
-  app.set "view engine", "jade"
+# require event/models
+app.set 'events',  require.all path.resolve 'events'
+app.set 'models',  require.all path.resolve 'models'
+app.set 'helpers', require.all path.resolve 'helpers'
 
-  # including library
-  app.set 'events', require.all path.resolve 'events'
-  app.set 'models', require.all path.resolve 'models'
-  app.set 'helper', require.all path.resolve 'helper'
+# middlewares
+app.use express.favicon path.resolve 'public', 'favicon.ico'
+app.use morgan('combined')
+app.use bodyParser.urlencoded()
+app.use bodyParser.json()
+app.use errorhandler() if app.get('env') is 'development'
+app.use connect.static
 
-  # config
-  app.use express.favicon path.resolve 'public', 'favicon.ico'
-  app.use express.logger("dev")
-  app.use express.bodyParser()
-  app.use express.methodOverride()
-
-  # static
-  app.use connect.static
-
-  # router
-  app.use app.router
 
 # Routes
 (require path.resolve 'routes','httpRoutes') app
 
-if process.env.NODE_ENV is 'production'
-  console.info "mongoose connect:unific"
-  mongoose.connect "mongodb://localhost/unific"
-else
-  console.info "mongoose connect:unific-dev"
-  mongoose.connect "mongodb://localhost/unific-dev"
+mongodb_uri = process.env.MONGOLAB_URI or
+              process.env.MONGOHQ_URL or
+              'mongodb://localhost/unific'
 
-app.configure "development", ->
-  app.use express.errorHandler()
+mongoose.connect mongodb_uri
 
 exports = module.exports = app

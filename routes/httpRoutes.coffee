@@ -20,4 +20,4 @@ module.exports = (app) ->
   app.get '/:stream/rss',   (req,res,next)-> StreamEvent.rss   req,res,next
 
   # 404 Not Found
-  app.get '/:stream/*',     (req,res,next)-> res.send "404 Error"
+  app.get '/:stream/*',     (req,res,next)-> res.send 404
