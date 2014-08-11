@@ -18,20 +18,23 @@ module.exports.HelperEvent = (app) ->
     return socket.emit error,"Error:unhandled"
 
   # find feed or stream
-  findFeed:(socket,url) ->
-    if url.match /^(http:\/\/|https:\/\/)/
-      finder url, (error,candidates)->
+  findFeed:(socket,data) ->
+    if data.query.match /^(http:\/\/|https:\/\/)/
+      finder data.query, (error,candidates)->
         if error
           debug error
           return @error err,socket
+        console.log "hoge"
         return socket.emit 'foundFeed',
           candidates:candidates
-          url: url
+          url: data.query
 
+    # @todo ストリーム検索/フィード検索(キーワード検索)
+    # @todo not found
     else
-      Stream.findByTitle url,(err,stream)->
-        if error
-          debug error
+      Stream.findByTitle data.query,(err,stream)->
+        if err
+          debug err
           return @error err,socket
         return socket.emit 'foundStream',
           stream:stream

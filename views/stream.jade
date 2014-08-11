@@ -1,20 +1,38 @@
 extends layout
 
-//-
-  Contents
-//-
 block content
+
   div#AngularApp(ng-app)
 
-    #Navigation(ng-controller="navigationController")
+    #Modals(ng-controller="modalController")
+      .modal.fade#FindFeedModal
+        .modal-dialog
+          .modal-content
+            .modal-header
+              button.close(type='button', data-dismiss='modal')
+                span(aria-hidden='true') ×
+                span.sr-only Close
+              h4.modal-title Search Results
+            .modal-body
+              .col-md-4(ng-repeat="feed in feeds")
+                h3 {{feed.sitename}}
+                p {{feed.href}}
+                img(src="{{feed.favicon}}")
 
+              button.btn.btn-default(type='button', data-dismiss='modal') Close
+
+
+    #Navigation(ng-controller="navigationController")
 
       .btn-group.btn-group-justified
         .btn-group
           .input-group
-            input.form-control(type="text",placeholder="keyword or url or streamname")
+            input.form-control(type="text",
+              ng-model="findFeedQuery"
+              placeholder="Keyword/URL/Other Stream's name"
+              )
             span.input-group-btn
-              button.btn.btn-primary(ng-click="addFeed()")
+              button.btn.btn-primary(ng-click="findFeed()")
                 | Subscribe
 
         .btn-group
@@ -29,15 +47,8 @@ block content
           button.btn.btn-warning
             | Fork
 
-
     hr
 
     #Pages(ng-controller="pageController")
-      .well#NoFeedIsAdded
-        button.close &times;
-        | No Feed Is Added.
-
-        p {{hoge}}
-
 
 
