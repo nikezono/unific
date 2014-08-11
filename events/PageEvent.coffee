@@ -6,13 +6,10 @@
 
 module.exports.PageEvent = (app) ->
 
-  ###
-  # dependency
-  ###
+  debug = require("debug")("events/page")
 
-  _  = require 'underscore'
-
-  Page   = app.get("models").Page
+  Page        = app.get("models").Page
+  HelperEvent = app.get("helpers").HelperEvent
 
   ###
   # socket.io events
@@ -20,20 +17,13 @@ module.exports.PageEvent = (app) ->
 
   addStar: (socket,io,data) ->
     Page.findOne _id:data.domid,(err,page)->
-      return socket.emit 'error' if err
-      page.starred = true
-      page.save()
-      io.sockets.to(data.stream).emit 'star added',
-        domid:data.domid
-
-
-  deleteStar: (socket,io,data) ->
-    Page.findOne _id:data.domid,(err,page)->
-      return socket.emit 'error' if err
-      page.starred = false
-      page.save()
-      io.sockets.to(data.stream).emit 'star deleted',
-        domid:data.domid
+      if err
+        debug err
+        return HelperEvent.error err,socket
+      page.addStar, (number)->
+        io.sockets.emit 'starred',
+          domid:data.domid
+          number:number
 
   addComment:(socket,io,data)->
     Page.findOne _id:data.domid, (err,page)->
