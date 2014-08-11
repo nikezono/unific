@@ -5,8 +5,7 @@
   * title        [String]     ページのタイトル
   * description  [String]     見出し
   * url          [String]     元記事のurl
-  * starred      [Bool]       スターが付けられているか
-  * comments     [Array]   String Array
+  * starred      [Number]       スターが付けられているか
   * feed         [ObjectId]   親Feed
 
 ###
@@ -14,6 +13,8 @@
 Mongo = require 'mongoose'
 async = require 'async'
 _     = require 'underscore'
+
+debug = require('debug')('models/page')
 
 PageSchema = new Mongo.Schema
   title:       { type: String, index: yes }
@@ -24,35 +25,38 @@ PageSchema = new Mongo.Schema
   comments:    [String]
   feed:        { type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }
 
-PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)->
-  that = this
+PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)=>
   pages = []
-  async.forEach articles, (article,cb)->
+  async.forEach articles, (article,cb)=>
     desc = sanitizeHTML(article.description) if article.description
-    desc = desc.slice(0,140).concat('...') if article.description?.length > 140
-    that.findOneAndUpdate
-      # condition
-      title:article.title
-      feed : feed._id
-    ,
-      title      :article.title
-      url        :article.link
-      feed       :feed._id
-      pubDate    :article.pubdate
-      description:desc
-    , upsert: true , (err,page) ->
-      console.error err if err
-      # CallbackにFeedもExtendさせる
-      pages.push
-        page: page
-        feed: feed
-      cb()
+    @updateOne article, (page)->
+      if page
+        pages.push
+          page: page
+          feed: feed
   ,->
     callback pages
 
+PageSchema.statics.updateOne = (article,callback)->
+  @findOneAndUpdate
+    title: article.link
+    feed : feed._id
+  ,
+    title      :article.title
+    url        :article.link
+    feed       :feed._id
+    pubDate    :article.pubdate
+    description:desc
+  , upsert: true , (err,page) ->
+    if err
+      debug(err)
+      return callback(null)
+    return callback(page)
+
+
 ###
 # Private Method
-### 
+###
 sanitizeHTML = (str)->
   return str.replace /<(.+?)>/g, ''
 

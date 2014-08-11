@@ -18,9 +18,9 @@ module.exports.FeedEvent = (app) ->
       feedUrl   : data.feed.url
     ,
       title     : data.feed.title
-      feedUrl   : data.feed.url
-      favicon   : data.favicon
-      site      : data.siteurl
+      feedUrl   : data.feed.xmlurl
+      favicon   : data.feed.favicon
+      siteUrl   : data.feed.link
     , upsert    : true ,(err,feed)->
       if err
         debug err

@@ -20,7 +20,7 @@ module.exports.PageEvent = (app) ->
       if err
         debug err
         return HelperEvent.error err,socket
-      page.addStar, (number)->
+      page.addStar (number)->
         io.sockets.emit 'starred',
           domid:data.domid
           number:number
