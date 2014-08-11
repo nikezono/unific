@@ -29,4 +29,3 @@ module.exports = exports = (app,io,socket) ->
   socket.on "addStar",       (data) -> PageEvent.addStar           socket, io,data
   socket.on "addComment",    (data) -> PageEvent.addComment        socket, io, data
 
-

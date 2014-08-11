@@ -34,8 +34,10 @@ createWatcher = (feed)->
     debug("new article on #{feed.title}")
     Page.updateOne article,feed,(err)->
       return debug err if err
+      app.get('emitter').emit 'new article',
+        article:article
+        feed:feed
 
-    # @tood ここでイベント発火させる
   watcher.run (err,articles)->
     return debug err if err
     for article in articles

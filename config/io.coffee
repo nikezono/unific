@@ -10,16 +10,26 @@ debug = require('debug')('config/io')
 
 module.exports = (app, server) ->
 
+  Subscribe = app.get('models').Subscribe
+
   # setup socket.io
   io = (require 'socket.io').listen server
+
+  app.on 'new article',(data)->
+    Subscribe.findStreamByFeed data.feed, (streams)->
+      for stream in streams
+        debug("publish article to stream#{stream.title}")
+        io.to(stream.title).emit data
 
   # Routing
   io.sockets.on "connection", (socket) ->
 
     # on Connection
     socket.on "connect stream", (streamName) ->
-      socket.join streamName
-      socket.set 'streamName', streamName
+      if streamName
+        socket.join streamName
+      else # GlobalStream @todo
+        debug "home"
 
     # on Error
     socket.on "error", (exc)->

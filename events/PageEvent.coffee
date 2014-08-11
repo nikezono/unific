@@ -9,7 +9,7 @@ module.exports.PageEvent = (app) ->
   debug = require("debug")("events/page")
 
   Page        = app.get("models").Page
-  HelperEvent = app.get("helpers").HelperEvent
+  HelperEvent = app.get("events").HelperEvent
 
   ###
   # socket.io events

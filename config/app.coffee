@@ -7,6 +7,7 @@ Express/Httpの設定ファイル
 
 # Api Dependencies
 path        = require "path"
+events      = require 'events'
 
 # Module Dependencies
 require.all  = require 'direquire'
@@ -38,7 +39,9 @@ app.disable 'x-powered-by'
 # require event/models
 app.set 'events',  require.all path.resolve 'events'
 app.set 'models',  require.all path.resolve 'models'
-app.set 'helpers', require.all path.resolve 'helpers'
+
+# Emitter
+app.set 'emitter', new events.EventEmitter()
 
 # middlewares
 app.use morgan('combined')

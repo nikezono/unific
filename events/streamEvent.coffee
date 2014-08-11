@@ -76,6 +76,9 @@ module.exports.StreamEvent = (app) ->
   ###
   # socket.io events
   ###
+  subscribeFeed:(socket,data)->
+    debug "hoge"
+
   getFeedList: (socket,data) ->
     streamName = decodeURIComponent data.stream
     Stream.findOne title:streamName,(err,stream)->
