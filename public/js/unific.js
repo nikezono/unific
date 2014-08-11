@@ -13,26 +13,32 @@
 
   socket.emit('connect stream', path);
 
-  socket.on("error", function(err) {
-    return console.log(err);
+  socket.on("serverError", function(err) {
+    console.error(err);
+    return console.trace();
   });
 
   window.modalController = function($scope) {
     socket.on("foundFeed", function(data) {
-      if ((data.candidates != null) && data.candidates.length() > 0) {
-        console.log(data);
+      if (data.candidates != null) {
         $scope.feeds = data.candidates;
-        $scope.apply();
+        $scope.$apply();
         return $('#FindFeedModal').modal();
       }
     });
-    return socket.on("foundStream", function(data) {
+    socket.on("foundStream", function(data) {
       return console.log(data);
     });
+    return $scope.subscribeFeed = function(feedUrl) {
+      return console.log("sub " + feedUrl);
+    };
   };
 
   window.navigationController = function($scope) {
     return $scope.findFeed = function() {
+      if (_.isEmpty($scope.findFeedQuery)) {
+        return;
+      }
       return socket.emit('findFeed', {
         stream: path,
         query: $scope.findFeedQuery

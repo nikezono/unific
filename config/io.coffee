@@ -34,7 +34,6 @@ module.exports = (app, server) ->
     # on Error
     socket.on "error", (exc)->
       debug exc
-      process.exit 1
 
     # Use Router
     (require path.resolve('routes','ioRoutes')) app,io,socket

@@ -15,16 +15,15 @@ module.exports.HelperEvent = (app) ->
   # 汎用socket.ioエラー
   error: (err,socket)->
     # @todo エラー種別判定してメッセージ変える
-    return socket.emit error,"Error:unhandled"
+    return socket.emit "serverError","Error:unhandled"
 
   # find feed or stream
   findFeed:(socket,data) ->
     if data.query.match /^(http:\/\/|https:\/\/)/
-      finder data.query, (error,candidates)->
-        if error
-          debug error
+      finder data.query, (err,candidates)=>
+        if err
+          debug err
           return @error err,socket
-        console.log "hoge"
         return socket.emit 'foundFeed',
           candidates:candidates
           url: data.query
