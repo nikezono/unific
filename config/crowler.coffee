@@ -12,6 +12,7 @@ exports = module.exports = (app)->
 
   Watcher = require 'rss-watcher'
   Feed = app.get('models').Feed
+  Page = app.get('models').Page
 
 
   # initializer
@@ -30,9 +31,15 @@ exports = module.exports = (app)->
 createWatcher = (feed)->
   watcher = new Watcher(feed.feedUrl)
   watcher.on 'new article',(article)->
-    feed.newArticle article
+    debug("new article on #{feed.title}")
+    Page.updateOne article,feed,(err)->
+      return debug err if err
+
+    # @tood ここでイベント発火させる
   watcher.run (err,articles)->
     return debug err if err
-    feed.newArticles articles
+    for article in articles
+      Page.updateOne article,feed,(err)->
+        return debug err if err
 
 

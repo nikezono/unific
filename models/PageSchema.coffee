@@ -25,19 +25,7 @@ PageSchema = new Mongo.Schema
   comments:    [String]
   feed:        { type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }
 
-PageSchema.statics.findAndUpdateByArticles = (articles,feed,callback)=>
-  pages = []
-  async.forEach articles, (article,cb)=>
-    desc = sanitizeHTML(article.description) if article.description
-    @updateOne article, (page)->
-      if page
-        pages.push
-          page: page
-          feed: feed
-  ,->
-    callback pages
-
-PageSchema.statics.updateOne = (article,callback)->
+PageSchema.statics.updateOne = (article,feed,callback)->
   @findOneAndUpdate
     title: article.link
     feed : feed._id

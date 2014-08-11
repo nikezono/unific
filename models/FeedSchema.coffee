@@ -3,13 +3,11 @@
   feedSchema.coffee
 
   * title    [String]    フィードのタイトル
-  * feedUrl      [String]    フィードのURL
-  * siteUrl     [String]    サイトのURL
+  * feedUrl  [String]    フィードのURL
+  * siteUrl  [String]    サイトのURL
   * updated  [Date]      アップデート日
   * favicon  [String]    faviconのurl
   * pages    [ObjectId]  PageオブジェクトのArray
-  * active   [Boolean]   現在リストに入っているか（削除されてもinactiveになるだけ)
-  * stream   [ObjectId]  親Stream
 
 ###
 

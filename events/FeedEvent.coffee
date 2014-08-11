@@ -19,12 +19,17 @@ module.exports.FeedEvent = (app) ->
     ,
       title     : data.feed.title
       feedUrl   : data.feed.xmlurl
-      favicon   : data.feed.favicon
+      favicon   : data.feed.favicon
       siteUrl   : data.feed.link
     , upsert    : true ,(err,feed)->
       if err
         debug err
         return HelperEvent.error(err,socket)
+
+      # データ更新&watcher
+      # @todo ここらへんかなり密になっててやばい
+      crowler     = app.get('crowler')
+      crowler.add feed
 
       if data.stream
         Subscribe.findOneAndUpdate
