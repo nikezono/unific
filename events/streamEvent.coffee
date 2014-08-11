@@ -16,7 +16,7 @@ module.exports.StreamEvent = (app) ->
   Feed   = app.get("models").Feed
   Page   = app.get("models").Page
 
-  HelperEvent = app.models('events').HelperEvent app
+  HelperEvent = app.get('events').HelperEvent app
 
 
   # HTTP EndPoint - Stream

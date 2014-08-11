@@ -41,13 +41,11 @@ app.set 'models',  require.all path.resolve 'models'
 app.set 'helpers', require.all path.resolve 'helpers'
 
 # middlewares
-app.use express.favicon path.resolve 'public', 'favicon.ico'
 app.use morgan('combined')
-app.use bodyParser.urlencoded()
+app.use bodyParser.urlencoded({extended:false})
 app.use bodyParser.json()
 app.use errorhandler() if app.get('env') is 'development'
 app.use connect.static
-
 
 # Routes
 (require path.resolve 'routes','httpRoutes') app
