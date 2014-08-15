@@ -20,7 +20,7 @@ PageSchema = new Mongo.Schema
   title:       { type: String, index: yes }
   description: String
   url:         String
-  starred:     { type: Boolean, default: false }
+  starred:     { type: Number, default: 0 }
   pubDate:     Date
   comments:    [String]
   feed:        { type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }
@@ -34,19 +34,11 @@ PageSchema.statics.updateOne = (article,feed,callback)->
     url        :article.link
     feed       :feed._id
     pubDate    :article.pubdate
-    description:desc
+    description:article.description
   , upsert: true , (err,page) ->
     if err
       debug(err)
       return callback(null)
     return callback(page)
-
-
-###
-# Private Method
-###
-sanitizeHTML = (str)->
-  return str.replace /<(.+?)>/g, ''
-
 
 exports.Page = Mongo.model 'pages', PageSchema

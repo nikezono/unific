@@ -13,27 +13,30 @@ socket.on "serverError",(err)->
   console.error err
   console.trace()
 
-window.modalController = ($scope)->
-
-  socket.on "foundFeed",(data)->
-    if data.candidates?
-      $scope.feeds = data.candidates
-      $scope.$apply()
-      $('#FindFeedModal').modal()
-
-  socket.on "foundStream",(data)->
-    console.log data
-
-  $scope.subscribeFeed = (feedUrl)->
-    console.log "sub #{feedUrl}"
+  $scope.subscribeFeed = (feed)->
+    socket.emit "subscribeFeed",
+      stream:path
+      feed:feed
 
 window.navigationController = ($scope)->
-  $scope.findFeed = ->
-    return if _.isEmpty $scope.findFeedQuery
-    socket.emit 'findFeed',
-      stream:path
-      query:$scope.findFeedQuery
+  $scope.findFeed = (query)->
+    return if _.isEmpty query
+    $.getJSON "/api/find",
+      query:query
+    ,->
+      console.log "request end"
+    .success (data)->
+      $scope.feeds = data
+      $scope.$apply()
+      $('#FindFeedModal').modal()
+    .error (err)->
+      console.error err
+
+
 
 window.pageController = ($scope)->
+
+  socket.on "newArticle", (data)->
+    console.log data
 
 

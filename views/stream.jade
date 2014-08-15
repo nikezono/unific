@@ -4,29 +4,11 @@ block content
 
   div#AngularApp(ng-app)
 
-    #Modals(ng-controller="modalController")
-      .modal.fade#FindFeedModal
-        .modal-dialog
-          .modal-content
-            .modal-header
-              button.close(type='button', data-dismiss='modal')
-                span(aria-hidden='true') ×
-                span.sr-only Close
-              h4.modal-title Search Results
-            .modal-body(ng-init="feeds = []")
-              ol
-                li(ng-repeat="feed in feeds")
-                  h4 {{feed.title}}  / {{feed.sitename}}
-                  a(href="{{feed.url}}")
-                    p {{feed.url}}
-                  img(src="{{feed.favicon}}")
-                  .pull-right
-                    button.btn.btn-primary(ng-click="subscribeFeed(feed.url)")
-                      | Subscribe
-                  hr
-
 
     #Navigation(ng-controller="navigationController")
+
+      #FindFeedModal
+        include modals/findFeedModal
 
       .col-md-12
         .col-md-6
@@ -36,9 +18,9 @@ block content
               placeholder="Keyword/URL/Other Stream's name"
               )
             span.input-group-btn
-              button.btn.btn-primary(ng-click="findFeed()")
-                span.glyphicon.glyphicon-plus
-                |  Subscribe
+              button.btn.btn-primary(ng-click="findFeed(findFeedQuery)")
+                span.glyphicon.glyphicon-search
+                |  Find
 
         .col-md-6
           .btn-group.btn-group-justified

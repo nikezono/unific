@@ -10,13 +10,18 @@ debug = require('debug')('config/io')
 
 module.exports = (app, server) ->
 
-  Subscribe = app.get('models').Subscribe
+  Stream      = app.get('models').Stream
+  Feed        = app.get('models').Feed
+  Page        = app.get('models').Page
+  HelperEvent = app.get('events').HelperEvent app
+
 
   # setup socket.io
   io = (require 'socket.io').listen server
 
-  app.on 'new article',(data)->
-    Subscribe.findStreamByFeed data.feed, (streams)->
+  app.get('emitter').on 'new article',(data)->
+    Stream.findBySubscribedFeedId data.feed._id,(err,streams)->
+      return debug err if err
       for stream in streams
         debug("publish article to stream#{stream.title}")
         io.to(stream.title).emit data
@@ -28,6 +33,8 @@ module.exports = (app, server) ->
     socket.on "connect stream", (streamName) ->
       if streamName
         socket.join streamName
+        debug "#{socket.id} is joined #{streamName}"
+
       else # GlobalStream @todo
         debug "home"
 

@@ -14,16 +14,10 @@ module.exports = exports = (app,io,socket) ->
   FeedEvent    = Events.FeedEvent    app
   PageEvent    = Events.PageEvent    app
 
-  # Helper Events
-  socket.on "findFeed",      (url)  -> HelperEvent.findFeed        socket, url
-
   # Stream Events
   socket.on "getFeedList",   (data) -> StreamEvent.getFeedList     socket, data
   socket.on "subscribeFeed", (data) -> StreamEvent.subscribeFeed   socket, data
   socket.on "changeDesc",    (data) -> StreamEvent.changeDesc      socket, io, data
-
-  # Feed Events
-  socket.on "createFeed",    (data) -> FeedEvent.createFeed        data,socket
 
   # Page Events
   socket.on "addStar",       (data) -> PageEvent.addStar           socket, io,data
