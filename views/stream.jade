@@ -23,12 +23,13 @@ block content
                   .pull-right
                     button.btn.btn-primary(ng-click="subscribeFeed(feed.url)")
                       | Subscribe
+                  hr
 
 
     #Navigation(ng-controller="navigationController")
 
-      .btn-group.btn-group-justified
-        .btn-group
+      .col-md-12
+        .col-md-6
           .input-group
             input.form-control(type="text",
               ng-model="findFeedQuery"
@@ -36,19 +37,25 @@ block content
               )
             span.input-group-btn
               button.btn.btn-primary(ng-click="findFeed()")
-                | Subscribe
+                span.glyphicon.glyphicon-plus
+                |  Subscribe
 
-        .btn-group
-          button.btn.btn-success
-            | List
+        .col-md-6
+          .btn-group.btn-group-justified
+            .btn-group
+              button.btn.btn-default
+                span.glyphicon.glyphicon-list
+                |  List
 
-        .btn-group
-          button.btn.btn-default
-            | Star
+            .btn-group
+              button.btn.btn-default
+                span.glyphicon.glyphicon-star
+                |  Starred
 
-        .btn-group
-          button.btn.btn-warning
-            | Fork
+            .btn-group
+              button.btn.btn-default
+                span.glyphicon.glyphicon-cutlery
+                |  Fork
 
     hr
 
