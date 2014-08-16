@@ -27,7 +27,7 @@ PageSchema = new Mongo.Schema
 
 PageSchema.statics.updateOneWithFeed = (article,feed,callback)->
   @findOneAndUpdate
-    title: article.link
+    title: article.title
     feed : feed._id
   ,
     title      :article.title

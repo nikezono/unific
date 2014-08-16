@@ -41,10 +41,12 @@ window.pageController = ($scope)->
   $.getJSON "/#{path}/latest"
   .success (data)->
     console.log data
+    $scope.pages = data
+    $scope.$apply()
   .error (err)->
     console.error err
 
   socket.on "newArticle", (data)->
-    console.log data
+    $scope.pages = $scope.pages.unshift data.page
 
 

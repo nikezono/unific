@@ -5,7 +5,7 @@ block content
   div#AngularApp(ng-app)
 
 
-    #Navigation(ng-controller="navigationController")
+    #Navigation.col-md-12(ng-controller="navigationController")
 
       include modals/findFeedModal
 
@@ -38,8 +38,14 @@ block content
                 span.glyphicon.glyphicon-cutlery
                 |  Fork
 
-    hr
 
-    #Pages(ng-controller="pageController")
+    br
+    #Pages.col-md-12(ng-controller="pageController" ng-init="pages = []")
+      .panel.panel-default(ng-repeat="page in pages")
+        .panel-heading
+          h5 {{page.title}}
+        .panel-body
+          p {{page.description}}
+
 
 

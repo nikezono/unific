@@ -28,7 +28,7 @@ exports = module.exports = (app)->
       debug("new article on #{feed.title}")
       @updateOne article,feed,(page)=>
         app.get('emitter').emit 'new article',
-          article:page
+          page:page
           feed:feed
 
     watcher.run (err,articles)=>
