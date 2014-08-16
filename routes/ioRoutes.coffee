@@ -16,7 +16,7 @@ module.exports = exports = (app,io,socket) ->
 
   # Stream Events
   socket.on "getFeedList",   (data) -> StreamEvent.getFeedList     socket, data
-  socket.on "subscribeFeed", (data) -> StreamEvent.subscribeFeed   socket, data
+  socket.on "subscribeFeed", (data) -> StreamEvent.subscribeFeed   socket, io,data
   socket.on "changeDesc",    (data) -> StreamEvent.changeDesc      socket, io, data
 
   # Page Events

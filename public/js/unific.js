@@ -46,14 +46,15 @@
 
   window.pageController = function($scope) {
     $.getJSON("/" + path + "/latest").success(function(data) {
-      console.log(data);
-      $scope.pages = data;
+      $scope.articles = data;
       return $scope.$apply();
     }).error(function(err) {
       return console.error(err);
     });
     return socket.on("newArticle", function(data) {
-      return $scope.pages = $scope.pages.unshift(data.page);
+      console.log(data);
+      $scope.articles.unshift(data);
+      return $scope.$apply();
     });
   };
 

@@ -24,6 +24,8 @@ exports = module.exports = (app)->
 
   createWatcher : (feed)->
     watcher = new Watcher(feed.feedUrl)
+    watcher.set
+      interval:60*3 # @todo frequencymoduleがオカシイ
     watcher.on 'new article',(article)=>
       debug("new article on #{feed.title}")
       @updateOne article,feed,(page)=>
@@ -39,12 +41,10 @@ exports = module.exports = (app)->
   updateOne:(article,feed,callback)->
     Page.updateOneWithFeed article,feed,(err,page)->
       return debug err if err
-      feed.pages.push page
-      feed.pages = _.uniq feed.pages
-      feed.save ->
-        callback page if callback
-
-
+      unless _.contains feed.pages,page
+        feed.pages.unshift page
+        feed.save ->
+          callback page if callback
 
   initialize : ->
     Feed.find {}, (err,feeds)=>

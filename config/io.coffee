@@ -24,7 +24,7 @@ module.exports = (app, server) ->
       return debug err if err
       for stream in streams
         debug("publish article to stream#{stream.title}")
-        io.to(stream.title).emit data
+        io.to(stream.title).emit 'newArticle',data
 
   # Routing
   io.sockets.on "connection", (socket) ->

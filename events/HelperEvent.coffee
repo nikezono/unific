@@ -43,7 +43,7 @@ module.exports.HelperEvent = (app) ->
         res.json stream
 
   # @todo ページ送り
-  getPagesByStreamWithLimit:(streamName,limit,callback)->
+  getArticlesByStreamWithLimit:(streamName,limit,callback)->
     streamName = decodeURIComponent streamName
     Stream.findOne({title:streamName})
     .populate("feeds")
@@ -56,9 +56,10 @@ module.exports.HelperEvent = (app) ->
           limit: limit
       ,(err,stream)->
         return callback err,null if err
-        pages = []
+        articles = []
         for feed in stream.feeds
-          pages = pages.concat feed.pages
-        pages.sort (a,b)->
-          b.pubDate - a.pubDate
-        return callback null,pages
+          for page in feed.pages
+            articles.push {feed:feed,page:page}
+        articles.sort (a,b)->
+          b.page.pubDate - a.page.pubDate
+        return callback null,articles

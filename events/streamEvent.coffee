@@ -40,9 +40,9 @@ module.exports.StreamEvent = (app) ->
   # HTTP Endpoint - RSS
   rss  : (req,res,next) ->
     title = req.params.stream
-    HelperEvent.getPagesByStreamWithLimit title,100,(err,pages)->
+    HelperEvent.getArticlesByStreamWithLimit title,100,(err,articles)->
       return HelperEvent.httpError err,res if err
-      return res.send 404,"Articles Not Found" if pages is null
+      return res.send 404,"Articles Not Found" if articles.length is 0
 
       feed = new RSS
         title: "#{title} - Unific"
@@ -52,26 +52,26 @@ module.exports.StreamEvent = (app) ->
         author: "Unific"
         webMaster: "Unific"
         copyright: "2014 unific.net"
-        pubDate: pages[0].pubDate
+        pubDate: articles[0].page.pubDate
 
 
-        for page in pages
-          feed.item
-            title: page.title
-            description:page.description
-            url: page.url
-            author: page.feed.title # optional - defaults to feed author property
-            date: page.pubDate
+      for article in articles
+        feed.item
+          title: article.page.title
+          description:article.page.description
+          url: article.page.url
+          author: article.feed.title # optional - defaults to feed author property
+          date: article.page.pubDate
 
-        xml = feed.xml()
-        res.set
-          "Content-Type": "text/xml"
-        res.send xml
+      xml = feed.xml()
+      res.set
+        "Content-Type": "text/xml"
+      res.send xml
 
   ###
   # socket.io events
   ###
-  subscribeFeed:(socket,data)->
+  subscribeFeed:(socket,io,data)->
     streamName = decodeURIComponent data.stream
     Stream.findOne title:streamName,(err,stream)->
       return HelperEvent.error err,socket if err or not stream
@@ -94,7 +94,7 @@ module.exports.StreamEvent = (app) ->
         # @todo ここらへんかなり密になっててやばい
         crowler     = app.get('crowler')
         crowler.add feed
-        return socket.emit 'subscribedFeed'
+        return io.to(stream.title).emit 'subscribedFeed'
 
   getFeedList: (socket,data) ->
     streamName = decodeURIComponent data.stream
