@@ -19,11 +19,12 @@ exports = module.exports = (app)->
 
   # api
   add:(feed)->
-    return if feed.feedUrl in @watchingUrls
+    return if feed.url in @watchingUrls
     @createWatcher(feed)
+    @watchingUrls.push feed.url
 
   createWatcher : (feed)->
-    watcher = new Watcher(feed.feedUrl)
+    watcher = new Watcher(feed.url)
     watcher.set
       interval:60*3 # @todo frequencymoduleがオカシイ
     watcher.on 'new article',(article)=>
@@ -41,16 +42,15 @@ exports = module.exports = (app)->
   updateOne:(article,feed,callback)->
     Page.updateOneWithFeed article,feed,(err,page)->
       return debug err if err
-      unless _.contains feed.pages,page
-        feed.pages.unshift page
-        feed.save ->
-          callback page if callback
+      feed.pages.addToSet page
+      feed.save ->
+        callback page if callback
 
   initialize : ->
     Feed.find {}, (err,feeds)=>
       return debug err if err
       for feed in feeds
         @createWatcher(feed)
-        @watchingUrls.push feed.feedUrl
+        @watchingUrls.push feed.url
 
 

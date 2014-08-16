@@ -20,10 +20,12 @@ window.navigationController = ($scope)->
     return if _.isEmpty query
     $.getJSON "/api/find",
       query:query
+      stream:path
     .success (data)->
       $scope.candidates = data
       $scope.$apply()
       $('#FindFeedModal').modal()
+
     .error (err)->
       console.error err
 
@@ -32,12 +34,14 @@ window.navigationController = ($scope)->
       socket.emit "subscribeFeed",
         stream:path
         feed:feed
+
     socket.on "subscribedFeed", ->
       console.log "subscribed" #@todo notice
 
 
 window.pageController = ($scope)->
 
+  # 初回記事取得
   $.getJSON "/#{path}/latest"
   .success (data)->
     $scope.articles = data

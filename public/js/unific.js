@@ -24,7 +24,8 @@
         return;
       }
       $.getJSON("/api/find", {
-        query: query
+        query: query,
+        stream: path
       }).success(function(data) {
         $scope.candidates = data;
         $scope.$apply();

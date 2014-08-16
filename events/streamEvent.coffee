@@ -78,10 +78,11 @@ module.exports.StreamEvent = (app) ->
       data.stream = stream
 
       Feed.findOneAndUpdate
-        feedUrl   : data.feed.url
+        url       : data.feed.url
       ,
         title     : data.feed.title
-        feedUrl   : data.feed.url
+        sitename  : data.feed.sitename
+        url       : data.feed.url
         favicon   : data.feed.favicon
         siteUrl   : data.feed.link or data.feed.url.split(data.feed.href)[0]# @todo find-Rss
       , upsert    : true ,(err,feed)->

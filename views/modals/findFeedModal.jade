@@ -14,7 +14,11 @@
               p {{cand.url}}
             img(src="{{cand.favicon}}")
             .pull-right
-              button.btn.btn-primary(ng-click="subscribeFeed(cand)")
+              button.btn.btn-success(disabled="disabled" ng-show="cand.subscribed")
+                span.glyphicon.glyphicon-ok
+                |  Subscribed
+
+              button.btn.btn-primary(data-dismiss="modal" ng-hide="cand.subscribed" ng-click="subscribeFeed(cand)")
                 span.glyphicon.glyphicon-plus
                 |  Subscribe
             hr

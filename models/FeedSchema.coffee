@@ -15,7 +15,8 @@ Mongo = require 'mongoose'
 
 FeedSchema = new Mongo.Schema
   title:       { type: String, index: yes }
-  feedUrl:     String
+  sitename:    String
+  url:         String
   siteUrl:     String
   favicon:     String
   pages:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'pages' }]
