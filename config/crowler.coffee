@@ -7,6 +7,7 @@ watcher自体はurlとlastPubDateしか持たない
 ###
 
 debug = require('debug')('config/crowler')
+_    = require 'underscore'
 Watcher = require 'rss-watcher'
 
 exports = module.exports = (app)->
@@ -23,19 +24,26 @@ exports = module.exports = (app)->
 
   createWatcher : (feed)->
     watcher = new Watcher(feed.feedUrl)
-    watcher.on 'new article',(article)->
+    watcher.on 'new article',(article)=>
       debug("new article on #{feed.title}")
-      Page.updateOne article,feed,(err)->
-        return debug err if err
+      @updateOne article,feed,(page)=>
         app.get('emitter').emit 'new article',
-          article:article
+          article:page
           feed:feed
 
-    watcher.run (err,articles)->
+    watcher.run (err,articles)=>
       return debug err if err
       for article in articles
-        Page.updateOne article,feed,(err)->
-          return debug err if err
+        @updateOne article,feed
+
+  updateOne:(article,feed,callback)->
+    Page.updateOneWithFeed article,feed,(err,page)->
+      return debug err if err
+      feed.pages.push page
+      feed.pages = _.uniq feed.pages
+      feed.save ->
+        callback page if callback
+
 
 
   initialize : ->

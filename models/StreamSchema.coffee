@@ -22,5 +22,12 @@ StreamSchema.statics.findByTitle = (title, callback) ->
     console.error err if err
     return callback err, stream
 
+# find-by-feed-id
+StreamSchema.statics.findBySubscribedFeedId = (feedId,callback)->
+  @find
+    feeds:feedId
+  ,(err,streams)->
+    callback err,streams
+
 
 exports.Stream = Mongo.model 'streams', StreamSchema

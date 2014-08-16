@@ -25,7 +25,7 @@ PageSchema = new Mongo.Schema
   comments:    [String]
   feed:        { type: Mongo.Schema.Types.ObjectId, ref: 'feeds' }
 
-PageSchema.statics.updateOne = (article,feed,callback)->
+PageSchema.statics.updateOneWithFeed = (article,feed,callback)->
   @findOneAndUpdate
     title: article.link
     feed : feed._id
@@ -38,7 +38,7 @@ PageSchema.statics.updateOne = (article,feed,callback)->
   , upsert: true , (err,page) ->
     if err
       debug(err)
-      return callback(null)
-    return callback(page)
+      return callback err,null
+    return callback null,page
 
 exports.Page = Mongo.model 'pages', PageSchema

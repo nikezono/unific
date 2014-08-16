@@ -15,13 +15,7 @@
 
   socket.on("serverError", function(err) {
     console.error(err);
-    console.trace();
-    return $scope.subscribeFeed = function(feed) {
-      return socket.emit("subscribeFeed", {
-        stream: path,
-        feed: feed
-      });
-    };
+    return console.trace();
   });
 
   window.navigationController = function($scope) {
@@ -29,21 +23,33 @@
       if (_.isEmpty(query)) {
         return;
       }
-      return $.getJSON("/api/find", {
+      $.getJSON("/api/find", {
         query: query
-      }, function() {
-        return console.log("request end");
       }).success(function(data) {
-        $scope.feeds = data;
+        $scope.candidates = data;
         $scope.$apply();
         return $('#FindFeedModal').modal();
       }).error(function(err) {
         return console.error(err);
       });
+      $scope.subscribeFeed = function(feed) {
+        return socket.emit("subscribeFeed", {
+          stream: path,
+          feed: feed
+        });
+      };
+      return socket.on("subscribedFeed", function() {
+        return console.log("subscribed");
+      });
     };
   };
 
   window.pageController = function($scope) {
+    $.getJSON("/" + path + "/latest").success(function(data) {
+      return console.log(data);
+    }).error(function(err) {
+      return console.error(err);
+    });
     return socket.on("newArticle", function(data) {
       return console.log(data);
     });

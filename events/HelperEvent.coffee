@@ -45,21 +45,20 @@ module.exports.HelperEvent = (app) ->
   # @todo ページ送り
   getPagesByStreamWithLimit:(streamName,limit,callback)->
     streamName = decodeURIComponent streamName
-    Stream.findOne({title:streamName}).populate("feeds").exec (err,stream)->
+    Stream.findOne({title:streamName})
+    .populate("feeds")
+    .exec (err,stream)->
       return callback err,null if err
-      Page.populate stream,
+      Feed.populate stream,
         path:'feeds.pages'
+        model:Page
         options:
           limit: limit
-          sort:
-            pubDate:-1
       ,(err,stream)->
         return callback err,null if err
-        return callback null,null if stream.feeds.length is 0
         pages = []
-        for feed in  stream.feeds
-          pages.concat feed.pages
-        return callback null,null if pages.length is 0
+        for feed in stream.feeds
+          pages = pages.concat feed.pages
         pages.sort (a,b)->
           b.pubDate - a.pubDate
         return callback null,pages

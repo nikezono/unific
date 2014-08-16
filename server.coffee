@@ -21,5 +21,6 @@ io app,server
 crowler = require(path.resolve 'config','crowler') app
 crowler.initialize()
 app.set 'crowler',crowler
+
 server.listen app.get("port"), ->
   console.log "Express server listening on port " + app.get("port")

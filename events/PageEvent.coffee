@@ -9,13 +9,13 @@ module.exports.PageEvent = (app) ->
   debug = require("debug")("events/page")
 
   Page        = app.get("models").Page
-  HelperEvent = app.get("events").HelperEvent
+  HelperEvent = app.get("events").HelperEvent app
 
   ### HTTP Events ###
   getPagesByStream:(req,res)->
     HelperEvent.getPagesByStreamWithLimit req.params.stream,100,(err,pages)->
-      res.send 400,'Internal Server Error' if err
-      res.json pages
+      return res.send 400,'Internal Server Error' if err
+      return res.json pages
 
   ### socket.io events ###
   addStar: (socket,io,data) ->
