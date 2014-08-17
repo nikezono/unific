@@ -61,11 +61,10 @@ module.exports.HelperEvent = (app) ->
             return res.json resArray
 
       # @todo ストリーム検索/フィード検索(キーワード検索)
-      # @todo not found
       else
-        Stream.findByTitle query,(err,stream)->
+        Stream.findByTitle query,(err,streams)->
           return @httpError err,res if err
-          res.json stream
+          res.json streams
 
     # @todo ページ送り
     # @todo 時間かかりすぎ？

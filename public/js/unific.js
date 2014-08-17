@@ -34,6 +34,7 @@
         if (_.isEmpty(data)) {
           return notify.info("Not Found.");
         }
+        console.log(data);
         $scope.candidates = data;
         $scope.$apply();
         return $('#FindFeedModal').modal();

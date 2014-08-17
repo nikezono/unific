@@ -18,7 +18,7 @@ StreamSchema = new Mongo.Schema
 
 # find-by-name
 StreamSchema.statics.findByTitle = (title, callback) ->
-  @findOne title: title, {}, {}, (err, stream) ->
+  @find title: new RegExp(title), {}, {}, (err, stream) ->
     console.error err if err
     return callback err, stream
 
