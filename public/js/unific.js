@@ -15,8 +15,12 @@
 
   socket.on("serverError", function(err) {
     console.error(err);
-    return console.trace();
+    console.trace();
+    return alert.danger("Error");
   });
+
+
+  /* AngularApp */
 
   window.navigationController = function($scope) {
     return $scope.findFeed = function(query) {
@@ -27,20 +31,25 @@
         query: query,
         stream: path
       }).success(function(data) {
+        if (_.isEmpty(data)) {
+          return notify.info("Not Found.");
+        }
         $scope.candidates = data;
         $scope.$apply();
         return $('#FindFeedModal').modal();
       }).error(function(err) {
-        return console.error(err);
+        console.error(err);
+        return notify.danger("Error");
       });
       $scope.subscribeFeed = function(feed) {
-        return socket.emit("subscribeFeed", {
+        socket.emit("subscribeFeed", {
           stream: path,
           feed: feed
         });
+        return notify.info("Subscribe Request");
       };
       return socket.on("subscribedFeed", function() {
-        return console.log("subscribed");
+        return notify.success("New Feed has Subscribed.");
       });
     };
   };
@@ -51,13 +60,15 @@
       $scope.$apply();
       return $('.collapse').collapse();
     }).error(function(err) {
-      return console.error(err);
+      console.error(err);
+      return notify.danger("Connection Error.");
     });
     return socket.on("newArticle", function(data) {
       console.log(data);
       $scope.articles.unshift(data);
+      $("#" + data.page._id).collapse();
       $scope.$apply();
-      return $("#" + data.page._id).collapse();
+      return notify.info(data.page.title);
     });
   };
 

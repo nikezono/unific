@@ -37,6 +37,12 @@ block content
                 span.glyphicon.glyphicon-cutlery
                 |  Fork
 
+            .btn-group
+              button.btn.btn-default(onClick="requestPermission()")
+                span.glyphicon.glyphicon-exclamation-sign
+                |  Notify
+
+
     #Pages.col-md-12(ng-controller="pageController" ng-init="articles = []")
       .panel-group#accordion
         .panel.panel-default(ng-repeat="article in articles")
@@ -47,6 +53,9 @@ block content
                 data-parent="#accordion"
               )
                 {{article.page.title}}
+                |  &nbsp;
+              small
+                {{article.page.pubDate | date:"medium"}}
           .panel-collapse.collapse.in(id="{{article.page._id}}")
             .panel-body
               // @todo 代表的画像抜き出し

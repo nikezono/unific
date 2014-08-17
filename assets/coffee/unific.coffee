@@ -12,6 +12,10 @@ socket.emit 'connect stream', path
 socket.on "serverError",(err)->
   console.error err
   console.trace()
+  alert.danger("Error")
+
+
+### AngularApp ###
 
 window.navigationController = ($scope)->
 
@@ -22,21 +26,25 @@ window.navigationController = ($scope)->
       query:query
       stream:path
     .success (data)->
+      if _.isEmpty data
+        return notify.info "Not Found."
       $scope.candidates = data
       $scope.$apply()
       $('#FindFeedModal').modal()
 
     .error (err)->
       console.error err
+      notify.danger "Error"
 
     # SubScribe Button
     $scope.subscribeFeed = (feed)->
       socket.emit "subscribeFeed",
         stream:path
         feed:feed
+      notify.info "Subscribe Request"
 
     socket.on "subscribedFeed", ->
-      console.log "subscribed" #@todo notice
+      notify.success "New Feed has Subscribed."
 
 
 window.pageController = ($scope)->
@@ -49,11 +57,13 @@ window.pageController = ($scope)->
     $('.collapse').collapse()
   .error (err)->
     console.error err
+    notify.danger("Connection Error.")
 
   socket.on "newArticle", (data)->
     console.log data
     $scope.articles.unshift data
-    $scope.$apply()
     $("##{data.page._id}").collapse()
+    $scope.$apply()
+    notify.info(data.page.title)
 
 
