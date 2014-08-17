@@ -52,10 +52,10 @@ block content
                 data-toggle="collapse"
                 data-parent="#accordion"
               )
-                {{article.page.title}}
-                |  &nbsp;
+                | {{article.page.title}}
+                | &nbsp;
               small
-                {{article.page.pubDate | date:"medium"}}
+                | {{article.page.pubDate | date:"medium"}}
           .panel-collapse.collapse.in(id="{{article.page._id}}")
             .panel-body
               // @todo 代表的画像抜き出し

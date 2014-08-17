@@ -49,6 +49,12 @@
     }
   };
 
-  window.requestPermission = Notification.requestPermission;
+  window.requestPermission = function() {
+    if (Notification.permission !== "granted") {
+      return Notification.requestPermission();
+    } else {
+      return notify.info("Notification is already enabled");
+    }
+  };
 
 }).call(this);

@@ -37,4 +37,8 @@ html5notification = (text)->
     show(text)
 
 
-window.requestPermission = Notification.requestPermission
+window.requestPermission =->
+  if Notification.permission isnt "granted"
+    Notification.requestPermission()
+  else
+    notify.info "Notification is already enabled"

@@ -22,7 +22,7 @@ module.exports.StreamEvent = (app) ->
   # HTTP EndPoint - Stream
   index: (req,res,next) ->
     title = req.params.stream
-    Stream.findByTitle title,(err,stream)->
+    Stream.findOne {title:title},(err,stream)->
       if err
         debug(err)
         return res.send 400,'Internal Server Error'

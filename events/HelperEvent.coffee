@@ -32,7 +32,7 @@ module.exports.HelperEvent = (app) ->
   # find feed or stream
   findFeed:(req,res) ->
     streamName = decodeURIComponent req.query.stream
-    Stream.findByTitle streamName,(err,stream)->
+    Stream.findOne {title: streamName},(err,stream)->
       return @httpError err if err
 
       query = req.query.query
