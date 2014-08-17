@@ -38,21 +38,28 @@ block content
                 |  Fork
 
     #Pages.col-md-12(ng-controller="pageController" ng-init="articles = []")
-      .panel.panel-default(ng-repeat="article in articles")
-        .panel-heading
-          a(href="{{article.page.url}}")
-            h5 {{article.page.title}}
-        .panel-body
-          // @todo 代表的画像抜き出し
-          p {{article.page.description}}
-        .panel-footer
-          a(href="{{article.feed.siteUrl}}")
-            .media
-              .pull-left
-                img.media-object.img-circle.img-responsive(src="{{article.feed.favicon}}")
-              .media-body
-                h6 {{article.feed.title}}
-                p {{article.feed.siteUrl}}
+      .panel-group#accordion
+        .panel.panel-default(ng-repeat="article in articles")
+          .panel-heading
+            h5.panel-title
+              a(href="#{{article.page._id}}"
+                data-toggle="collapse"
+                data-parent="#accordion"
+              )
+                {{article.page.title}}
+          .panel-collapse.collapse.in(id="{{article.page._id}}")
+            .panel-body
+              // @todo 代表的画像抜き出し
+              a(href="{{article.page.url}}")
+                h4 {{article.page.title}}
+              p {{article.page.description}}
+              a(href="{{article.feed.siteUrl}}")
+                .media
+                  .pull-left
+                    img.media-object.img-circle.img-responsive(src="{{article.feed.favicon}}")
+                  .media-body
+                    h6 {{article.feed.title}}
+                    p {{article.feed.siteUrl}}
 
 
 

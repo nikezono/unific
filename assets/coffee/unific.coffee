@@ -46,6 +46,7 @@ window.pageController = ($scope)->
   .success (data)->
     $scope.articles = data
     $scope.$apply()
+    $('.collapse').collapse()
   .error (err)->
     console.error err
 
@@ -53,5 +54,6 @@ window.pageController = ($scope)->
     console.log data
     $scope.articles.unshift data
     $scope.$apply()
+    $("##{data.page._id}").collapse()
 
 

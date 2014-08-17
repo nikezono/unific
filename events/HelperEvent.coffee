@@ -68,6 +68,7 @@ module.exports.HelperEvent = (app) ->
           res.json stream
 
     # @todo ページ送り
+    # @todo 時間かかりすぎ？
   getArticlesByStreamWithLimit:(streamName,limit,callback)->
     streamName = decodeURIComponent streamName
     Stream.findOne({title:streamName})
@@ -79,6 +80,8 @@ module.exports.HelperEvent = (app) ->
         model:Page
         options:
           limit: limit
+          sort:
+            pubDate:-1
       ,(err,stream)->
         return callback err,null if err
         articles = []

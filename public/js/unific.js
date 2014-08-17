@@ -48,14 +48,16 @@
   window.pageController = function($scope) {
     $.getJSON("/" + path + "/latest").success(function(data) {
       $scope.articles = data;
-      return $scope.$apply();
+      $scope.$apply();
+      return $('.collapse').collapse();
     }).error(function(err) {
       return console.error(err);
     });
     return socket.on("newArticle", function(data) {
       console.log(data);
       $scope.articles.unshift(data);
-      return $scope.$apply();
+      $scope.$apply();
+      return $("#" + data.page._id).collapse();
     });
   };
 
