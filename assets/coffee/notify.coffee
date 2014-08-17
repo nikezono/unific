@@ -3,6 +3,7 @@ window.notify =
 
   success:(text)->
     $.bootstrapgrowl text,
+      ele:"body"
       type:'success'
       allow_dismiss: true
       align: 'right'
@@ -10,6 +11,7 @@ window.notify =
   info:(text)->
     html5notification text
     $.bootstrapGrowl text,
+      ele:"body"
       type:'info'
       allow_dismiss: true
       align: 'right'
@@ -17,6 +19,7 @@ window.notify =
   danger:(text)->
     html5notification text
     $.bootstrapGrowl text,
+      ele:"body"
       type:'danger'
       allow_dismiss: true
       align: 'right'
