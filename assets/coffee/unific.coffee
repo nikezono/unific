@@ -63,7 +63,7 @@ window.pageController = ($scope)->
   socket.on "newArticle", (data)->
     console.log data
     $scope.articles.unshift data
-    $("##{data.page._id}").collapse()
+    $(".collapse").collapse()
     $scope.$apply()
     notify.info(data.page.title)
 

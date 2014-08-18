@@ -67,7 +67,7 @@
     return socket.on("newArticle", function(data) {
       console.log(data);
       $scope.articles.unshift(data);
-      $("#" + data.page._id).collapse();
+      $(".collapse").collapse();
       $scope.$apply();
       return notify.info(data.page.title);
     });
