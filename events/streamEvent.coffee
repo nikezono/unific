@@ -74,7 +74,7 @@ module.exports.StreamEvent = (app) ->
   subscribeFeed:(socket,io,data)->
     streamName = decodeURIComponent data.stream
     Stream.findOne title:streamName,(err,stream)->
-      return HelperEvent.error err,socket if err or not stream
+      return HelperEvent.ioError err,socket if err or not stream
       data.stream = stream
 
       Feed.findOneAndUpdate
@@ -84,31 +84,27 @@ module.exports.StreamEvent = (app) ->
         sitename  : data.feed.sitename
         url       : data.feed.url
         favicon   : data.feed.favicon
-        siteUrl   : data.feed.link or data.feed.url.split(data.feed.href)[0]# @todo find-Rss
+        siteUrl   : data.feed.link or data.feed.siteUrl or data.feed.url.split(data.feed.href)[0]
       , upsert    : true ,(err,feed)->
-        return HelperEvent.error(err,socket) if err or not feed
+        return HelperEvent.ioError(err,socket) if err or not feed
 
-        stream.feeds.push feed._id
-        stream.save()
+        if stream.feeds.indexOf feed._id is -1
+          stream.feeds.push feed._id
+          stream.save()
 
         # データ更新&watcher
         # @todo ここらへんかなり密になっててやばい
         crowler     = app.get('crowler')
-        crowler.add feed
-        return io.to(stream.title).emit 'subscribedFeed'
+        crowler.addToSet feed
+        return io.to(stream.title).emit 'subscribedFeed',feed
 
-  getFeedList: (socket,data) ->
+  unsubscribeFeed:(socket,io,data)->
     streamName = decodeURIComponent data.stream
     Stream.findOne title:streamName,(err,stream)->
-      if err
-        debug err
-        return HelperEvent.error err,socket
-      stream.getSubscribedFeedList (err,feeds)->
-        if err
-          debug err
-          return HelperEvent.error err,socket
-        socket.emit 'feedList', feeds
-
+      return HelperEvent.ioError err,socket if err or not stream
+      stream.feeds.pull data.feed._id
+      stream.save()
+      return io.to(stream.title).emit 'unsubscribedFeed',feed
 
   changeDesc: (socket,data) ->
     streamName = decodeURIComponent data.stream

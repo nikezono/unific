@@ -1,15 +1,15 @@
 
 /*
 
-@todo エラーハンドラ
+ unific.coffee
  */
 
 (function() {
-  var path, socket;
+  var Article, ArticleView, Articles, ArticlesView, Unific, httpApi, ioApi, path, socket;
 
   path = window.location.pathname.substr(1);
 
-  socket = io.connect();
+  socket = io.connect("/" + path);
 
   socket.emit('connect stream', path);
 
@@ -19,58 +19,65 @@
     return alert.danger("Error");
   });
 
+  httpApi = httpApiWrapper(path);
 
-  /* AngularApp */
+  ioApi = ioApiWrapper(socket);
 
-  window.navigationController = function($scope) {
-    return $scope.findFeed = function(query) {
-      if (_.isEmpty(query)) {
-        return;
-      }
-      $.getJSON("/api/find", {
-        query: query,
-        stream: path
-      }).success(function(data) {
-        if (_.isEmpty(data)) {
-          return notify.info("Not Found.");
-        }
-        console.log(data);
-        $scope.candidates = data;
-        $scope.$apply();
-        return $('#FindFeedModal').modal();
-      }).error(function(err) {
+  Unific = new Backbone.Marionette.Application();
+
+  Unific.addRegions({
+    pages: '#Pages'
+  });
+
+  Article = Backbone.Model.extend();
+
+  Articles = Backbone.Collection.extend(Article);
+
+  ArticleView = Backbone.Marionette.ItemView.extend({
+    template: "#articleTemplate"
+  });
+
+  ArticlesView = Backbone.Marionette.CollectionView.extend({
+    childView: ArticleView,
+    tagName: 'div',
+    className: 'panel-group',
+    id: 'accordion'
+  });
+
+  Unific.addInitializer(function(options) {
+    return Unific.pages.show(new ArticlesView({
+      collection: options.articles
+    }));
+  });
+
+  $(function() {
+    var articles;
+    articles = new Articles();
+    httpApi.getLatestArticles(function(err, data) {
+      var article, _i, _len;
+      if (err) {
         console.error(err);
-        return notify.danger("Error");
+        return notify.danger("Initialize Error.Please Reload.");
+      }
+      for (_i = 0, _len = data.length; _i < _len; _i++) {
+        article = data[_i];
+        articles.add(new Article(article));
+      }
+      return Unific.start({
+        articles: articles
       });
-      $scope.subscribeFeed = function(feed) {
-        socket.emit("subscribeFeed", {
-          stream: path,
-          feed: feed
-        });
-        return notify.info("Subscribe Request");
-      };
-      return socket.on("subscribedFeed", function() {
-        return notify.success("New Feed has Subscribed.");
-      });
-    };
-  };
-
-  window.pageController = function($scope) {
-    $.getJSON("/" + path + "/latest").success(function(data) {
-      $scope.articles = data;
-      $scope.$apply();
-      return $('.collapse').collapse();
-    }).error(function(err) {
-      console.error(err);
-      return notify.danger("Connection Error.");
+    });
+    socket.on("subscribedFeed", function() {
+      return notify.success("New Feed has Subscribed.");
+    });
+    socket.on("unsubscribedFeed", function() {
+      return notify.success("New Feed has Subscribed.");
     });
     return socket.on("newArticle", function(data) {
       console.log(data);
-      $scope.articles.unshift(data);
-      $(".collapse").collapse();
-      $scope.$apply();
-      return notify.info(data.page.title);
+      notify.info(data.page.title);
+      return articles.add(data);
     });
-  };
+  });
 
 }).call(this);

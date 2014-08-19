@@ -21,7 +21,8 @@ head
   script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js')
   script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
-  script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js")
+  script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js')
+  script(src="//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.0.3/backbone.marionette.min.js")
   script(src="/vendor/js/jquery.bootstrap-growl.min.js")
 
   //- css
@@ -31,6 +32,8 @@ head
 
   //- User Script
   script(src="/js/notify.js" type="application/javascript")
+  script(src="/js/http.js"   type="application/javascript")
+  script(src="/js/io.js"   type="application/javascript")
   script(src="/js/unific.js" type="application/javascript")
 
 body
@@ -41,7 +44,6 @@ body
           if stream
             h1= stream.title
             small unific.net
-            p#Description(data-intro='説明文を変更できます。',data-position='left',contenteditable=true)= description
           else
             h1= 'Unific'
 

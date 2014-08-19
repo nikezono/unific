@@ -15,11 +15,12 @@ module.exports = exports = (app,io,socket) ->
   PageEvent    = Events.PageEvent    app
 
   # Stream Events
-  socket.on "getFeedList",   (data) -> StreamEvent.getFeedList     socket, data
-  socket.on "subscribeFeed", (data) -> StreamEvent.subscribeFeed   socket, io,data
-  socket.on "changeDesc",    (data) -> StreamEvent.changeDesc      socket, io, data
+  socket.on "getFeedList",     (data) -> StreamEvent.getFeedList     socket, data
+  socket.on "subscribeFeed",   (data) -> StreamEvent.subscribeFeed   socket, io,data
+  socket.on "unsubscribeFeed", (data) -> StreamEvent.unsubscribeFeed   socket, io,data
+  socket.on "changeDesc",      (data) -> StreamEvent.changeDesc      socket, io,data
 
   # Page Events
-  socket.on "addStar",       (data) -> PageEvent.addStar           socket, io,data
-  socket.on "addComment",    (data) -> PageEvent.addComment        socket, io, data
+  socket.on "addStar",         (data) -> PageEvent.addStar           socket, io,data
+  socket.on "addComment",      (data) -> PageEvent.addComment        socket, io, data
 

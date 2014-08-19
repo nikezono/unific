@@ -2,74 +2,50 @@ extends layout
 
 block content
 
-  div#AngularApp(ng-app)
+  #Modals
 
-    #Navigation.col-md-12(ng-controller="navigationController")
+    include modals/findFeedModal
+    include modals/feedListModal
 
-      include modals/findFeedModal
+  #Navigation.col-md-12
 
-      .col-md-12
-        .col-md-6
-          .input-group
-            input.form-control(type="text",
-              ng-model="findFeedQuery"
-              placeholder="Keyword/URL/Other Stream's name"
+    .col-md-12
+      .col-md-6
+        .input-group
+          input.form-control(type="text",
+            placeholder="Keyword/URL/Other Stream's name"
+            )
+          span.input-group-btn
+            button.btn.btn-primary
+              span.glyphicon.glyphicon-search
+              |  Find
+
+      .col-md-6
+        .btn-group.btn-group-justified
+          .btn-group
+            button.btn.btn-default
+              span.glyphicon.glyphicon-list
+              |  List
+
+          .btn-group
+            button.btn.btn-default
+              span.glyphicon.glyphicon-star
+              |  Starred
+
+          .btn-group
+            button.btn.btn-default
+              span.glyphicon.glyphicon-cutlery
+              |  Fork
+
+          .btn-group
+            button.btn.btn-default(
+              onClick="requestPermission()"
               )
-            span.input-group-btn
-              button.btn.btn-primary(ng-click="findFeed(findFeedQuery)")
-                span.glyphicon.glyphicon-search
-                |  Find
-
-        .col-md-6
-          .btn-group.btn-group-justified
-            .btn-group
-              button.btn.btn-default
-                span.glyphicon.glyphicon-list
-                |  List
-
-            .btn-group
-              button.btn.btn-default
-                span.glyphicon.glyphicon-star
-                |  Starred
-
-            .btn-group
-              button.btn.btn-default
-                span.glyphicon.glyphicon-cutlery
-                |  Fork
-
-            .btn-group
-              button.btn.btn-default(onClick="requestPermission()")
-                span.glyphicon.glyphicon-exclamation-sign
-                |  Notify
+              span.glyphicon.glyphicon-exclamation-sign
+              |  Notify
 
 
-    #Pages.col-md-12(ng-controller="pageController" ng-init="articles = []")
-      .panel-group#accordion
-        .panel.panel-default(ng-repeat="article in articles")
-          .panel-heading
-            h5.panel-title
-              a(href="#{{article.page._id}}"
-                data-toggle="collapse"
-                data-parent="#accordion"
-              )
-                | {{article.page.title}}
-                | &nbsp;
-              small
-                | {{article.page.pubDate | date:"medium"}}
-          .panel-collapse.collapse.in(id="{{article.page._id}}")
-            .panel-body
-              // @todo 代表的画像抜き出し
-              a(href="{{article.page.url}}")
-                h4 {{article.page.title}}
-              p {{article.page.description}}
-              a(href="{{article.feed.siteUrl}}")
-                .media
-                  .pull-left
-                    img.media-object.img-circle.img-responsive(src="{{article.feed.favicon}}")
-                  .media-body
-                    h6 {{article.feed.title}}
-                    p {{article.feed.siteUrl}}
+  #Pages.col-md-12
 
-
-
-
+  script#articleTemplate(type="text/template")
+    include panel

@@ -1,0 +1,28 @@
+// パネル（記事）
+.panel.panel-default
+  .panel-heading
+    h5.panel-title
+      a(href="<%- page._id %>"
+        data-toggle="collapse"
+        data-parent="#accordion"
+      )
+        | <%- page.title %>
+        | &nbsp;
+      small
+        | <%- page.pubDate %>
+  .panel-collapse.collapse.in(id="<%- page._id %>")
+    .panel-body
+      // @todo 代表的画像抜き出し
+      a(href="<%- page.url %>")
+        h4 <%- page.title %>
+      p <%- page.description %>
+      a(href="<%- feed.siteUrl %>")
+        .media
+          .pull-left
+            img.media-object.img-circle.img-responsive(
+              src="<%- feed.favicon %>"
+              )
+          .media-body
+            h6 <%- feed.title %>
+            p <%- feed.siteUrl %>
+

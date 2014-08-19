@@ -1,12 +1,13 @@
 ###
 
-@todo エラーハンドラ
+ unific.coffee
 
 ###
 
+
 path = (window.location.pathname).substr(1)
 
-socket = io.connect()
+socket = io.connect "/#{path}"
 socket.emit 'connect stream', path
 
 socket.on "serverError",(err)->
@@ -14,57 +15,57 @@ socket.on "serverError",(err)->
   console.trace()
   alert.danger("Error")
 
+httpApi = httpApiWrapper(path)
+ioApi   = ioApiWrapper(socket)
 
-### AngularApp ###
+## Marionette ##
+Unific = new Backbone.Marionette.Application()
+Unific.addRegions
+  pages:'#Pages'
 
-window.navigationController = ($scope)->
+## Model ##
+Article  = Backbone.Model.extend()
+Articles = Backbone.Collection.extend Article
 
-  # Find Button
-  $scope.findFeed = (query)->
-    return if _.isEmpty query
-    $.getJSON "/api/find",
-      query:query
-      stream:path
-    .success (data)->
-      if _.isEmpty data
-        return notify.info "Not Found."
-      console.log data
-      $scope.candidates = data
-      $scope.$apply()
-      $('#FindFeedModal').modal()
 
-    .error (err)->
+## ItemView ##
+ArticleView = Backbone.Marionette.ItemView.extend
+  template:"#articleTemplate"
+
+## CollectionView ##
+ArticlesView = Backbone.Marionette.CollectionView.extend
+  childView:ArticleView
+  tagName:'div'
+  className:'panel-group'
+  id:'accordion'
+
+Unific.addInitializer (options)->
+  Unific.pages.show new ArticlesView
+    collection:options.articles
+
+
+$ ->
+
+  articles = new Articles()
+
+  # 初回記事読み込み
+  httpApi.getLatestArticles (err,data)->
+    if err
       console.error err
-      notify.danger "Error"
+      return notify.danger "Initialize Error.Please Reload."
+    for article in data
+      articles.add new Article(article)
 
-    # SubScribe Button
-    $scope.subscribeFeed = (feed)->
-      socket.emit "subscribeFeed",
-        stream:path
-        feed:feed
-      notify.info "Subscribe Request"
+    Unific.start
+      articles:articles
 
-    socket.on "subscribedFeed", ->
-      notify.success "New Feed has Subscribed."
-
-
-window.pageController = ($scope)->
-
-  # 初回記事取得
-  $.getJSON "/#{path}/latest"
-  .success (data)->
-    $scope.articles = data
-    $scope.$apply()
-    $('.collapse').collapse()
-  .error (err)->
-    console.error err
-    notify.danger("Connection Error.")
+  socket.on "subscribedFeed", ->
+    notify.success "New Feed has Subscribed."
+  socket.on "unsubscribedFeed", ->
+    notify.success "New Feed has Subscribed."
 
   socket.on "newArticle", (data)->
     console.log data
-    $scope.articles.unshift data
-    $(".collapse").collapse()
-    $scope.$apply()
     notify.info(data.page.title)
-
+    articles.add data
 

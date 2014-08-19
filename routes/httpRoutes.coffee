@@ -10,7 +10,8 @@ module.exports = (app) ->
   # include events
   HomeEvent   = app.get('events').HomeEvent app
   StreamEvent = app.get('events').StreamEvent app
-  PageEvent = app.get('events').PageEvent app
+  FeedEvent   = app.get('events').FeedEvent app
+  PageEvent   = app.get('events').PageEvent app
   HelperEvent = app.get('events').HelperEvent app
 
   # homeEvent Controller
@@ -23,6 +24,9 @@ module.exports = (app) ->
   # streamEvent Controller
   app.get '/:stream',        (req,res,next)-> StreamEvent.index req,res,next
   app.get '/:stream/rss',    (req,res,next)-> StreamEvent.rss   req,res,next
+
+  # FeedEvent Controller
+  app.get '/:stream/list',   (req,res,next)-> FeedEvent.list    req,res,next
 
   # PageEvent Controller
   app.get '/:stream/latest', (req,res,next)-> PageEvent.getPagesByStream req,res,next

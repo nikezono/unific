@@ -10,4 +10,15 @@ module.exports.FeedEvent = (app) ->
 
   HelperEvent = app.get('events').HelperEvent app
   Feed        = app.get('models').Feed
+  Stream      = app.get('models').Stream
+
+  # Feed List
+  list:(req,res,next)->
+    streamName = req.params.stream
+    Stream.findOne({title:streamName})
+    .populate "feeds"
+    .exec (err,stream)->
+      return HelperEvent.httpError err,res if err
+      return res.json stream.feeds
+
 
