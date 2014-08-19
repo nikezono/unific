@@ -4,6 +4,8 @@
 
 ###
 
+_.templateSettings =
+    interpolate: /\{\{(.+?)\}\}/g
 
 path = (window.location.pathname).substr(1)
 
@@ -42,6 +44,7 @@ ArticlesView = Backbone.Marionette.CollectionView.extend
 Unific.addInitializer (options)->
   Unific.pages.show new ArticlesView
     collection:options.articles
+  $('.collapse').collapse()
 
 
 $ ->

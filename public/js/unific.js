@@ -7,6 +7,10 @@
 (function() {
   var Article, ArticleView, Articles, ArticlesView, Unific, httpApi, ioApi, path, socket;
 
+  _.templateSettings = {
+    interpolate: /\{\{(.+?)\}\}/g
+  };
+
   path = window.location.pathname.substr(1);
 
   socket = io.connect("/" + path);
@@ -45,9 +49,10 @@
   });
 
   Unific.addInitializer(function(options) {
-    return Unific.pages.show(new ArticlesView({
+    Unific.pages.show(new ArticlesView({
       collection: options.articles
     }));
+    return $('.collapse').collapse();
   });
 
   $(function() {

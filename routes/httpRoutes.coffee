@@ -17,7 +17,8 @@ module.exports = (app) ->
   # homeEvent Controller
   app.get '/',               (req,res,next)-> HomeEvent.index   req,res,next
   app.get '/about',          (req,res,next)-> HomeEvent.about   req,res,next
-  app.get  /^\/%3c%/i,       (req,res,next)-> res.send 400 # underscore template
+  app.get  /^\/%3c%/i,       (req,res,next)-> res.send 404 # underscore template
+  app.get  /^\/%7b%/i,       (req,res,next)-> res.send 404 # underscore template
 
   # HelperEvent Controller
   app.get '/api/find',       (req,res,next)-> HelperEvent.findFeed req,res,next
