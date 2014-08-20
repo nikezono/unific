@@ -3,26 +3,26 @@
   検索後の購読候補(newFeed/feed/stream)、
   購読リスト(feed/stream)を表示する
 
- li
-    h4 {{title}} / {{sitename}}
-    a(href="{{url}}")
-      p {{url}}
-    img(src="{{favicon}}")
-    .pull-right
-      button.btn.btn-warning(
-        data-dismiss="modal"
-        )
-        span.glyphicon.glyphicon-plus
-          |  Unsubscribe
+li
+  h5 {{title}} / {{sitename}}
+  a(href="{{url}}")
+    p {{url}}
+  img(src="{{favicon}}")
+  .pull-right
+    button.btn.btn-warning(
+      data-dismiss="modal"
+      )
+      span.glyphicon.glyphicon-plus
+        |  Unsubscribe
 
-      button.btn.btn-success(disabled="disabled")
-        span.glyphicon.glyphicon-ok
-          |  Subscribed
+    button.btn.btn-success(disabled="disabled")
+      span.glyphicon.glyphicon-ok
+        |  Subscribed
 
-      button.btn.btn-primary(data-dismiss="modal")
-        span.glyphicon.glyphicon-plus
-          |  Subscribe
+    button.btn.btn-primary(data-dismiss="modal")
+      span.glyphicon.glyphicon-plus
+        |  Subscribe
 
-    hr
+  hr
 
 

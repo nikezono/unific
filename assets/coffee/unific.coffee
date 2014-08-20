@@ -19,6 +19,9 @@ $ ->
   socket.on "connect",->
     notify.info "Connected."
 
+  socket.on "error",(err)->
+    notify.danger err
+
   socket.on "serverError",(err)->
     console.error err
     console.trace()
@@ -30,6 +33,7 @@ $ ->
   articlesView   = new ArticlesView
     collection:articles
   candidatesView = new CandidatesView
+    model: null
     collection:candidates
 
   ## Marionette ##
@@ -40,7 +44,8 @@ $ ->
 
   Unific.addInitializer (options)->
     Unific.pages.show articlesView
-    $('.collapse').collapse()
+    Unific.modals.show candidatesView # @note modalなので常にshowしておいてjsで制御する
+    $('.collapse').collapse() # @note Viewに書きたい
 
   # 初回記事読み込み
   if not _.isEmpty path
@@ -64,6 +69,15 @@ $ ->
     notify.info(data.page.title)
     articles.unshift new Article data
 
-  socket.on "error",(err)->
-    notify.danger err
+  ## Navigation Event @note backboneに落としこむ
+  $('button#Find').click ->
+    query = $('#FindQuery').val()
+    httpApi.findCandidates query,(err,data)->
+      return notify.danger err if err
+      return notify.danger "candidate not found" if _.isEmpty data
 
+      newCandidates = []
+      for candidate in data
+        newCandidates.push new Candidate candidate
+      candidates.reset newCandidates
+      $('.modal').modal()

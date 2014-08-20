@@ -1,13 +1,6 @@
 (function() {
   window.ArticleView = Backbone.Marionette.ItemView.extend({
-    template: "#articleTemplate",
-    timestamp: function() {
-      return this.page.pubDate / 1000;
-    }
-  });
-
-  window.CandidateView = Backbone.Marionette.ItemView.extend({
-    template: "#candidateTemplate"
+    template: "#articleTemplate"
   });
 
   window.ArticlesView = Backbone.Marionette.CollectionView.extend({
@@ -17,9 +10,14 @@
     id: 'accordion'
   });
 
+  window.CandidateView = Backbone.Marionette.ItemView.extend({
+    template: "#candidateTemplate"
+  });
+
   window.CandidatesView = Backbone.Marionette.CompositeView.extend({
+    template: "#candidatesRootTemplate",
     childView: CandidateView,
-    template: "#candidatesRootTemplate"
+    childViewContainer: "ol"
   });
 
 }).call(this);

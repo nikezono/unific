@@ -9,7 +9,7 @@ block content
     .col-md-12
       .col-md-6
         .input-group
-          input.form-control(type="text",
+          input#FindQuery.form-control(type="text",
             placeholder="Keyword/URL/Other Stream's name"
             )
           span.input-group-btn
@@ -51,6 +51,6 @@ block content
   script#candidatesRootTemplate(type="text/template")
     include template/candidatesRoot
   script#candidateTemplate(type="text/template")
-    //include template/candidate
+    include template/candidate
 
 

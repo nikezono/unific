@@ -19,6 +19,9 @@
     socket.on("connect", function() {
       return notify.info("Connected.");
     });
+    socket.on("error", function(err) {
+      return notify.danger(err);
+    });
     socket.on("serverError", function(err) {
       console.error(err);
       console.trace();
@@ -30,6 +33,7 @@
       collection: articles
     });
     candidatesView = new CandidatesView({
+      model: null,
       collection: candidates
     });
     Unific = new Backbone.Marionette.Application();
@@ -39,6 +43,7 @@
     });
     Unific.addInitializer(function(options) {
       Unific.pages.show(articlesView);
+      Unific.modals.show(candidatesView);
       return $('.collapse').collapse();
     });
     if (!_.isEmpty(path)) {
@@ -65,8 +70,25 @@
       notify.info(data.page.title);
       return articles.unshift(new Article(data));
     });
-    return socket.on("error", function(err) {
-      return notify.danger(err);
+    return $('button#Find').click(function() {
+      var query;
+      query = $('#FindQuery').val();
+      return httpApi.findCandidates(query, function(err, data) {
+        var candidate, newCandidates, _i, _len;
+        if (err) {
+          return notify.danger(err);
+        }
+        if (_.isEmpty(data)) {
+          return notify.danger("candidate not found");
+        }
+        newCandidates = [];
+        for (_i = 0, _len = data.length; _i < _len; _i++) {
+          candidate = data[_i];
+          newCandidates.push(new Candidate(candidate));
+        }
+        candidates.reset(newCandidates);
+        return $('.modal').modal();
+      });
     });
   });
 
