@@ -7,13 +7,15 @@ head
 
   //-
     Atom/RSS Feed
-  //-
-  if rss
-    link(rel="alternate",type="application/rss+xml",href="#{rss}")
+
+  if stream
+    link(rel="alternate",
+      type="application/rss+xml",
+      href="/" + stream.title
+      )
 
   //-
      Include Library (Primaly)
-  //-
 
   //- javascript
   script(src='/socket.io/socket.io.js')
@@ -23,6 +25,8 @@ head
   script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js')
   script(src="//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.0.3/backbone.marionette.min.js")
+  script(src="//cdnjs.cloudflare.com/ajax/libs/livestamp/1.1.2/livestamp.min.js")
+
   script(src="/vendor/js/jquery.bootstrap-growl.min.js")
 
   //- css
@@ -33,7 +37,9 @@ head
   //- User Script
   script(src="/js/notify.js" type="application/javascript")
   script(src="/js/http.js"   type="application/javascript")
-  script(src="/js/io.js"   type="application/javascript")
+  script(src="/js/io.js"     type="application/javascript")
+  script(src="/js/model.js"  type="application/javascript")
+  script(src="/js/view.js"   type="application/javascript")
   script(src="/js/unific.js" type="application/javascript")
 
 body

@@ -96,7 +96,7 @@ module.exports.StreamEvent = (app) ->
         # @todo ここらへんかなり密になっててやばい
         crowler     = app.get('crowler')
         crowler.addToSet feed
-        return io.to(stream.title).emit 'subscribedFeed',feed
+        return io.of("#{stream.title}").emit 'subscribedFeed',feed
 
   unsubscribeFeed:(socket,io,data)->
     streamName = decodeURIComponent data.stream
@@ -104,7 +104,7 @@ module.exports.StreamEvent = (app) ->
       return HelperEvent.ioError err,socket if err or not stream
       stream.feeds.pull data.feed._id
       stream.save()
-      return io.to(stream.title).emit 'unsubscribedFeed',feed
+      return io.of("/#{stream.title}").emit 'unsubscribedFeed',feed
 
   changeDesc: (socket,data) ->
     streamName = decodeURIComponent data.stream

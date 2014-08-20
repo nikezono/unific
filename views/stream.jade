@@ -4,9 +4,6 @@ block content
 
   #Modals
 
-    include modals/findFeedModal
-    include modals/feedListModal
-
   #Navigation.col-md-12
 
     .col-md-12
@@ -16,7 +13,7 @@ block content
             placeholder="Keyword/URL/Other Stream's name"
             )
           span.input-group-btn
-            button.btn.btn-primary
+            button.btn.btn-primary#Find
               span.glyphicon.glyphicon-search
               |  Find
 
@@ -45,7 +42,15 @@ block content
               |  Notify
 
 
+  .col-md-12
+    hr
   #Pages.col-md-12
 
   script#articleTemplate(type="text/template")
-    include panel
+    include template/panel
+  script#candidatesRootTemplate(type="text/template")
+    include template/candidatesRoot
+  script#candidateTemplate(type="text/template")
+    //include template/candidate
+
+

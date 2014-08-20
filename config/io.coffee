@@ -23,20 +23,11 @@ module.exports = (app, server) ->
     Stream.findBySubscribedFeedId data.feed._id,(err,streams)->
       return debug err if err
       for stream in streams
-        debug("publish article to stream#{stream.title}")
-        io.to(stream.title).emit 'newArticle',data
+        debug("publish article to stream #{stream.title}")
+        io.of("/#{stream.title}").emit 'newArticle',data
 
   # Routing
   io.sockets.on "connection", (socket) ->
-
-    # on Connection
-    socket.on "connect stream", (streamName) ->
-      if streamName
-        socket.join streamName
-        debug "#{socket.id} is joined #{streamName}"
-
-      else # GlobalStream @todo
-        debug "home"
 
     # on Error
     socket.on "error", (exc)->

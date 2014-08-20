@@ -8,8 +8,8 @@
       )
         | {{page.title}}
         | &nbsp;
-      small
-        | {{page.pubDate}}
+      small(data-livestamp="{{timestamp}}")
+        | &nbsp;
   .panel-collapse.collapse.in(
     id="{{page._id}}"
     )
