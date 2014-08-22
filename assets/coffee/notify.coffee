@@ -2,7 +2,7 @@
 window.notify =
 
   success:(text)->
-    $.bootstrapgrowl text,
+    $.bootstrapGrowl text,
       ele:"body"
       type:'success'
       allow_dismiss: true

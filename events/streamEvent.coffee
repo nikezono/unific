@@ -68,25 +68,26 @@ module.exports.StreamEvent = (app) ->
         "Content-Type": "text/xml"
       res.send xml
 
-  ###
-  # socket.io events
-  ###
-  subscribeFeed:(socket,io,data)->
-    streamName = decodeURIComponent data.stream
+  subscribe:(req,res,next)->
+    streamName = decodeURIComponent req.params.stream
     Stream.findOne title:streamName,(err,stream)->
-      return HelperEvent.ioError err,socket if err or not stream
-      data.stream = stream
+      return HelperEvent.httpError err,res if err or not stream
+
+      debug req.body
+      model = req.body.model
+      # @todo modelがStream/Feed/orElseを確認
+      # @todo streamもsubscribeできるようにする
 
       Feed.findOneAndUpdate
-        url       : data.feed.url
+        url       : model.url
       ,
-        title     : data.feed.title
-        sitename  : data.feed.sitename
-        url       : data.feed.url
-        favicon   : data.feed.favicon
-        siteUrl   : data.feed.link or data.feed.siteUrl or data.feed.url.split(data.feed.href)[0]
+        title     : model.title
+        sitename  : model.sitename
+        url       : model.url
+        favicon   : model.favicon
+        siteUrl   : model.link or model.siteUrl or model.url.split(model.href)[0]
       , upsert    : true ,(err,feed)->
-        return HelperEvent.ioError(err,socket) if err or not feed
+        return HelperEvent.httpError(err,res) if err or not feed
 
         if stream.feeds.indexOf feed._id is -1
           stream.feeds.push feed._id
@@ -96,26 +97,23 @@ module.exports.StreamEvent = (app) ->
         # @todo ここらへんかなり密になっててやばい
         crowler     = app.get('crowler')
         crowler.addToSet feed
-        return io.of("#{stream.title}").emit 'subscribedFeed',feed
 
-  unsubscribeFeed:(socket,io,data)->
-    streamName = decodeURIComponent data.stream
+        res.send 200
+        return app.get('emitter').emit "subscribed",
+          stream:stream
+          model:feed
+
+  unsubscribe:(req,res,next)->
+    streamName = decodeURIComponent req.param.stream
     Stream.findOne title:streamName,(err,stream)->
-      return HelperEvent.ioError err,socket if err or not stream
-      stream.feeds.pull data.feed._id
+      return HelperEvent.httpError err,res if err or not stream
+      # @todo Streamに対応
+      stream.feeds.pull req.body.model._id
       stream.save()
-      return io.of("/#{stream.title}").emit 'unsubscribedFeed',feed
-
-  changeDesc: (socket,data) ->
-    streamName = decodeURIComponent data.stream
-    Stream.findOne title:streamName, (err,stream)->
-      if err
-        debug err
-        return HelperEvent.error error,socket
-      stream.description = data.text
-      stream.save()
-      socket.broadcast.to(data.stream).emit 'descChanged',
-        text:data.text
+      res.send 200
+      return app.get('emitter').emit "unsubscribed",
+        stream:stream
+        model:feed
 
 ###
 # Private Methods

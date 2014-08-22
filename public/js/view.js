@@ -15,6 +15,26 @@
     modelEvents: {
       change: "render"
     },
+    ui: {
+      button: "button"
+    },
+    events: {
+      "click @ui.button": "sendEvent"
+    },
+    sendEvent: function() {
+      var httpApi, path, subscribe;
+      path = window.location.pathname.substr(1);
+      httpApi = httpApiWrapper(path);
+      subscribe = this.model.attributes.subscribe;
+      return httpApi.sendSubscribeEvent({
+        action: subscribe ? "subscribe" : "unsubscribe",
+        model: this.model.attributes
+      }, function(err, data) {
+        if (err) {
+          return notify.danger(err);
+        }
+      });
+    },
     templateHelpers: {
       renderButton: function(subscribed) {
         if (subscribed) {

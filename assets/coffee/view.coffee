@@ -11,6 +11,23 @@ window.CandidateView = Backbone.Marionette.ItemView.extend
   template:"#candidateTemplate"
   modelEvents:
     change: "render"
+  ui:
+    button:"button"
+  events:
+    "click @ui.button":"sendEvent"
+
+  # Sub/Unsub
+  sendEvent:->
+    path = (window.location.pathname).substr(1)
+    httpApi = httpApiWrapper(path)
+    subscribe = this.model.attributes.subscribe
+    httpApi.sendSubscribeEvent
+      action: if subscribe then "subscribe" else "unsubscribe"
+      model: this.model.attributes
+    ,(err,data)->
+      return notify.danger err if err
+
+  # Helper
   templateHelpers:
     renderButton:(subscribed)->
       if subscribed

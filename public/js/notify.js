@@ -6,7 +6,7 @@
 
   window.notify = {
     success: function(text) {
-      return $.bootstrapgrowl(text, {
+      return $.bootstrapGrowl(text, {
         ele: "body",
         type: 'success',
         allow_dismiss: true,

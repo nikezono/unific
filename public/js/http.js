@@ -24,6 +24,17 @@
         }).error(function(err) {
           return callback(err, data);
         });
+      },
+      sendSubscribeEvent: function(data, callback) {
+        var action;
+        action = data.action;
+        return $.getJSON("/" + currentStream + "/" + action, {
+          model: data.model
+        }).success(function(data) {
+          return callback(null, data);
+        }).error(function(err) {
+          return callback(err, null);
+        });
       }
     };
   };

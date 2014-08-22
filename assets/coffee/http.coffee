@@ -10,7 +10,7 @@ window.httpApiWrapper = (currentStream)->
     .error (err)->
       callback err,null
 
-  # 現在のストリームの記事リスト
+  # 現在のストリームの記事リスト取得
   getFeedList:(callback)->
     $.getJSON "/#{currentStream}/list"
     .success (data)->
@@ -25,6 +25,15 @@ window.httpApiWrapper = (currentStream)->
       callback null,data
     .error (err)->
       callback err,data
+
+  sendSubscribeEvent:(data,callback)->
+    action = data.action
+    $.getJSON "/#{currentStream}/#{action}",
+      model:data.model
+    .success (data)->
+      callback null,data
+    .error (err)->
+      callback err,null
 
 
 

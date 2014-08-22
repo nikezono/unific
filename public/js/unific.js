@@ -8,7 +8,7 @@
   $(function() {
 
     /* Configration & Initialize */
-    var Unific, articles, articlesView, candidates, candidatesView, httpApi, ioApi, path, socket;
+    var Unific, articles, articlesView, candidates, candidatesView, httpApi, ioApi, path, refresh, socket;
     _.templateSettings = {
       interpolate: /\{\{(.+?)\}\}/g
     };
@@ -36,6 +36,25 @@
       model: null,
       collection: candidates
     });
+    refresh = function(callback) {
+      return httpApi.getLatestArticles(function(err, data) {
+        var article, newArticles, _i, _len;
+        if (err) {
+          console.error(err);
+          return notify.danger("Initialize Error.Please Reload.");
+        }
+        newArticles = [];
+        for (_i = 0, _len = data.length; _i < _len; _i++) {
+          article = data[_i];
+          newArticles.push(new Article(article));
+        }
+        articles.reset(newArticles);
+        notify.success("Refreshed");
+        if (callback) {
+          return callback();
+        }
+      });
+    };
     Unific = new Backbone.Marionette.Application();
     Unific.addRegions({
       modals: '#Modals',
@@ -47,24 +66,17 @@
       return $('.collapse').collapse();
     });
     if (!_.isEmpty(path)) {
-      httpApi.getLatestArticles(function(err, data) {
-        var article, _i, _len;
-        if (err) {
-          console.error(err);
-          return notify.danger("Initialize Error.Please Reload.");
-        }
-        for (_i = 0, _len = data.length; _i < _len; _i++) {
-          article = data[_i];
-          articles.add(new Article(article));
-        }
+      refresh(function() {
         return Unific.start();
       });
     }
     socket.on("subscribedFeed", function() {
-      return notify.success("New Feed has Subscribed.");
+      notify.success("New Feed has Subscribed.");
+      return refresh();
     });
     socket.on("unsubscribedFeed", function() {
-      return notify.success("New Feed has Subscribed.");
+      notify.success("New Feed has Subscribed.");
+      return refresh();
     });
     socket.on("newArticle", function(data) {
       notify.info(data.page.title);

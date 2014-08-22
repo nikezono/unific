@@ -36,6 +36,21 @@ $ ->
     model: null
     collection:candidates
 
+  # Helper Method
+  refresh = (callback)->
+    httpApi.getLatestArticles (err,data)->
+      if err
+        console.error err
+        return notify.danger "Initialize Error.Please Reload."
+
+      newArticles = []
+      for article in data
+        newArticles.push new Article(article)
+      articles.reset newArticles
+
+      notify.success "Refreshed"
+      return callback() if callback
+
   ## Marionette ##
   Unific = new Backbone.Marionette.Application()
   Unific.addRegions
@@ -49,21 +64,17 @@ $ ->
 
   # 初回記事読み込み
   if not _.isEmpty path
-    httpApi.getLatestArticles (err,data)->
-      if err
-        console.error err
-        return notify.danger "Initialize Error.Please Reload."
-      for article in data
-        articles.add new Article(article)
-
+    refresh ->
       # Start App
       Unific.start()
 
   ## Socket.io EventHandlers ##
   socket.on "subscribedFeed", ->
     notify.success "New Feed has Subscribed."
+    refresh()
   socket.on "unsubscribedFeed", ->
     notify.success "New Feed has Subscribed."
+    refresh()
 
   socket.on "newArticle", (data)->
     notify.info(data.page.title)
