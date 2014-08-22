@@ -4,25 +4,13 @@
   購読リスト(feed/stream)を表示する
 
 li
-  h5 {{title}} / {{sitename}}
+  h5 {{name}}
   a(href="{{url}}")
     p {{url}}
   img(src="{{favicon}}")
   .pull-right
-    button.btn.btn-warning(
-      data-dismiss="modal"
-      )
-      span.glyphicon.glyphicon-plus
-        |  Unsubscribe
-
-    button.btn.btn-success(disabled="disabled")
-      span.glyphicon.glyphicon-ok
-        |  Subscribed
-
-    button.btn.btn-primary(data-dismiss="modal")
-      span.glyphicon.glyphicon-plus
-        |  Subscribe
-
+    .actionButton
+      {{renderButton(subscribed)}}
   hr
 
 

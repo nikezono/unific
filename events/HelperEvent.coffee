@@ -49,12 +49,15 @@ module.exports.HelperEvent = (app) ->
               url : candidate.url
             ,(err,feed)->
               if err or not feed
+                candidate.subscribed = false
                 resArray.push candidate
                 return cb()
               feedObj = feed.toObject() # 置き換え
               if stream.feeds.indexOf feed._id isnt -1 # フラグ
                 feedObj.subscribed = true
                 debug "#{candidate.title} has Subscribed by #{streamName}"
+              else
+                feedObj.subscribed = false
               resArray.push feedObj
               return cb()
           ,->
@@ -64,6 +67,8 @@ module.exports.HelperEvent = (app) ->
       else
         Stream.findByTitle query,(err,streams)->
           return @httpError err,res if err
+          for st in streams
+            st.subscribed = false
           res.json streams
 
     # @todo ページ送り
