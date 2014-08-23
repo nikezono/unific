@@ -6,6 +6,7 @@
 
   window.notify = {
     success: function(text) {
+      html5notification(text);
       return $.bootstrapGrowl(text, {
         ele: "body",
         type: 'success',

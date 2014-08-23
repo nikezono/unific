@@ -2,6 +2,7 @@
 window.notify =
 
   success:(text)->
+    html5notification text
     $.bootstrapGrowl text,
       ele:"body"
       type:'success'
