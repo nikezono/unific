@@ -29,6 +29,23 @@ module.exports.HelperEvent = (app) ->
     console.trace err
     return res.send 400,"Internal Server Error"
 
+  # Streamが購読しうるモデル(現在Feed/Streamの二種)をDetectionする
+  detectCandidateType:(model,callback)->
+    return callback null,null if not model._id
+    async.parallel [(cb)->
+      Stream.findById model._id,(err,streams)->
+        return cb err,null if err
+        return cb null,null if _.isEmpty streams
+        callback null,"stream"
+    ,(cb)->
+      Feed.findById model._id,(err,feeds)->
+        return cb,err if err
+        return cb null,null if _.isEmpty feeds
+        cb null,"feed"
+    ],(err,result)->
+      return callback err,null if err
+      return callback null,_.without(result,null)[0]
+
   # find feed or stream
   findFeed:(req,res) ->
     streamName = decodeURIComponent req.query.stream
