@@ -53,7 +53,7 @@ module.exports.HelperEvent = (app) ->
                 resArray.push candidate
                 return cb()
               feedObj = feed.toObject() # 置き換え
-              if stream.feeds.indexOf feed._id isnt -1 # フラグ
+              if stream.feeds.indexOf feed._id is not -1 # フラグ
                 feedObj.subscribed = true
                 debug "#{candidate.title} has Subscribed by #{streamName}"
               else

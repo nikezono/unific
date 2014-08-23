@@ -20,14 +20,14 @@ window.CandidateView = Backbone.Marionette.ItemView.extend
   sendEvent:->
     path = (window.location.pathname).substr(1)
     httpApi = httpApiWrapper(path)
-    subscribe = this.model.attributes.subscribe
+    subscribed = this.model.attributes.subscribed
     httpApi.sendSubscribeEvent
-      action: if subscribe then "subscribe" else "unsubscribe"
-      model: this.model.attributes
-    ,(err,data)->
+      action: if subscribed then "unsubscribe" else "subscribe"
+      model: this.model.toJSON()
+    ,(err,data)=>
       return notify.danger err if err
       # 成功した場合反転
-      this.model.set "subscribe", !subscribe
+      this.model.set "subscribed", !subscribed
 
   # Helper
   templateHelpers:

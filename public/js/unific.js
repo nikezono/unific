@@ -49,6 +49,7 @@
           newArticles.push(new Article(article));
         }
         articles.reset(newArticles);
+        $('.collapse').collapse();
         notify.success("Refreshed");
         if (callback) {
           return callback();
@@ -70,7 +71,7 @@
         return Unific.start();
       });
     }
-    socket.on("subscribedFeed", function(data) {
+    socket.on("subscribed", function(data) {
       notify.success("" + data.title + " Subscribed.");
       return refresh();
     });

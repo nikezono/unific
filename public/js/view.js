@@ -22,19 +22,21 @@
       "click @ui.button": "sendEvent"
     },
     sendEvent: function() {
-      var httpApi, path, subscribe;
+      var httpApi, path, subscribed;
       path = window.location.pathname.substr(1);
       httpApi = httpApiWrapper(path);
-      subscribe = this.model.attributes.subscribe;
+      subscribed = this.model.attributes.subscribed;
       return httpApi.sendSubscribeEvent({
-        action: subscribe ? "subscribe" : "unsubscribe",
-        model: this.model.attributes
-      }, function(err, data) {
-        if (err) {
-          return notify.danger(err);
-        }
-        return this.model.set("subscribe", !subscribe);
-      });
+        action: subscribed ? "unsubscribe" : "subscribe",
+        model: this.model.toJSON()
+      }, (function(_this) {
+        return function(err, data) {
+          if (err) {
+            return notify.danger(err);
+          }
+          return _this.model.set("subscribed", !subscribed);
+        };
+      })(this));
     },
     templateHelpers: {
       renderButton: function(subscribed) {

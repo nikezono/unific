@@ -72,7 +72,7 @@ module.exports.StreamEvent = (app) ->
     Stream.findOne title:req.params.stream,(err,stream)->
       return HelperEvent.httpError err,res if err or not stream
 
-      model = req.body.model
+      model = JSON.parse req.body.model
       # @todo modelがStream/Feed/orElseを確認
       # @todo streamもsubscribeできるようにする
 
@@ -87,31 +87,31 @@ module.exports.StreamEvent = (app) ->
       , upsert    : true ,(err,feed)->
         return HelperEvent.httpError(err,res) if err or not feed
 
-        if stream.feeds.indexOf feed._id is -1
-          stream.feeds.push feed._id
-          stream.save()
-
         # データ更新&watcher
         # @todo ここらへんかなり密になっててやばい
         crowler     = app.get('crowler')
         crowler.addToSet feed
 
-        res.send 200
-        return app.get('emitter').emit "subscribed",
-          stream:stream
-          model:feed
+        stream.feeds.addToSet feed._id
+        stream.save ->
+          res.send 200
+          return app.get('emitter').emit "subscribed",
+            stream:stream
+            model:feed
 
   unsubscribe:(req,res,next)->
-    debug req.body
     Stream.findOne title:req.params.stream,(err,stream)->
-      return HelperEvent.httpError err,res if err or not stream
+      model = JSON.parse req.body.model
+      return HelperEvent.httpError err,res if err or not stream or not model._id?
+
       # @todo Streamに対応
-      stream.feeds.pull req.body.model._id
-      stream.save()
-      res.send 200
-      return app.get('emitter').emit "unsubscribed",
+      stream.feeds.pull model._id
+      stream.save ->
+        res.send 200
+
+      app.get('emitter').emit "unsubscribed",
         stream:stream
-        model:req.body.model
+        model:model
 
 ###
 # Private Methods

@@ -29,20 +29,14 @@ module.exports = (app, server) ->
 
   # Sub/UnSub
   # @todo Streamに対応
-  app.get('emitter').on "subscribe",(data)->
-    Stream.findBySubscribedFeedId data.mode._id,(err,streams)->
-      return debug err if err
-      for stream in streams
-        debug("subscribed #{data.model.title} in stream #{stream.title}")
-        io.of("/#{stream.title}").emit 'subscribed',
-          title:data.model.title
-  app.get('emitter').on "unsubscribe",(data)->
-    Stream.findBySubscribedFeedId data.mode._id,(err,streams)->
-      return debug err if err
-      for stream in streams
-        debug("unsubscribed #{data.model.title} in stream #{stream.title}")
-        io.of("/#{stream.title}").emit 'unsubscribed',
-          title:data.model.title
+  app.get('emitter').on "subscribed",(data)->
+    debug("subscribed #{data.model.title} in stream #{data.stream.title}")
+    io.of("/#{data.stream.title}").emit 'subscribed',
+      title:data.model.title
+  app.get('emitter').on "unsubscribed",(data)->
+    debug("unsubscribed #{data.model.title} in stream #{data.stream.title}")
+    io.of("/#{data.stream.title}").emit 'unsubscribed',
+      title:data.model.title
 
   # Routing
   io.sockets.on "connection", (socket) ->

@@ -31,7 +31,7 @@
         return $.ajax("/" + currentStream + "/" + action, {
           type: "POST",
           data: {
-            model: data.model
+            model: JSON.stringify(data.model)
           },
           success: function(data) {
             return callback(null, data);
@@ -39,7 +39,7 @@
           error: function(err) {
             return callback(err, null);
           }
-        })();
+        });
       }
     };
   };

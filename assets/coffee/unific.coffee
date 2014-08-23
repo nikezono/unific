@@ -48,6 +48,7 @@ $ ->
         newArticles.push new Article(article)
       articles.reset newArticles
 
+      $('.collapse').collapse() # @note Viewに書きたい
       notify.success "Refreshed"
       return callback() if callback
 
@@ -69,7 +70,7 @@ $ ->
       Unific.start()
 
   ## Socket.io EventHandlers ##
-  socket.on "subscribedFeed", (data)->
+  socket.on "subscribed", (data)->
     notify.success "#{data.title} Subscribed."
     refresh()
   socket.on "unsubscribed", (data)->
