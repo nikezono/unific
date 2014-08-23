@@ -69,11 +69,9 @@ module.exports.StreamEvent = (app) ->
       res.send xml
 
   subscribe:(req,res,next)->
-    streamName = decodeURIComponent req.params.stream
-    Stream.findOne title:streamName,(err,stream)->
+    Stream.findOne title:req.params.stream,(err,stream)->
       return HelperEvent.httpError err,res if err or not stream
 
-      debug req.body
       model = req.body.model
       # @todo modelがStream/Feed/orElseを確認
       # @todo streamもsubscribeできるようにする
@@ -104,8 +102,8 @@ module.exports.StreamEvent = (app) ->
           model:feed
 
   unsubscribe:(req,res,next)->
-    streamName = decodeURIComponent req.param.stream
-    Stream.findOne title:streamName,(err,stream)->
+    debug req.body
+    Stream.findOne title:req.params.stream,(err,stream)->
       return HelperEvent.httpError err,res if err or not stream
       # @todo Streamに対応
       stream.feeds.pull req.body.model._id
@@ -113,7 +111,7 @@ module.exports.StreamEvent = (app) ->
       res.send 200
       return app.get('emitter').emit "unsubscribed",
         stream:stream
-        model:feed
+        model:req.body.model
 
 ###
 # Private Methods

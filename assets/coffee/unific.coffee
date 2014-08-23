@@ -69,11 +69,11 @@ $ ->
       Unific.start()
 
   ## Socket.io EventHandlers ##
-  socket.on "subscribedFeed", ->
-    notify.success "New Feed has Subscribed."
+  socket.on "subscribedFeed", (data)->
+    notify.success "#{data.title} Subscribed."
     refresh()
-  socket.on "unsubscribedFeed", ->
-    notify.success "New Feed has Subscribed."
+  socket.on "unsubscribed", (data)->
+    notify.success "#{data.title} Unsubscribed."
     refresh()
 
   socket.on "newArticle", (data)->

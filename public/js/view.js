@@ -33,6 +33,7 @@
         if (err) {
           return notify.danger(err);
         }
+        return this.model.set("subscribe", !subscribe);
       });
     },
     templateHelpers: {

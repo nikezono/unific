@@ -28,12 +28,14 @@ window.httpApiWrapper = (currentStream)->
 
   sendSubscribeEvent:(data,callback)->
     action = data.action
-    $.getJSON "/#{currentStream}/#{action}",
-      model:data.model
-    .success (data)->
-      callback null,data
-    .error (err)->
-      callback err,null
+    do $.ajax "/#{currentStream}/#{action}",
+      type:"POST"
+      data:
+        model:data.model
+      success:(data)->
+        callback null,data
+      error: (err)->
+        callback err,null
 
 
 

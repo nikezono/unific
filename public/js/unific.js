@@ -70,12 +70,12 @@
         return Unific.start();
       });
     }
-    socket.on("subscribedFeed", function() {
-      notify.success("New Feed has Subscribed.");
+    socket.on("subscribedFeed", function(data) {
+      notify.success("" + data.title + " Subscribed.");
       return refresh();
     });
-    socket.on("unsubscribedFeed", function() {
-      notify.success("New Feed has Subscribed.");
+    socket.on("unsubscribed", function(data) {
+      notify.success("" + data.title + " Unsubscribed.");
       return refresh();
     });
     socket.on("newArticle", function(data) {

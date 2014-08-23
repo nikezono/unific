@@ -26,6 +26,8 @@ window.CandidateView = Backbone.Marionette.ItemView.extend
       model: this.model.attributes
     ,(err,data)->
       return notify.danger err if err
+      # 成功した場合反転
+      this.model.set "subscribe", !subscribe
 
   # Helper
   templateHelpers:
