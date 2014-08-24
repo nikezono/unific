@@ -5,6 +5,9 @@
 
 ###
 
+### Start NewRelic Performance Indicator ###
+require('newrelic')
+
 # dependency
 http = require "http"
 path = require 'path'
