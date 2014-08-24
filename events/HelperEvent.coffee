@@ -39,7 +39,7 @@ module.exports.HelperEvent = (app) ->
         callback null,"stream"
     ,(cb)->
       Feed.findById model._id,(err,feeds)->
-        return cb,err if err
+        return cb err,null if err
         return cb null,null if _.isEmpty feeds
         cb null,"feed"
     ],(err,result)->

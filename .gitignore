@@ -6,7 +6,4 @@ unific.log
 *.log
 dump.rdb
 
-public/images/background/*.png
-public/images/background/*.jpeg
-public/images/background/*.gif
-public/images/background/*.jpg
+newrelic.js
