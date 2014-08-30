@@ -6,5 +6,10 @@ script:
 notifications:
   slack:
     masuilab:p4zvcihWTFLz1KwJXYGwJgeZ
+deploy:
+  provider: heroku
+  api_key:
+    secure:b8588100021f62d353dc8cb756c4017faf208a78
+  app:unific
 env:
   - COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=7BPLqS4aRiqcMZ6MiNcMbBh49fNDbO9Vd
