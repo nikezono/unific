@@ -8,7 +8,7 @@
   $(function() {
 
     /* Configration & Initialize */
-    var Unific, articles, articlesView, candidates, candidatesView, httpApi, ioApi, path, refresh, socket;
+    var Unific, articles, articlesView, candidates, candidatesView, httpApi, ioApi, path, refresh, resetCandidates, socket;
     _.templateSettings = {
       interpolate: /\{\{(.+?)\}\}/g
     };
@@ -83,24 +83,38 @@
       notify.info(data.page.title);
       return articles.unshift(new Article(data));
     });
-    return $('button#Find').click(function() {
+    resetCandidates = function(data) {
+      var candidate, newCandidates, _i, _len;
+      newCandidates = [];
+      for (_i = 0, _len = data.length; _i < _len; _i++) {
+        candidate = data[_i];
+        newCandidates.push(new Candidate(candidate));
+      }
+      candidates.reset(newCandidates);
+      return $('.modal').modal();
+    };
+    $('button#Find').click(function() {
       var query;
       query = $('#FindQuery').val();
       return httpApi.findCandidates(query, function(err, data) {
-        var candidate, newCandidates, _i, _len;
         if (err) {
           return notify.danger(err);
         }
         if (_.isEmpty(data)) {
           return notify.danger("candidate not found");
         }
-        newCandidates = [];
-        for (_i = 0, _len = data.length; _i < _len; _i++) {
-          candidate = data[_i];
-          newCandidates.push(new Candidate(candidate));
+        return resetCandidates(data);
+      });
+    });
+    return $('button#List').click(function() {
+      return httpApi.getFeedList(function(err, data) {
+        if (err) {
+          return notify.danger(err);
         }
-        candidates.reset(newCandidates);
-        return $('.modal').modal();
+        if (_.isEmpty(data)) {
+          return notify.danger("no feed has subscribed");
+        }
+        return resetCandidates(data);
       });
     });
   });

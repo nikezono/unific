@@ -20,6 +20,11 @@ module.exports.FeedEvent = (app) ->
     .populate "feeds"
     .exec (err,stream)->
       return HelperEvent.httpError err,res if err
-      return res.json stream.feeds
+      resArray = []
+      for feed in stream.feeds
+        feedObj = feed.toObject()
+        feedObj.subscribed = true
+        resArray.push feedObj
+      return res.json resArray
 
 
