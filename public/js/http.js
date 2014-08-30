@@ -22,7 +22,7 @@
         return $.getJSON("/" + currentStream + "/latest").success(function(data) {
           return callback(null, data);
         }).error(function(err) {
-          return callback(err, data);
+          return callback(err, null);
         });
       },
       sendSubscribeEvent: function(data, callback) {

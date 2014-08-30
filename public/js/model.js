@@ -9,11 +9,13 @@
 
   window.Candidate = Backbone.Model.extend({
     initialize: function(attr, opts) {
-      var favicon, host, name;
+      var favicon, host, name, url;
       host = attr.sitename || "Unific.net";
       name = "" + attr.title + " / " + host;
+      url = attr.url || ("http://unific.net/" + attr.title);
       favicon = attr.favicon || "/favicon.ico";
       this.set("name", name);
+      this.set("url", url);
       return this.set("favicon", favicon);
     }
   });

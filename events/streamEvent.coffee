@@ -73,45 +73,71 @@ module.exports.StreamEvent = (app) ->
       return HelperEvent.httpError err,res if err or not stream
 
       model = JSON.parse req.body.model
-      # @todo modelがStream/Feed/orElseを確認
-      # @todo streamもsubscribeできるようにする
 
-      Feed.findOneAndUpdate
-        url       : model.url
-      ,
-        title     : model.title
-        sitename  : model.sitename
-        url       : model.url
-        favicon   : model.favicon
-        siteUrl   : model.link or model.siteUrl or model.url.split(model.href)[0]
-      , upsert    : true ,(err,feed)->
-        return HelperEvent.httpError(err,res) if err or not feed
+      HelperEvent.detectCandidateType model,(err,type)->
+        if type is "feed"
 
-        # データ更新&watcher
-        # @todo ここらへんかなり密になっててやばい
-        crowler     = app.get('crowler')
-        crowler.addToSet feed
+          Feed.findOneAndUpdate
+            url       : model.url
+          ,
+            title     : model.title
+            sitename  : model.sitename
+            url       : model.url
+            favicon   : model.favicon
+            siteUrl   : model.link or model.siteUrl or model.url.split(model.href)[0]
+          , upsert    : true ,(err,feed)->
+            return HelperEvent.httpError(err,res) if err or not feed
 
-        stream.feeds.addToSet feed._id
-        stream.save ->
-          res.send 200
-          return app.get('emitter').emit "subscribed",
-            stream:stream
-            model:feed
+            # データ更新&watcher
+            # @todo ここらへんかなり密になっててやばい
+            crowler     = app.get('crowler')
+            crowler.addToSet feed
+
+            stream.feeds.addToSet feed._id
+            stream.save ->
+              res.send 200
+              return app.get('emitter').emit "subscribed",
+                stream:stream
+                model:feed
+
+        else if type is "stream"
+          Stream.findOne {_id: model._id},(err,targetStream)->
+            return HelperEvent.httpError err,res if err or not stream
+
+            stream.streams.addToSet targetStream._id
+            stream.save ->
+              res.send 200
+              return app.get('emitter').emit "subscribed",
+                stream:stream
+                model:targetStream
 
   unsubscribe:(req,res,next)->
     Stream.findOne title:req.params.stream,(err,stream)->
       model = JSON.parse req.body.model
       return HelperEvent.httpError err,res if err or not stream or not model._id?
 
-      # @todo Streamに対応
-      stream.feeds.pull model._id
-      stream.save ->
-        res.send 200
+      HelperEvent.detectCandidateType model,(err,type)->
+        return HelperEvent.httpError err,res if err or not type
 
-        app.get('emitter').emit "unsubscribed",
-          stream:stream
-          model:model
+        if type is "feed"
+
+          stream.feeds.pull model._id
+          stream.save ->
+            res.send 200
+
+            app.get('emitter').emit "unsubscribed",
+              stream:stream
+              model:model
+
+        else if type is "stream"
+
+          stream.streams.pull model._id
+          stream.save ->
+            res.send 200
+
+            app.get('emitter').emit "unsubscribed",
+              stream:stream
+              model:model
 
 ###
 # Private Methods

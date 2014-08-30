@@ -24,7 +24,7 @@ window.httpApiWrapper = (currentStream)->
     .success (data)->
       callback null,data
     .error (err)->
-      callback err,data
+      callback err,null
 
   sendSubscribeEvent:(data,callback)->
     action = data.action

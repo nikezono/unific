@@ -73,7 +73,7 @@ module.exports.HelperEvent = (app) ->
                 obj = feed.toObject() # 置き換え
                 obj.subscribed = (stream.feeds.indexOf(feed._id) > -1)
                 debug "#{obj.title} is Subscribed #{obj.subscribed} by #{streamName}"
-                resArray.push feedObj
+                resArray.push obj
                 return cb()
           ,->
             return res.json resArray
@@ -95,20 +95,26 @@ module.exports.HelperEvent = (app) ->
   getArticlesByStreamWithLimit:(streamName,limit,callback)->
     streamName = decodeURIComponent streamName
     Stream.findOne({title:streamName})
-    .populate("feeds")
-    .exec (err,stream)->
+    .populate("streams")
+    .exec (err,requestedStream)->
       return callback err,null if err
-      Feed.populate stream,
-        path:'feeds.pages'
-        model:Page
-        options:
-          limit: limit
-          sort:
-            pubDate:-1
-      ,(err,stream)->
+      streamArray = requestedStream.streams
+      articles = []
+      feedList = requestedStream.feeds
+      for stream in streamArray
+        feedList = _.union feedList,stream.feeds
+      return callback null,[] if _.isEmpty feedList
+      Feed.find
+        _id:
+          $in:feedList
+      .populate
+        path:'pages'
+        limit: limit
+        sort:
+          pubDate:-1
+      .exec (err,feeds)->
         return callback err,null if err
-        articles = []
-        for feed in stream.feeds
+        for feed in feeds
           for page in feed.pages
             articles.push {feed:feed,page:page}
         articles.sort (a,b)->
