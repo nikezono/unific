@@ -18,6 +18,7 @@ module.exports.FeedEvent = (app) ->
     Stream.findOne({title:streamName})
     # @todo Streamの購読
     .populate "feeds"
+    .populate "streams"
     .exec (err,stream)->
       return HelperEvent.httpError err,res if err
       resArray = []
@@ -25,6 +26,10 @@ module.exports.FeedEvent = (app) ->
         feedObj = feed.toObject()
         feedObj.subscribed = true
         resArray.push feedObj
+      for st   in stream.streams
+        streamObj = st.toObject()
+        streamObj.subscribed = true
+        resArray.push streamObj
       return res.json resArray
 
 
