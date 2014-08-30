@@ -31,5 +31,10 @@ StreamSchema.statics.findBySubscribedFeedId = (feedId,callback)->
   ,(err,streams)->
     callback err,streams
 
+StreamSchema.statics.findBySubscribedStreamId = (streamId,callback)->
+  @find
+    streams:streamId
+  ,(err,streams)->
+    callback err,streams
 
 exports.Stream = Mongo.model 'streams', StreamSchema

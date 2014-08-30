@@ -7,6 +7,8 @@
 
 path  = require 'path'
 debug = require('debug')('config/io')
+async = require 'async'
+_     = require 'underscore'
 
 module.exports = (app, server) ->
 
@@ -23,20 +25,44 @@ module.exports = (app, server) ->
   app.get('emitter').on 'new article',(data)->
     Stream.findBySubscribedFeedId data.feed._id,(err,streams)->
       return debug err if err
-      for stream in streams
-        debug("publish article to stream #{stream.title}")
-        io.of("/#{stream.title}").emit 'newArticle',data
+      targetArray = _.pluck streams,'title'
+      async.forEach streams,(stream,cb)->
+        Stream.findBySubscribedStreamId stream._id,(err,subStreams)->
+          if err
+            debug err
+            return cb()
+          subArray = _.pluck(subStreams,'title')
+          targetArray = _.union targetArray,subArray
+          return cb()
+      ,->
+        for title in targetArray
+          debug("publish article to stream #{title}")
+          io.of("/#{title}").emit 'newArticle',data
 
   # Sub/UnSub
-  # @todo Streamに対応
   app.get('emitter').on "subscribed",(data)->
-    debug("subscribed #{data.model.title} in stream #{data.stream.title}")
-    io.of("/#{data.stream.title}").emit 'subscribed',
-      title:data.model.title
+    targetArray = [data.stream.title]
+    Stream.findBySubscribedStreamId data.stream._id,(err,streams)->
+      return debug err if err
+      if not _.isEmpty streams
+        targetArray = _.union targetArray,_.pluck(streams,'title')
+
+      for title in targetArray
+        debug("unsubscribed #{data.model.title} in stream #{title}")
+        io.of("/#{title}").emit 'subscribed',
+          title:data.model.title
+
   app.get('emitter').on "unsubscribed",(data)->
-    debug("unsubscribed #{data.model.title} in stream #{data.stream.title}")
-    io.of("/#{data.stream.title}").emit 'unsubscribed',
-      title:data.model.title
+    targetArray = [data.stream.title]
+    Stream.findBySubscribedStreamId data.stream._id,(err,streams)->
+      return debug err if err
+      if not _.isEmpty streams
+        targetArray = _.union targetArray,_.pluck(streams,'title')
+
+      for title in targetArray
+        debug("unsubscribed #{data.model.title} in stream #{title}")
+        io.of("/#{title}").emit 'unsubscribed',
+          title:data.model.title
 
   # Routing
   io.sockets.on "connection", (socket) ->

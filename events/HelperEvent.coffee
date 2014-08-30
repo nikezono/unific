@@ -84,6 +84,7 @@ module.exports.HelperEvent = (app) ->
           return @httpError err,res if err
           resArray = []
           for candidate in streams
+            continue if candidate._id.toString() is stream._id.toString()
             obj = candidate.toObject()
             obj.subscribed = (stream.streams.indexOf(candidate._id) > -1)
             debug "#{obj.title} is Subscribed #{obj.subscribed} by #{streamName}"
