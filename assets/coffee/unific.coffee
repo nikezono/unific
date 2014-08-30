@@ -103,4 +103,8 @@ $ ->
       return notify.danger "no feed has subscribed" if _.isEmpty data
       resetCandidates(data)
 
+  $('button#Hot').click ->
+    return notify.danger "未実装"
 
+  $('button#Fork').click ->
+    return notify.danger "未実装"

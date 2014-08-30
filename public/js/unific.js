@@ -106,7 +106,7 @@
         return resetCandidates(data);
       });
     });
-    return $('button#List').click(function() {
+    $('button#List').click(function() {
       return httpApi.getFeedList(function(err, data) {
         if (err) {
           return notify.danger(err);
@@ -116,6 +116,12 @@
         }
         return resetCandidates(data);
       });
+    });
+    $('button#Hot').click(function() {
+      return notify.danger("未実装");
+    });
+    return $('button#Fork').click(function() {
+      return notify.danger("未実装");
     });
   });
 
