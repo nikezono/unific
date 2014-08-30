@@ -81,15 +81,26 @@ $ ->
     notify.info(data.page.title)
     articles.unshift new Article data
 
+
+  resetCandidates = (data)->
+    newCandidates = []
+    for candidate in data
+      newCandidates.push new Candidate candidate
+    candidates.reset newCandidates
+    $('.modal').modal()
+
   ## Navigation Event @note backboneに落としこむ
   $('button#Find').click ->
     query = $('#FindQuery').val()
     httpApi.findCandidates query,(err,data)->
       return notify.danger err if err
       return notify.danger "candidate not found" if _.isEmpty data
+      resetCandidates(data)
 
-      newCandidates = []
-      for candidate in data
-        newCandidates.push new Candidate candidate
-      candidates.reset newCandidates
-      $('.modal').modal()
+  $('button#List').click ->
+    httpApi.getFeedList (err,data)->
+      return notify.danger err if err
+      return notify.danger "no feed has subscribed" if _.isEmpty data
+      resetCandidates(data)
+
+

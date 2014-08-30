@@ -16,6 +16,7 @@ module.exports.FeedEvent = (app) ->
   list:(req,res,next)->
     streamName = req.params.stream
     Stream.findOne({title:streamName})
+    # @todo Streamの購読
     .populate "feeds"
     .exec (err,stream)->
       return HelperEvent.httpError err,res if err
