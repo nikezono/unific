@@ -69,15 +69,12 @@ module.exports.HelperEvent = (app) ->
                 candidate.subscribed = false
                 resArray.push candidate
                 return cb()
-              feedObj = feed.toObject() # 置き換え
-              index = stream.feeds.indexOf feed._id
-              if index > -1 # フラグ
-                feedObj.subscribed = true
-                debug "#{candidate.title} has Subscribed by #{streamName}"
               else
-                feedObj.subscribed = false
-              resArray.push feedObj
-              return cb()
+                obj = feed.toObject() # 置き換え
+                obj.subscribed = (stream.feeds.indexOf(feed._id) > -1)
+                debug "#{obj.title} is Subscribed #{obj.subscribed} by #{streamName}"
+                resArray.push feedObj
+                return cb()
           ,->
             return res.json resArray
 
@@ -85,9 +82,13 @@ module.exports.HelperEvent = (app) ->
       else
         Stream.findByTitle query,(err,streams)->
           return @httpError err,res if err
-          for st in streams
-            st.subscribed = false
-          res.json streams
+          resArray = []
+          for candidate in streams
+            obj = candidate.toObject()
+            obj.subscribed = (stream.streams.indexOf(candidate._id) > -1)
+            debug "#{obj.title} is Subscribed #{obj.subscribed} by #{streamName}"
+            resArray.push obj
+          return res.json resArray
 
     # @todo ページ送り
     # @todo 時間かかりすぎ？

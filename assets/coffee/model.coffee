@@ -15,7 +15,6 @@ window.Candidate = Backbone.Model.extend
     this.set "name" , name
     this.set "favicon",favicon
 
-
 ## Collection ##
 window.Articles = Backbone.Collection.extend Article
 window.Candidates = Backbone.Collection.extend Candidate
