@@ -109,9 +109,9 @@ module.exports.StreamEvent = (app) ->
       stream.save ->
         res.send 200
 
-      app.get('emitter').emit "unsubscribed",
-        stream:stream
-        model:model
+        app.get('emitter').emit "unsubscribed",
+          stream:stream
+          model:model
 
 ###
 # Private Methods
