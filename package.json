@@ -45,7 +45,8 @@
   },
   "main": "",
   "scripts": {
-    "test": "./node_modules/grunt-cli/bin/grunt test"
+    "test": "./node_modules/grunt-cli/bin/grunt test",
+    "start":"./node_modules/coffee-script/bin/coffee server.coffee"
   },
   "engines": {
     "node": "*"
