@@ -1,5 +1,14 @@
 digraph unific {
 
+  /*
+
+  unificクラス図
+  v1.0~2.0
+  @note ユーザ系のスキーマをコメントアウト
+
+  */
+
+
   // Dot言語設定
   graph [nodesep = 0.7];
   node [shape = record, height = 0.01,
@@ -7,21 +16,22 @@ digraph unific {
   edge [arrowtail = onormal, arrowhead = none];
 
   // モデル
-  Stream [label = "{Stream|title\ldescription\lbackground}"];
-  Feed   [label = "{Feed|title\lfeed_url\lsite_url\lfavicon}"];
-  Page   [label = "{Page|title\ldescription\lurl\lstarred_count\lril_count}"];
-  User   [label = "{User|name\lemail\lpassword\laccess_token}"];
-  
-  //中間モデル
-  Star   [label = "{Star|user_id\lpage_id}"]
-  RIL    [label = "{RIL|user_id\lpage_id}"]
-  Owner  [label = "{Owner|user_id\lfeed_id}"]
-  Admin  [label = "{Admin|user_id\lfeed_id}"]
-  Check  [label = "{Check|user_id\lstream_id}"]
-  Subscribe [label = "{Subscribe|stream_id\lfeed_id}"]
-  
-  // リレーション
+  Stream    [label = "{Stream|title\ldescription}"];
+  Feed      [label = "{Feed|title\lfeed_url\lsite_url\lfavicon_url}"];
+  Article   [label = "{Article|title\ldescription\larticle_url}"];
 
+  // User   [label = "{User|name\lemail\lpassword\laccess_token}"];
+
+  //中間モデル
+  Star   [label = "{Star|page_id}"]
+  // RIL    [label = "{RIL|user_id\lpage_id}"]
+  // Owner  [label = "{Owner|user_id\lfeed_id}"]
+  // Admin  [label = "{Admin|user_id\lfeed_id}"]
+  // Check  [label = "{Check|user_id\lstream_id}"]
+  // Subscribe [label = "{Subscribe|stream_id\lfeed_id}"]
+
+  // リレーション
+  /*
   Stream -> Subscribe[arrowhead=odiamond];
   Subscribe -> Feed[arrowhead=normal];
 
@@ -41,6 +51,6 @@ digraph unific {
 
   User -> RIL[arrowhead=odiamond];
   RIL -> Page[arrowhead=normal];
-
+  */
 
 }

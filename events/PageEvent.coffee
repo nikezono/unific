@@ -6,34 +6,28 @@
 
 module.exports.PageEvent = (app) ->
 
-  ###
-  # dependency
-  ###
+  debug = require("debug")("events/page")
 
-  _  = require 'underscore'
+  Page        = app.get("models").Page
+  HelperEvent = app.get("events").HelperEvent app
 
-  Page   = app.get("models").Page
+  ### HTTP Events ###
+  getPagesByStream:(req,res)->
+    HelperEvent.getArticlesByStreamWithLimit req.params.stream,100,(err,pages)->
+      debug err if err
+      return res.send 400,'Internal Server Error' if err
+      return res.json pages
 
-  ###
-  # socket.io events
-  ###
-
+  ### socket.io events ###
   addStar: (socket,io,data) ->
     Page.findOne _id:data.domid,(err,page)->
-      return socket.emit 'error' if err
-      page.starred = true
-      page.save()
-      io.sockets.to(data.stream).emit 'star added',
-        domid:data.domid
-
-
-  deleteStar: (socket,io,data) ->
-    Page.findOne _id:data.domid,(err,page)->
-      return socket.emit 'error' if err
-      page.starred = false
-      page.save()
-      io.sockets.to(data.stream).emit 'star deleted',
-        domid:data.domid
+      if err
+        debug err
+        return HelperEvent.error err,socket
+      page.addStar (number)->
+        io.sockets.emit 'starred',
+          domid:data.domid
+          number:number
 
   addComment:(socket,io,data)->
     Page.findOne _id:data.domid, (err,page)->

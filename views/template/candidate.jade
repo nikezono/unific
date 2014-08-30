@@ -1,0 +1,16 @@
+//-
+  template/candidate
+  検索後の購読候補(newFeed/feed/stream)、
+  購読リスト(feed/stream)を表示する
+
+li
+  h5 {{name}}
+  a(href="{{url}}")
+    p {{url}}
+  img(src="{{favicon}}")
+  .pull-right
+    .actionButton
+      {{renderButton(subscribed)}}
+  hr
+
+

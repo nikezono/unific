@@ -1,82 +1,56 @@
-doctype 5
-html
-  head
-    if title != 'unific'
-      title= title + ' - unific'
-    else
-      title= 'unific'
+doctype html
+head
+  if stream
+    title= stream.title + ' - unific'
+  else
+    title= 'unific'
 
-    //-
-      Atom/RSS Feed
-    //-
-    if rss
-      link(rel="alternate",type="application/rss+xml",href="#{rss}")
+  //-
+    Atom/RSS Feed
 
-    //-
-       Include Library (Primaly)
-    //-
+  if stream
+    link(rel="alternate",
+      type="application/rss+xml",
+      href="/" + stream.title
+      )
 
-    //- javascript
-    script(src='/socket.io/socket.io.js')
-    script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js')
-    script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
-    script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js')
-    script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js')
-    script(src='//cdnjs.cloudflare.com/ajax/libs/chardin.js/0.1.2/chardinjs.min.js')
-    script(src='/lib/js/bootstrap.min.js')
+  //-
+     Include Library (Primaly)
 
-    //- FancyBox
-    script(src='//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.pack.js')
-    link(rel='stylesheet', href='/lib/css/jquery.fancybox.css', media="screen")
+  //- javascript
+  script(src='/socket.io/socket.io.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js')
+  script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js')
+  script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js')
+  script(src="//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.0.3/backbone.marionette.min.js")
+  script(src="//cdnjs.cloudflare.com/ajax/libs/livestamp/1.1.2/livestamp.min.js")
 
-    //- css
-    link(rel='stylesheet', href='/lib/css/bootplus.min.css')
-    link(rel='stylesheet', href='/lib/css/bootplus-responsive.min.css')
-    link(rel='stylesheet', href='/lib/css/font-awesome.min.css')
-    link(rel='stylesheet', href='/lib/css/chardinjs.css')
+  script(src="/vendor/js/jquery.bootstrap-growl.min.js")
 
-    link(rel='stylesheet', href='/css/main.css')
+  //- css
+  link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css')
+  link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+  link(rel='stylesheet', href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/paper/bootstrap.min.css")
 
-  body
-    if background
-      #AbsoluteBackground(style="background-image:url(#{background});opacity:0.2")
-    else
-      #AbsoluteBackground
-    .container
-      .row
-        .span2#notification
-          block notification
+  //- User Script
+  script(src="/js/notify.js" type="application/javascript")
+  script(src="/js/http.js"   type="application/javascript")
+  script(src="/js/io.js"     type="application/javascript")
+  script(src="/js/model.js"  type="application/javascript")
+  script(src="/js/view.js"   type="application/javascript")
+  script(src="/js/unific.js" type="application/javascript")
 
-        .span7#contents
-          .page-header
-            h1= title
-              if title != 'unific'
-                small= ' - unific'
-            if description
-              p#Description(data-intro='説明文を変更できます。',data-position='left',contenteditable=true)= description
+body
+  .container
+    .row
+      .col-md-12.col-lg-12.col-xs-12.center-block
+        .page-header
+          if stream
+            h1= stream.title
+            small unific.net
+          else
+            h1= 'Unific'
 
-          block content
-        .span3#utility
-          block utility
-
-        block modals
-
-  //- Include User Scripts
-
-  //- Variables
-  script(src='/js/globalObject.js')
-
-  //- Helpers
-  script(src='/js/viewHelper.js')
-  script(src='/js/domHelper.js')
-
-  //- Events
-  script(src='/js/domEvent.js')
-  script(src='/js/homeEvent.js')
-  script(src='/js/streamEvent.js')
-  script(src='/js/feedEvent.js')
-  script(src='/js/pageEvent.js')
-
-  //- Main
-  script(src='/js/routes.js')
-  script(src='/js/main.js')
+        block content

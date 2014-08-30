@@ -1,23 +1,23 @@
 extends layout
 
 block content
-  input.input-large.search-query#GoInput(type='text',placeholder="Type something…")
-  button.btn#GoButton Go
 
   h3 Usage
   ol
-    li input any keyword which you interests
-    li push 'Go' button
-    li then you found(or created) your feed stream
+    li Unificはユーザ全員で管理する匿名のRSSリーダーです
+    li
+      pre http://unific.net/リーダーの名前
+      | でリーダーを生成/参照できます
 
   h3 Example
   ol
     li
       a(href='/music') Music
-      p music news stream.
+      p 音楽ニュース全般
     li
       a(href='/nikezono') nikezono
-      p news stream for nikezono(is the developer of unific)
+      p @nikezonoのリーダー
     li
       a(href='/masuilab') Masui Lab.
-      p social news stream for Masui Lab.(Keio University)
+      p @masuilabのリーダー
+

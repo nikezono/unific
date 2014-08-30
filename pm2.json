@@ -1,0 +1,9 @@
+{
+  "name"        : "unific",
+  "script" : "server.coffee",
+  "env":{
+    "DEBUG":"*"
+  },
+  "watch"       : "true",
+  "log_date_format"  : "MMDD HH:mm Z"
+}

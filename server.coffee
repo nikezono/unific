@@ -5,6 +5,9 @@
 
 ###
 
+### Start NewRelic Performance Indicator ###
+require('newrelic')
+
 # dependency
 http = require "http"
 path = require 'path'
@@ -16,6 +19,11 @@ io  = require path.resolve('config','io')
 # start socket.io and http server
 server = http.createServer app
 io app,server
+
+# start rss crowler
+crowler = require(path.resolve 'config','crowler') app
+crowler.initialize()
+app.set 'crowler',crowler
 
 server.listen app.get("port"), ->
   console.log "Express server listening on port " + app.get("port")

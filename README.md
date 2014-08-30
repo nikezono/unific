@@ -1,16 +1,8 @@
-unific
+unific  ![Travis](https://travis-ci.org/nikezono/unific.png)[![Coverage Status](https://coveralls.io/repos/nikezono/unific/badge.png)](https://coveralls.io/r/nikezono/unific)
 ---
 
-social rss reader on web
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-[unific.net](http://unific.net)
+http://unific.net
 
----
 
-## つかいかた
-
-    git clone https://github.com/nikezono/unific.git
-    cd unific
-    npm install
-    npm install -i nodectl -g
-    nodectl

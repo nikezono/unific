@@ -1,120 +1,56 @@
 extends layout
 
-//-
-  notifications
-//-
-block notification
-  .alert.alert-success#NewFeedIsAdded
-    button.close &times;
-    | New Feed.
-  .alert.alert-info#NewArticleIsAdded
-    button.close &times;
-    | New Article.
-  .alert.alert-success#FeedListIsEditted
-    button.close &times;
-    | Feed-List Editted.
-  .alert.alert-error#SomethingWrong
-    button.close &times;
-    | Error!.
-
-//-
-  Contents
-//-
 block content
 
-  //- When no feed or article
-  .well#NoFeedIsAdded
-    button.close &times;
-    | No Feed Is Added.
+  #Modals
 
-  //- Articles
-  #usage(data-intro='<ol><li>コメントの投稿・表示</li><li>記事詳細の閲覧</li><li>記事の保存(Star)</li></ol>が行えます。',data-position='bottom')
-  ul.media-list#Articles
+  #Navigation.col-md-12
 
-//-
-  Control Panel
-//-
-block utility
+    .col-md-12
+      .col-md-6
+        .input-group
+          input#FindQuery.form-control(type="text",
+            placeholder="Keyword/URL/Other Stream's name"
+            )
+          span.input-group-btn
+            button.btn.btn-primary#Find
+              span.glyphicon.glyphicon-search
+              |  Find
 
-  h2 Control Panel
-  hr
+      .col-md-6
+        .btn-group.btn-group-justified
+          .btn-group
+            button.btn.btn-default#List
+              span.glyphicon.glyphicon-list
+              |  List
 
-  //-
-    Usage
-  //-
-  #usage
-    h4 Usage
-    button.btn.btn-success#UsageButton(data-intro='使い方。今あなたが見ているもの',data-position='left')
-      i.icon-book
-      |     View Usage
-  hr
+          .btn-group
+            button.btn.btn-default#Hot
+              span.glyphicon.glyphicon-fire
+              |  Hotentry
 
-  //-
-    Add Feed
-  //-
-  #add_feed
-    h4 Subscribe Feed
-    input.span2.search-query#FindFeedInput(data-intro='フィードの新規登録。<br>アドレス、または、あなたが追加したいUnificのページ(<i>ex:nikezono</i>)を入力してください',data-position='left', type='text',placeholder="input url...")
-    button.btn.btn-warning#FindFeedButton
-      i.icon-search
-      |     Find Feed
-    br
-    i ex: ' http://www3.nhk.or.jp/news '
-    br
-    i or: ' nikezono'
+          .btn-group
+            button.btn.btn-default#Fork
+              span.glyphicon.glyphicon-cutlery
+              |  Fork
 
-  //- No Feeds
-  .alert.alert-warning#NoFeedIsFound
-    button.close(type='button') &times;
-    | No Feed is Founded.(invalid url)
+          .btn-group
+            button.btn.btn-default(
+              onClick="requestPermission()"
+              )
+              span.glyphicon.glyphicon-exclamation-sign
+              |  Notify
 
-  hr
 
-  //-
-    Edit RSS List
-  //-
-  #edit_feed_list
-    h4 Edit Feed List
-    button.btn.btn-danger#EditFeedButton(data-intro='フィードリストの編集。',data-position='left')
-      i.icon-list
-      |    Edit Feed
-  hr
+  .col-md-12
+    hr
+  #Pages.col-md-12
 
-  //-
-    Change Background Image
-  //-
-  #ChangeBackgroundImage(data-intro='背景画像の変更。',data-position='left')
-    h4 Change Background
-    input#ImageInput(type='file',accept="image/*")
-    button.btn.btn-inverse#ClearBg
-      i.icon-remove-circle
-      |     Clear
-  hr
+  script#articleTemplate(type="text/template")
+    include template/panel
+  script#candidatesRootTemplate(type="text/template")
+    include template/candidatesRoot
+  script#candidateTemplate(type="text/template")
+    include template/candidate
 
-block modals
 
-  //-
-    Edit Feed Modal Window
-  //-
-  #EditFeedModalWindow.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-    .modal-header
-      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-      h3 Edit Feed List
-    .modal-body
-      ol#FeedList
-    .modal-footer
-      button.btn(data-dismiss='modal', aria-hidden='true') Close
-      button.btn.btn-primary(data-dismiss='modal', aria-hidden='true')#ApplyEditFeedButton Apply Changes
-
-  //-
-    Add Feed Modal Window
-  //-
-  #CandidatesModalWindow.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-    .modal-header
-      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-      h3 SubScribe Feeds
-    .modal-body
-      ol#CandidatesList
-    .modal-footer
-      button.btn(data-dismiss='modal', aria-hidden='true') Close
-      button.btn.btn-primary(data-dismiss='modal', aria-hidden='true')#AddFeedButton Subscribe
