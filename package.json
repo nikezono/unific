@@ -16,6 +16,7 @@
     "mongoose": "^3.8.14",
     "morgan": "^1.2.2",
     "newrelic": "^1.10.1",
+    "rollbar": "^0.3.13",
     "rss": "^0.3.2",
     "rss-watcher": "^1.2.0",
     "socket.io": "^1.0.6",
@@ -46,7 +47,7 @@
   "main": "",
   "scripts": {
     "test": "./node_modules/grunt-cli/bin/grunt test",
-    "start":"./node_modules/coffee-script/bin/coffee server.coffee"
+    "start": "./node_modules/coffee-script/bin/coffee server.coffee"
   },
   "engines": {
     "node": "*"
