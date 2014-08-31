@@ -31,7 +31,6 @@ module.exports.HelperEvent = (app) ->
 
   # Streamが購読しうるモデル(現在Feed/Streamの二種)をDetectionする
   detectCandidateType:(model,callback)->
-    return callback null,null if not model._id
     async.parallel [(cb)->
       Stream.findById model._id,(err,streams)->
         return cb err,null if err
@@ -40,8 +39,11 @@ module.exports.HelperEvent = (app) ->
     ,(cb)->
       Feed.findById model._id,(err,feeds)->
         return cb err,null if err
-        return cb null,null if _.isEmpty feeds
+        if _.isEmpty feeds
+          return cb null,"rss" if model.url
+          return cb null,null
         cb null,"feed"
+
     ],(err,result)->
       return callback err,null if err
       return callback null,_.without(result,null)[0]
@@ -116,6 +118,7 @@ module.exports.HelperEvent = (app) ->
       .exec (err,feeds)->
         return callback err,null if err
         for feed in feeds
+          continue if not feed.pages
           for page in feed.pages
             articles.push {feed:feed,page:page}
         articles.sort (a,b)->

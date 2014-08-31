@@ -37,7 +37,10 @@ exports = module.exports = (app)->
     watcher.run (err,articles)=>
       return debug err if err
       for article in articles
-        @updateOne article,feed
+        @updateOne article,feed,(page)=>
+          app.get('emitter').emit 'new article',
+            page:page
+            feed:feed
 
   updateOne:(article,feed,callback)->
     Page.updateOneWithFeed article,feed,(err,page)->

@@ -19,6 +19,6 @@ FeedSchema = new Mongo.Schema
   url:         String
   siteUrl:     String
   favicon:     String
-  pages:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'pages' }]
+  pages:       [{ type: Mongo.Schema.Types.ObjectId, ref: 'pages', default:[] }]
 
 exports.Feed = Mongo.model 'feeds', FeedSchema

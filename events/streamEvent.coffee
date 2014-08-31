@@ -75,7 +75,7 @@ module.exports.StreamEvent = (app) ->
       model = JSON.parse req.body.model
 
       HelperEvent.detectCandidateType model,(err,type)->
-        if type is "feed"
+        if type is "feed" or type is 'rss'
 
           Feed.findOneAndUpdate
             url       : model.url
