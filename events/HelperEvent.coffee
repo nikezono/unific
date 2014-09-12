@@ -119,8 +119,13 @@ module.exports.HelperEvent = (app) ->
         return callback err,null if err
         for feed in feeds
           continue if not feed.pages
+
+          # 要らない要素削減
+          feedObj = feed.toObject()
+          omittedFeed = _.omit feedObj,"pages"
+
           for page in feed.pages
-            articles.push {feed:feed,page:page}
+            articles.push {feed:omittedFeed,page:page}
         articles.sort (a,b)->
           b.page.pubDate - a.page.pubDate
         return callback null,articles

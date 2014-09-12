@@ -36,11 +36,15 @@ exports = module.exports = (app)->
 
     watcher.run (err,articles)=>
       return debug err if err
+
+      # Omitして通信量を減らす @todo ヘルパにまとめる
+      feedObj = feed.toObject()
+      omittedFeed = _.omit feedObj,"pages"
       for article in articles
         @updateOne article,feed,(page)=>
           app.get('emitter').emit 'new article',
             page:page
-            feed:feed
+            feed:omittedFeed
 
   updateOne:(article,feed,callback)->
     Page.updateOneWithFeed article,feed,(err,page)->
