@@ -79,7 +79,9 @@ $ ->
 
   socket.on "newArticle", (data)->
     notify.info(data.page.title)
-    articles.unshift new Article data
+    if articles.where({url:data.page.url}).length > 0
+      articles.unshift new Article data
+      $('.collapse').collapse()
 
 
   resetCandidates = (data)->

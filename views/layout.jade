@@ -16,31 +16,10 @@ head
 
   //-
      Include Library (Primaly)
-
-  //- javascript
-  script(src='/socket.io/socket.io.js')
-  script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js')
-  script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
-  script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js')
-  script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
-  script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js')
-  script(src="//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.0.3/backbone.marionette.min.js")
-  script(src="//cdnjs.cloudflare.com/ajax/libs/livestamp/1.1.2/livestamp.min.js")
-
-  script(src="/vendor/js/jquery.bootstrap-growl.min.js")
-
   //- css
   link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css')
   link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
   link(rel='stylesheet', href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/paper/bootstrap.min.css")
-
-  //- User Script
-  script(src="/js/notify.js" type="application/javascript")
-  script(src="/js/http.js"   type="application/javascript")
-  script(src="/js/io.js"     type="application/javascript")
-  script(src="/js/model.js"  type="application/javascript")
-  script(src="/js/view.js"   type="application/javascript")
-  script(src="/js/unific.js" type="application/javascript")
 
 body
   .container
@@ -54,3 +33,27 @@ body
             h1= 'Unific'
 
         block content
+  #Include
+
+    //- javascript
+    script(src='/socket.io/socket.io.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js')
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js')
+    script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js')
+    script(src="//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.0.3/backbone.marionette.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/livestamp/1.1.2/livestamp.min.js")
+
+    script(src="/vendor/js/jquery.bootstrap-growl.min.js")
+
+    //- User Script
+    script(src="/js/notify.js" type="application/javascript")
+    script(src="/js/http.js"   type="application/javascript")
+    script(src="/js/io.js"     type="application/javascript")
+    script(src="/js/model.js"  type="application/javascript")
+    script(src="/js/view.js"   type="application/javascript")
+    script(src="/js/unific.js" type="application/javascript")
+
+
+

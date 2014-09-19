@@ -38,9 +38,10 @@ module.exports.StreamEvent = (app) ->
           return render(res,stream)
 
   # HTTP Endpoint - RSS
+  # 1フィードにつき20件(多い？)
   rss  : (req,res,next) ->
     title = req.params.stream
-    HelperEvent.getArticlesByStreamWithLimit title,100,(err,articles)->
+    HelperEvent.getArticlesByStreamWithLimit title,20,(err,articles)->
       return HelperEvent.httpError err,res if err
       return res.send 404,"Articles Not Found" if articles.length is 0
 

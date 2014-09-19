@@ -81,7 +81,12 @@
     });
     socket.on("newArticle", function(data) {
       notify.info(data.page.title);
-      return articles.unshift(new Article(data));
+      if (articles.where({
+        url: data.page.url
+      }).length > 0) {
+        articles.unshift(new Article(data));
+        return $('.collapse').collapse();
+      }
     });
     resetCandidates = function(data) {
       var candidate, newCandidates, _i, _len;

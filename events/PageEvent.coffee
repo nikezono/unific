@@ -13,7 +13,7 @@ module.exports.PageEvent = (app) ->
 
   ### HTTP Events ###
   getPagesByStream:(req,res)->
-    HelperEvent.getArticlesByStreamWithLimit req.params.stream,100,(err,pages)->
+    HelperEvent.getArticlesByStreamWithLimit req.params.stream,20,(err,pages)->
       debug err if err
       return res.send 400,'Internal Server Error' if err
       return res.json pages

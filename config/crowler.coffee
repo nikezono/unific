@@ -19,7 +19,9 @@ exports = module.exports = (app)->
 
   # api
   addToSet:(feed)->
-    return if feed.url in @watchingUrls
+    if feed.url in @watchingUrls
+      debug "#{feed.url} is already watching"
+      return
     @createWatcher(feed)
     @watchingUrls.push feed.url
 

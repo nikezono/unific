@@ -98,34 +98,56 @@ module.exports.HelperEvent = (app) ->
   getArticlesByStreamWithLimit:(streamName,limit,callback)->
     streamName = decodeURIComponent streamName
     Stream.findOne({title:streamName})
-    .populate("streams")
-    .exec (err,requestedStream)->
+    .exec (err,stream)=>
       return callback err,null if err
-      streamArray = requestedStream.streams
-      articles = []
-      feedList = requestedStream.feeds
-      for stream in streamArray
-        feedList = _.union feedList,stream.feeds
-      return callback null,[] if _.isEmpty feedList
-      Feed.find
-        _id:
-          $in:feedList
-      .populate
-        path:'pages'
-        limit: limit
-        sort:
-          pubDate:-1
-      .exec (err,feeds)->
+
+      # 全フィードリストを自身と子要素/孫要素全てからunionする
+      @getRecursiveAllFeedList stream._id,(err,feedList)->
         return callback err,null if err
-        for feed in feeds
-          continue if not feed.pages
+        return callback null,[] if _.isEmpty feedList
+        articles = []
+        Feed.find
+          _id:
+            $in:feedList
+        .populate
+          path:'pages'
+          limit: limit
+          sort:
+            pubDate:-1
+        .exec (err,feeds)->
+          return callback err,null if err
+          for feed in feeds
+            continue if not feed.pages
 
-          # 要らない要素削減
-          feedObj = feed.toObject()
-          omittedFeed = _.omit feedObj,"pages"
+            # 要らない要素削減1#ページのIDをFEEDから削る
+            feedObj = feed.toObject()
+            omittedFeed = _.omit feedObj,"pages"
 
-          for page in feed.pages
-            articles.push {feed:omittedFeed,page:page}
-        articles.sort (a,b)->
-          b.page.pubDate - a.page.pubDate
-        return callback null,articles
+            for page in feed.pages
+              articles.push {feed:omittedFeed,page:page}
+
+          # 記事全体の時間別ソート
+          articles.sort (a,b)->
+            b.page.pubDate - a.page.pubDate
+
+          # 要らない要素削減2#全体の件数を上限100にする
+          if(articles.length > 100)
+            articles = articles.slice(0,100)
+
+          return callback null,articles
+
+  # 再帰的に全購読ストリームのフィードリストを合体させる
+  # @param [stream] must be populated by 'stream'
+  # @return [Feed]
+  getRecursiveAllFeedList:(streamId,callback)->
+    Stream.findOne {_id:streamId}, (err,stream)=>
+      return callback err,null if err
+      feedList = stream.feeds
+      async.forEach stream.streams, (_id,cb)=>
+        @getRecursiveAllFeedList _id,(err,subFeedList) ->
+          return debug err if err
+          feedList = _.union feedList,subFeedList
+          cb()
+      ,->
+        callback null,feedList
+
