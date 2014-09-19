@@ -16,6 +16,7 @@ mongoose     = require "mongoose"
 errorhandler = require 'errorhandler'
 bodyParser   = require 'body-parser'
 morgan       = require 'morgan'
+rollbar      = require 'rollbar'
 
 # Static Files
 connect =
@@ -49,6 +50,7 @@ app.use bodyParser.urlencoded({extended:false})
 app.use bodyParser.json()
 app.use errorhandler() if app.get('env') is 'development'
 app.use connect.static
+app.use(rollbar.errorHandler('b2a13f53cc6b444a92e9234dd1fe37fd'))
 
 # Routes
 (require path.resolve 'routes','httpRoutes') app
