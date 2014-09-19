@@ -5,7 +5,7 @@
 
 ###
 
-### Start NewRelic Performance Indicator ###
+### Start NewRelic ###
 require('newrelic')
 
 # dependency

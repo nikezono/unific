@@ -1,9 +1,9 @@
 {
   "name"        : "unific",
   "script" : "server.coffee",
+  "PORT":3000,
   "env":{
     "DEBUG":"*",
-    "PORT":3050,
     "NODE_ENV":"production"
   },
   "watch"       : "true",
