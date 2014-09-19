@@ -3,6 +3,7 @@ unific  ![Travis](https://travis-ci.org/nikezono/unific.png)[![Coverage Status](
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-http://unific.net
+unific is recursive & anonymous rss reader
 
+http://www.unific.net
 

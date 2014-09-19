@@ -15,6 +15,7 @@
     "jade": "^1.5.0",
     "mongoose": "^3.8.14",
     "morgan": "^1.2.2",
+    "newrelic": "^1.11.1",
     "rss": "^0.3.2",
     "rss-watcher": "^1.2.0",
     "socket.io": "^1.0.6",
