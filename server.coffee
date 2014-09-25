@@ -5,7 +5,11 @@
 
 ###
 
-newrelicEnable = (process.env.NEW_RELIC_APP_NAME? and process.env.NEW_RELIC_LICENSE_KEY? and process.env.NEW_RELIC_NO_CONFIG_FILE?)
+newrelicEnable = (
+  process.env.NEW_RELIC_APP_NAME? and
+  process.env.NEW_RELIC_LICENSE_KEY? and
+  process.env.NEW_RELIC_NO_CONFIG_FILE?
+)
 console.log "using newrelic:#{newrelicEnable}"
 if newrelicEnable
   require 'newrelic'
