@@ -50,6 +50,12 @@ app.use bodyParser.json()
 app.use errorhandler() if app.get('env') is 'development'
 app.use connect.static
 
+# Rollbar Error Reporter
+rollbar = require('rollbar')
+app.use(rollbar.errorHandler('cf7cfdd25aac48f6989b5d3cf024ba6a'))
+rollbar.handleUncaughtExceptions "cf7cfdd25aac48f6989b5d3cf024ba6a",
+  exitOnUncaughtException:true
+
 # Routes
 (require path.resolve 'routes','httpRoutes') app
 
