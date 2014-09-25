@@ -1,5 +1,12 @@
 {
   "name": "unific",
-  "description":"Recursive&Anonymous RSS Reader",
-  "repository": "https://github.com/nikezono/unific"
+    "description":"Recursive&Anonymous RSS Reader",
+    "website": "https://github.com/nikezono/unific",
+    "repository": "https://github.com/nikezono/unific",
+    "success_url": "/",
+    "env": {
+      "NODE_ENV": "production",
+      "TZ": "Asia/Tokyo",
+      "HEROKU_URL": "https://(YOUR-APP-NAME).herokuapp.com"
+    }
 }
