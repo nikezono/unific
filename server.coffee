@@ -5,7 +5,8 @@
 
 ###
 
-require 'newrelic'
+if process.env.NEW_RELIC_APP_NAME and process.env.NEW_RELIC_LICENSE_KEY and process.env.NEW_RELIC_NO_CONFIG_FILE
+  require 'newrelic'
 
 # dependency
 http = require "http"
