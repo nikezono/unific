@@ -4,7 +4,7 @@
     "website": "https://github.com/nikezono/unific",
     "repository": "https://github.com/nikezono/unific",
     "success_url": "/",
-    "addons": ["mongohq:sandbox"]
+    "addons": ["mongohq:sandbox"],
     "env": {
       "NODE_ENV": "production",
       "TZ": "Asia/Tokyo",
