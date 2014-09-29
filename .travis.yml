@@ -3,9 +3,9 @@ node_js:
   - "0.10"
 script:
   - ./node_modules/grunt-cli/bin/grunt travis
+after_script:
+  - CODECLIMATE_REPO_TOKEN=22798960a8bf30141eefb5ac78b18929fa1a3df4469d6f5f351fdd4ae34d78ab codeclimate < coverage/reports/lcov.info
 notifications:
   slack:
     masuilab:p4zvcihWTFLz1KwJXYGwJgeZ
 services: mongodb
-env:
-  - COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=7BPLqS4aRiqcMZ6MiNcMbBh49fNDbO9Vd
