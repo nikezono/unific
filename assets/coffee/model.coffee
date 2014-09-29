@@ -11,7 +11,7 @@ window.Candidate = Backbone.Model.extend
   initialize:(attr,opts)->
     host = attr.sitename or "Unific.net"
     name = "#{attr.title} / #{host}"
-    url  = attr.url or "http://unific.net/#{attr.title}"
+    url  = attr.url or "http://www.unific.net/#{attr.title}"
     favicon = attr.favicon or "/favicon.ico"
     this.set "name" , name
     this.set "url",url

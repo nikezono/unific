@@ -12,7 +12,7 @@
       var favicon, host, name, url;
       host = attr.sitename || "Unific.net";
       name = "" + attr.title + " / " + host;
-      url = attr.url || ("http://unific.net/" + attr.title);
+      url = attr.url || ("http://www.unific.net/" + attr.title);
       favicon = attr.favicon || "/favicon.ico";
       this.set("name", name);
       this.set("url", url);
