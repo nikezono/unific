@@ -15,7 +15,9 @@
     )
     .panel-body
       // @todo 代表的画像抜き出し
-      a(href="{{page.url}}")
+      a(href="{{page.url}}"
+        target="_blank"
+      )
         h4 {{page.title}}
       p {{page.description}}
       a(href="{{feed.siteUrl}}")
