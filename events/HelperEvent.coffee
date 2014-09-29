@@ -56,7 +56,7 @@ module.exports.HelperEvent = (app) ->
       query = req.query.query
 
       # URLの場合
-      if query.match /^(http:\/\/|https:\/\/)/
+      if query.match /^(http:\/\/|https:\/\/)/ and !query.contains "www.unific.net"
         finder query, (err,candidates)=>
           return @httpError err,res if err
 
