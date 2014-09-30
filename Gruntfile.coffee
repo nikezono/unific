@@ -11,12 +11,15 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-mocha-test'
-  grunt.loadNpmTasks 'grunt-istanbul'
+  grunt.loadNpmTasks 'grunt-blanket'
   grunt.loadNpmTasks 'grunt-notify'
+  grunt.loadNpmTasks 'grunt-coveralls'
+  grunt.loadNpmTasks 'grunt-exec'
 
-  grunt.registerTask 'test',     [ 'coffeelint','coffee','mochaTest:spec' ]
-  grunt.registerTask 'coverage', [ 'clean','coffee','copy', 'instrument', 'mochaTest:coverage', 'storeCoverage', 'makeReport']
-  grunt.registerTask 'travis',   [ 'coverage']
+  grunt.registerTask 'test',     [ 'coffeelint','coffee', 'mochaTest:spec' ]
+  grunt.registerTask 'coverage', [ 'clean', 'blanket', 'copy','mochaTest:coverage' ]
+  grunt.registerTask 'ci',       [ 'clean', 'blanket', 'copy','mochaTest:coverdump','coveralls']
+  grunt.registerTask 'travis',   [ 'test','ci']
   grunt.registerTask 'default',  [ 'test', 'watch' ]
 
   grunt.initConfig
@@ -24,7 +27,7 @@ module.exports = (grunt) ->
     coffeelint:
       options:
         max_line_length:
-          value: 130
+          value: 100
         indentation:
           value: 2
         newlines_after_classes:
@@ -40,8 +43,10 @@ module.exports = (grunt) ->
           { expand: yes, cwd: 'models/', src: [ '**/*.coffee' ] }
           { expand: yes, cwd: 'config/', src: [ '**/*.coffee' ] }
           { expand: yes, cwd: 'events/', src: [ '**/*.coffee' ] }
-          { expand: yes, cwd: 'routes/', src: [ '**/*.coffee' ] }
+          { expand: yes, cwd: 'src/', src: [ '**/*.coffee' ] }
           { expand: yes, cwd: 'assets/', src: [ '**/*.coffee' ] }
+          { expand: yes, cwd: 'routes/', src: [ '**/*.coffee' ] }
+          { expand: yes, cwd: 'public/', src: [ '**/*.coffee' ] }
         ]
 
     watch:
@@ -53,47 +58,37 @@ module.exports = (grunt) ->
           'models/**/*.coffee'
           'events/**/*.coffee'
           'config/**/*.coffee'
+          'src/**/*.coffee'
+          'assets/**/*.coffee'
           'routes/**/*.coffee'
-          'views/**/*.jade'
+          'public/**/*.coffee'
           'test/**/*.coffee'
         ]
         tasks: [ 'coffeelint','coffee','mochaTest:spec' ]
 
     coffee:
-      clientjs:
+      assets:
         expand:true
-        cwd:'assets/coffee'
+        cwd:'assets/coffee/'
         src:'*.coffee'
         dest:'public/js/'
         ext:'.js'
-      # @todo ビルド
-      build:
-        expand:true
-        cwd:''
-        src:'server.coffee'
-        dest:'build/'
-        ext:'.js'
 
-    copy:
-      coverage:
-        files: [
-          expand: true
-          src: ['test/*']
-          dest: 'coverage/instrument/'
-        ]
+    exec:
+      dot:'dot -Tgif docs/*.dot -o docs/*.gif && open docs'
 
     clean:
       coverage:
         src: ['coverage/']
-      build:
-        src: ['build/']
 
-    # Istanbul(MochaTest+Coverage Report)
-    instrument:
-      files: "build/*.js"
-      options:
-        lazy: true
-        basePath: "coverage/instrument/"
+    copy:
+      coverage:
+        src: ['test/**']
+        dest: 'coverage/'
+
+    blanket:
+      coverage:
+        files:'coverage/lib':['lib/']
 
     mochaTest:
       spec:
@@ -102,20 +97,27 @@ module.exports = (grunt) ->
           timeout: 50000
           colors: true
         src: ['test/**/*.coffee']
+
       coverage:
         options:
-          reporter:"spec"
+          reporter:"html-cov"
           timeout: 50000
-          colors:true
-        src: ['coverage/instrument/test/*.coffee']
+          captureFile: 'coverage/coverage.html'
+          quiet:true
+        src: ['coverage/test/**/*.coffee']
 
-    storeCoverage:
-      options:
-        dir: "coverage/reports"
+      coverdump:
+        options:
+          reporter: 'mocha-lcov-reporter'
+          timeout: 50000
+          quiet: true
+          captureFile: 'coverage/lcov.info'
+        src: ['coverage/test/**/*.coffee']
 
-    makeReport:
-      src: "coverage/reports/**/*.json"
-      options:
-        type: "lcov"
-        dir: "coverage/reports"
-        print: "detail"
+    coveralls:
+      all:
+        src:'coverage/lcov.info'
+
+
+
+

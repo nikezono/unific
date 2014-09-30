@@ -29,20 +29,21 @@ module.exports.HelperEvent = (app) ->
     console.trace err
     return res.send 400,"Internal Server Error"
 
-  # Streamが購読しうるモデル(現在Feed/Streamの二種)のdocObjectを判別する
-  detectCandidateType:(document,callback)->
+  # Streamが購読しうるモデル(現在Feed/Streamの二種)をDetectionする
+  detectCandidateType:(model,callback)->
     async.parallel [(cb)->
-      Stream.findById document._id,(err,streams)->
+      Stream.findById model._id,(err,streams)->
         return cb err,null if err
         return cb null,null if _.isEmpty streams
         callback null,"stream"
     ,(cb)->
-      Feed.findById document._id,(err,feeds)->
+      Feed.findById model._id,(err,feeds)->
         return cb err,null if err
         if _.isEmpty feeds
-          return cb null,"rss" if document.url
+          return cb null,"rss" if model.url
           return cb null,null
         cb null,"feed"
+
     ],(err,result)->
       return callback err,null if err
       return callback null,_.without(result,null)[0]
@@ -56,7 +57,7 @@ module.exports.HelperEvent = (app) ->
       query = req.query.query
 
       # URLの場合
-      if query.match /^(http:\/\/|https:\/\/)/ and !query.contains "www.unific.net"
+      if query.match /^(http:\/\/|https:\/\/)/
         finder query, (err,candidates)=>
           return @httpError err,res if err
 
