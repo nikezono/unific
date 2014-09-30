@@ -7,3 +7,5 @@ unific.log
 dump.rdb
 
 newrelic.js
+build/
+coverage/
