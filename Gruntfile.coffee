@@ -14,7 +14,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-istanbul'
   grunt.loadNpmTasks 'grunt-notify'
 
-  grunt.registerTask 'test',     [ 'coffeelint','coffee:clientjs', 'mochaTest:spec' ]
+  grunt.registerTask 'test',     [ 'coffeelint','coffee','mochaTest:spec' ]
   grunt.registerTask 'coverage', [ 'clean','coffee','copy', 'instrument', 'mochaTest:coverage', 'storeCoverage', 'makeReport']
   grunt.registerTask 'travis',   [ 'test','coverage']
   grunt.registerTask 'default',  [ 'test', 'watch' ]
@@ -85,6 +85,8 @@ module.exports = (grunt) ->
     clean:
       coverage:
         src: ['coverage/']
+      build:
+        src: ['build/']
 
     # Istanbul(MochaTest+Coverage Report)
     instrument:
