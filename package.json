@@ -25,6 +25,7 @@
     "underscore": "^1.6.0"
   },
   "devDependencies": {
+    "codeclimate-test-reporter": "0.0.4",
     "coffee-errors": "^0.8.6",
     "coffeelint": "^1.5.3",
     "grunt": "^0.4.5",
