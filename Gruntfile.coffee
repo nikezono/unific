@@ -16,7 +16,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'test',     [ 'coffeelint','coffee','mochaTest:spec' ]
   grunt.registerTask 'coverage', [ 'clean','coffee','copy', 'instrument', 'mochaTest:coverage', 'storeCoverage', 'makeReport']
-  grunt.registerTask 'travis',   [ 'test','coverage']
+  grunt.registerTask 'travis',   [ 'coverage']
   grunt.registerTask 'default',  [ 'test', 'watch' ]
 
   grunt.initConfig
