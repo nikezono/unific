@@ -40,7 +40,6 @@ Feed.find {}, (err,feeds)->
         return cb()
   ,->
     debug "All Feed Is Update"
-    process.exit()
 
 
 
