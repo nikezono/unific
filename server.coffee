@@ -31,5 +31,13 @@ crowler = require(path.resolve 'config','crowler') app
 crowler.initialize()
 app.set 'crowler',crowler
 
+# start batch processing
+require path.resolve('helper','updateAllFeed')
+setInterval ->
+  require path.resolve('helper','updateAllFeed')
+,1000*60*60 # 1時間おきにフィードリスト更新
+
 server.listen app.get("port"), ->
   console.log "Express server listening on port " + app.get("port")
+
+
