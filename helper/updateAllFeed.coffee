@@ -26,8 +26,6 @@ Feed.find {}, (err,feeds)->
     debug "MODIFIED TO"
 
     finder feed.url,(err,candidates)->
-      debug "hoge"
-      debug candidates
       debug err if err
       return cb() if err
       candidate = candidates[0] # フィード自体を指定しているので
