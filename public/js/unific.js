@@ -76,6 +76,9 @@
         return refresh();
       }
     });
+    socket.on('reconnect', function() {
+      return refresh();
+    });
     socket.on("subscribed", function(data) {
       notify.success("" + data.title + " Subscribed.");
       return refresh();
