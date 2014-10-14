@@ -4,15 +4,18 @@ unific  ![Travis](https://travis-ci.org/nikezono/unific.png)[![Test Coverage](ht
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 
-Unific - Recursive & Anonymous RSS Reader
+## Unific - Recursive & Anonymous RSS Reader
 
 http://www.unific.net
 
-* unificは「RSSを生成できる」RSSリーダです
-  * 他のRSSリーダを購読することができます
+* unificは「RSSフィードを生成できる」RSSリーダです
+  * Webアプリケーションとして実装されています
+    * フィードの購読/検索が行えます
+  * 購読している各フィードの新着記事をマージしたRSSを生成出来ます
+    * 他のRSSリーダを購読することができます
   * 子や孫のリーダの購読リストの変更を、親も受け取ります
     * ex: @nikezono の読んでいるニュース記事(/nikezono)を組織で購読する(/masuilab)
-    * ex: /jpop でJ-POPについてのリーダーを管理し、/musicで購読する
+    * ex: `/jpop` でJ-POPについてのリーダーを管理し、`/music`が`/jpop`や`/rock`を購読する
 * アカウントはありません
   * `http://www.unific.net/リーダーの名前`でリーダを生成します
   * 全てのユーザに編集権限があります

@@ -101,30 +101,38 @@ module.exports.HelperEvent = (app) ->
       return callback err,null if err
 
       # 全フィードリストを自身と子要素/孫要素全てからunionする
-      @getRecursiveAllFeedList stream._id,(err,feedList)->
+      @getRecursiveAllFeedList stream,(err,feedList)->
         return callback err,null if err
         return callback null,[] if _.isEmpty feedList
         articles = []
-        Feed.find
-          _id:
-            $in:feedList
-        .populate
-          path:'pages'
-          limit: limit
-          sort:
-            pubDate:-1
-        .exec (err,feeds)->
-          return callback err,null if err
-          for feed in feeds
-            continue if not feed.pages
 
-            # 要らない要素削減1#ページのIDをFEEDから削る
-            feedObj = feed.toObject()
-            omittedFeed = _.omit feedObj,"pages"
+        # 各フィードから記事を取得してarticlesに詰める
+        async.forEach Object.keys(feedList),(streamTitle,cb)->
+          Feed.find
+            _id:
+              $in:feedList[streamTitle]
+          .populate
+            path:'pages'
+            limit: limit
+            sort:
+              pubDate:-1
+          .exec (err,feeds)->
+            return cb err if err
+            for feed in feeds
+              continue if not feed.pages
 
-            for page in feed.pages
-              articles.push {feed:omittedFeed,page:page}
+              # 要らない要素削減1#ページのIDをFEEDから削る
+              feedObj = feed.toObject()
+              omittedFeed = _.omit feedObj,"pages"
+              omittedFeed.title = "#{omittedFeed.title}"
+              if stream.title isnt streamTitle
+                omittedFeed.title += " by #{streamTitle}"
 
+              for page in feed.pages
+                articles.push {feed:omittedFeed,page:page}
+
+            cb()
+        ,->
           # 記事全体の時間別ソート
           articles.sort (a,b)->
             b.page.pubDate - a.page.pubDate
@@ -136,16 +144,17 @@ module.exports.HelperEvent = (app) ->
           return callback null,articles
 
   # 再帰的に全購読ストリームのフィードリストを合体させる
-  # @param [stream] must be populated by 'stream'
-  # @return [Feed]
-  getRecursiveAllFeedList:(streamId,callback)->
-    Stream.findOne {_id:streamId}, (err,stream)=>
+  # @param [stream]
+  # @return [Object] Streamタイトル:Feedタイトル（パンくず)
+  getRecursiveAllFeedList:(queryStream,callback)->
+    Stream.findOne({_id:queryStream._id}).populate('streams').exec (err,stream)=>
       return callback err,null if err
-      feedList = stream.feeds
-      async.forEach stream.streams, (_id,cb)=>
-        @getRecursiveAllFeedList _id,(err,subFeedList) ->
+      feedList = {}
+      feedList["#{stream.title}"] = stream.feeds
+      async.forEach stream.streams, (subStream,cb)=>
+        @getRecursiveAllFeedList subStream,(err,subFeedList) ->
           return debug err if err
-          feedList = _.union feedList,subFeedList
+          feedList = _.extend feedList,subFeedList
           cb()
       ,->
         callback null,feedList

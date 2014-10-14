@@ -55,6 +55,7 @@ module.exports = (grunt) ->
           'config/**/*.coffee'
           'routes/**/*.coffee'
           'views/**/*.jade'
+          'assets/coffee/*.coffee'
           'test/**/*.coffee'
         ]
         tasks: [ 'coffeelint','coffee','mochaTest:spec' ]

@@ -69,6 +69,14 @@ $ ->
       # Start App
       Unific.start()
 
+  # 他のタブから帰ってきた時
+  document.addEventListener "visibilitychange",->
+    refresh() unless document.hidden
+
+  # 繋ぎ直した時
+  socket.on 'reconnect',->
+    refresh()
+
   ## Socket.io EventHandlers ##
   socket.on "subscribed", (data)->
     notify.success "#{data.title} Subscribed."
