@@ -71,6 +71,11 @@
         return Unific.start();
       });
     }
+    document.addEventListener("visibilitychange", function() {
+      if (!document.hidden) {
+        return refresh();
+      }
+    });
     socket.on("subscribed", function(data) {
       notify.success("" + data.title + " Subscribed.");
       return refresh();
