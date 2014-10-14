@@ -9,6 +9,9 @@
 debug  = require('debug')('unific:updateAllFeed')
 async  = require 'async'
 finder = require 'find-rss'
+finder.setOptions
+  favicon:true
+  getDetail:true
 path   = require 'path'
 
 

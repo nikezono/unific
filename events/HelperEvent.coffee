@@ -8,6 +8,9 @@
 module.exports.HelperEvent = (app) ->
 
   finder = require 'find-rss'
+  finder.setOptions
+    favicon:true
+    getDetail:true
   async  = require 'async'
   _      = require 'underscore'
   debug = require('debug')('events/helper')
@@ -56,9 +59,14 @@ module.exports.HelperEvent = (app) ->
       query = req.query.query
 
       # URLかつunificのURLではない場合
-      if (query.match /^(http:\/\/|https:\/\/)/) and (query.indexOf("www.unific.net") == -1 )
+      if (query.match /^https?/) and (query.indexOf("www.unific.net") == -1 )
         finder query, (err,candidates)=>
           return @httpError err,res if err
+
+          # find-rss 1.5.0 getDetail
+          for candidate in candidates
+            candidate.url = candidate.xmlurl
+            candidate.sitename = candidate.title
 
           # Candidatesの中で既にインスタンスがあるものは置き換え
           resArray = []
