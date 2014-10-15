@@ -8,7 +8,7 @@
   $(function() {
 
     /* Configration & Initialize */
-    var Unific, articles, articlesView, candidates, candidatesView, httpApi, ioApi, path, refresh, resetCandidates, socket;
+    var Unific, articles, articlesView, candidates, candidatesView, httpApi, ioApi, path, refresh, resetCandidates, socket, time;
     _.templateSettings = {
       interpolate: /\{\{(.+?)\}\}/g
     };
@@ -36,7 +36,12 @@
       model: null,
       collection: candidates
     });
+    time = null;
     refresh = function(callback) {
+      if (!(time === null || (new Date() / 1 - time / 1) > 1000 * 60 * 3)) {
+        return;
+      }
+      time = new Date();
       return httpApi.getLatestArticles(function(err, data) {
         var article, newArticles, _i, _len;
         if (err) {

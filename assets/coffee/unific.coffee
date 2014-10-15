@@ -35,9 +35,15 @@ $ ->
   candidatesView = new CandidatesView
     model: null
     collection:candidates
+  time = null
 
   # Helper Method
   refresh = (callback)->
+
+    # 3分以内であればリフレッシュしない
+    return unless time is null or (new Date()/1 - time/1) > 1000*60*3
+    time = new Date()
+
     httpApi.getLatestArticles (err,data)->
       if err
         console.error err
