@@ -63,11 +63,6 @@ module.exports.HelperEvent = (app) ->
         finder query, (err,candidates)=>
           return @httpError err,res if err
 
-          # find-rss 1.5.0 getDetail
-          for candidate in candidates
-            candidate.url = candidate.xmlurl
-            candidate.sitename = candidate.title
-
           # Candidatesの中で既にインスタンスがあるものは置き換え
           resArray = []
           async.forEach candidates,(candidate,cb)->
