@@ -5,7 +5,6 @@
 
   window.ArticlesView = Backbone.Marionette.CollectionView.extend({
     childView: ArticleView,
-    tagName: 'div',
     className: 'panel-group',
     id: 'accordion'
   });

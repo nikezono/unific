@@ -36,6 +36,7 @@ $ ->
     model: null
     collection:candidates
   time = null
+  collapseCount = 0
 
   # Helper Method
   refresh = (callback)->
@@ -53,10 +54,14 @@ $ ->
       for article in data
         newArticles.push new Article(article)
       articles.reset newArticles
-
-      $('.collapse').collapse() # @note Viewに書きたい
       notify.success "Refreshed"
       return callback() if callback
+
+  refreshCollapse = ->
+    $('.collapse').collapse() # @note Viewに書きたい
+    $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide')
+    collapseCount = 0
+    $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show')
 
   ## Marionette ##
   Unific = new Backbone.Marionette.Application()
@@ -67,13 +72,13 @@ $ ->
   Unific.addInitializer (options)->
     Unific.pages.show articlesView
     Unific.modals.show candidatesView # @note modalなので常にshowしておいてjsで制御する
-    $('.collapse').collapse() # @note Viewに書きたい
 
   # 初回記事読み込み
   if not _.isEmpty path
     refresh ->
       # Start App
       Unific.start()
+      refreshCollapse()
 
   # 他のタブから帰ってきた時
   document.addEventListener "visibilitychange",->
@@ -81,22 +86,36 @@ $ ->
 
   # 繋ぎ直した時
   socket.on 'reconnect',->
-    refresh()
+    refresh ->
+      refreshCollapse()
 
   ## Socket.io EventHandlers ##
   socket.on "subscribed", (data)->
     notify.success "#{data.title} Subscribed."
-    refresh()
+    refresh ->
+      refreshCollapse()
   socket.on "unsubscribed", (data)->
     notify.success "#{data.title} Unsubscribed."
-    refresh()
+    refresh ->
+      refreshCollapse()
 
   socket.on "newArticle", (data)->
     notify.info(data.page.title)
-    if articles.where({url:data.page.url}).length > 0
-      articles.unshift new Article data
-      $('.collapse').collapse()
+    articles.unshift new Article data
 
+  ## Keyboard Event ##
+  $(window).keyup (e)->
+
+    ## event ##
+    if _.contains [39,34,32],e.keyCode # right,down,space
+      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide')
+      collapseCount+=1 if $('#accordion').find('.panel').length > collapseCount
+      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show')
+
+    else if _.contains [37,33],e.keyCode # left,up
+      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide')
+      collapseCount-=1 if collapseCount > 0
+      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show')
 
   resetCandidates = (data)->
     newCandidates = []

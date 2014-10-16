@@ -8,7 +8,7 @@
   $(function() {
 
     /* Configration & Initialize */
-    var Unific, articles, articlesView, candidates, candidatesView, httpApi, ioApi, path, refresh, resetCandidates, socket, time;
+    var Unific, articles, articlesView, candidates, candidatesView, collapseCount, httpApi, ioApi, path, refresh, refreshCollapse, resetCandidates, socket, time;
     _.templateSettings = {
       interpolate: /\{\{(.+?)\}\}/g
     };
@@ -37,6 +37,7 @@
       collection: candidates
     });
     time = null;
+    collapseCount = 0;
     refresh = function(callback) {
       if (!(time === null || (new Date() / 1 - time / 1) > 1000 * 60 * 3)) {
         return;
@@ -54,12 +55,17 @@
           newArticles.push(new Article(article));
         }
         articles.reset(newArticles);
-        $('.collapse').collapse();
         notify.success("Refreshed");
         if (callback) {
           return callback();
         }
       });
+    };
+    refreshCollapse = function() {
+      $('.collapse').collapse();
+      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide');
+      collapseCount = 0;
+      return $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show');
     };
     Unific = new Backbone.Marionette.Application();
     Unific.addRegions({
@@ -68,12 +74,12 @@
     });
     Unific.addInitializer(function(options) {
       Unific.pages.show(articlesView);
-      Unific.modals.show(candidatesView);
-      return $('.collapse').collapse();
+      return Unific.modals.show(candidatesView);
     });
     if (!_.isEmpty(path)) {
       refresh(function() {
-        return Unific.start();
+        Unific.start();
+        return refreshCollapse();
       });
     }
     document.addEventListener("visibilitychange", function() {
@@ -82,23 +88,39 @@
       }
     });
     socket.on('reconnect', function() {
-      return refresh();
+      return refresh(function() {
+        return refreshCollapse();
+      });
     });
     socket.on("subscribed", function(data) {
       notify.success("" + data.title + " Subscribed.");
-      return refresh();
+      return refresh(function() {
+        return refreshCollapse();
+      });
     });
     socket.on("unsubscribed", function(data) {
       notify.success("" + data.title + " Unsubscribed.");
-      return refresh();
+      return refresh(function() {
+        return refreshCollapse();
+      });
     });
     socket.on("newArticle", function(data) {
       notify.info(data.page.title);
-      if (articles.where({
-        url: data.page.url
-      }).length > 0) {
-        articles.unshift(new Article(data));
-        return $('.collapse').collapse();
+      return articles.unshift(new Article(data));
+    });
+    $(window).keyup(function(e) {
+      if (_.contains([39, 34, 32], e.keyCode)) {
+        $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide');
+        if ($('#accordion').find('.panel').length > collapseCount) {
+          collapseCount += 1;
+        }
+        return $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show');
+      } else if (_.contains([37, 33], e.keyCode)) {
+        $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide');
+        if (collapseCount > 0) {
+          collapseCount -= 1;
+        }
+        return $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show');
       }
     });
     resetCandidates = function(data) {
