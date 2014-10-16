@@ -58,7 +58,7 @@ $ ->
       return callback() if callback
 
   refreshCollapse = ->
-    $('.collapse').collapse() # @note Viewに書きたい
+    $('.collapse').collapse('hide') # @note Viewに書きたい
     $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide')
     collapseCount = 0
     $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show')
@@ -107,15 +107,25 @@ $ ->
   $(window).keyup (e)->
 
     ## event ##
-    if _.contains [39,34,32],e.keyCode # right,down,space
-      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide')
+    if _.contains [39,40,34,32,13,45],e.keyCode # right,down,space,enter
+      $before = $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide')
       collapseCount+=1 if $('#accordion').find('.panel').length > collapseCount
-      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show')
+      $after = $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show')
+      $("html, body").animate
+        scrollTop: $before.offset().top - 40
+      , 200
 
-    else if _.contains [37,33],e.keyCode # left,up
-      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide')
+      return true
+
+    else if _.contains [37,38,33,8,35],e.keyCode # left,up,backspace
+      $before = $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide')
       collapseCount-=1 if collapseCount > 0
-      $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show')
+      $after = $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show')
+      $("html, body").animate
+        scrollTop: $after.offset().top - 40
+      , 200
+
+      return true
 
   resetCandidates = (data)->
     newCandidates = []

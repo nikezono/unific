@@ -62,7 +62,7 @@
       });
     };
     refreshCollapse = function() {
-      $('.collapse').collapse();
+      $('.collapse').collapse('hide');
       $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide');
       collapseCount = 0;
       return $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show');
@@ -109,18 +109,27 @@
       return articles.unshift(new Article(data));
     });
     $(window).keyup(function(e) {
-      if (_.contains([39, 34, 32], e.keyCode)) {
-        $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide');
+      var $after, $before;
+      if (_.contains([39, 40, 34, 32, 13, 45], e.keyCode)) {
+        $before = $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide');
         if ($('#accordion').find('.panel').length > collapseCount) {
           collapseCount += 1;
         }
-        return $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show');
-      } else if (_.contains([37, 33], e.keyCode)) {
-        $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide');
+        $after = $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show');
+        $("html, body").animate({
+          scrollTop: $before.offset().top - 40
+        }, 200);
+        return true;
+      } else if (_.contains([37, 38, 33, 8, 35], e.keyCode)) {
+        $before = $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('hide');
         if (collapseCount > 0) {
           collapseCount -= 1;
         }
-        return $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show');
+        $after = $($('#accordion').find('.panel')[collapseCount]).find('.collapse').collapse('show');
+        $("html, body").animate({
+          scrollTop: $after.offset().top - 40
+        }, 200);
+        return true;
       }
     });
     resetCandidates = function(data) {
