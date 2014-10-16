@@ -41,8 +41,8 @@
       return notification = new Notification("Unific", {
         body: text,
         tag: "test",
-        iconUrl: "http://nikezono.com/favicon.ico",
-        icon: "http://nikezono.com/favicon.ico"
+        iconUrl: "/images/unific-logo_narrow.png",
+        icon: "/images/unific-logo_narrow.png"
       });
     };
     if (window.Notification.permission === "granted") {
