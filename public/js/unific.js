@@ -82,11 +82,6 @@
         return refreshCollapse();
       });
     }
-    document.addEventListener("visibilitychange", function() {
-      if (!document.hidden) {
-        return refresh();
-      }
-    });
     socket.on('reconnect', function() {
       return refresh(function() {
         return refreshCollapse();
