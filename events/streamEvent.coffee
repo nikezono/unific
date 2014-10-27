@@ -45,7 +45,7 @@ module.exports.StreamEvent = (app) ->
   # 1フィードにつき20件(多い？)
   rss  : (req,res,next) ->
     title = req.params.stream
-    findOrCreateStream title,(err,stream)->
+    @findOrCreateStream title,(err,stream)->
       return HelperEvent.httpError err,res if err
 
       HelperEvent.getArticlesByStreamWithLimit stream.title,20,(err,articles)->
